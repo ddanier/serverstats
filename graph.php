@@ -20,7 +20,10 @@ $filename = md5($graphindex . $period . $title);
 $graphfile = GRAPHPATH . $filename . '.png';
 
 // Create Graph
-$rrdgraph = new rrdgraph($config['rrdtool'], $period, $title);
+$rrdgraph = new rrdgraph($config['rrdtool'], -$period);
+$rrdgraph->setTitle($title);
+$rrdgraph->setWidth($config['graph']['width']);
+$rrdgraph->setHeight($config['graph']['height']);
 
 foreach($graph['content'] as $c)
 {

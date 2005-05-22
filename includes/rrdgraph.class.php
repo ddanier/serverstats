@@ -4,7 +4,8 @@ class rrdgraph
 {
 	private $rrdtoolbin;
 	private $title;
-	private $period;
+	private $start;
+	private $end;
 	private $width = 500;
 	private $height = 150;
 	private $format = 'PNG';
@@ -12,11 +13,26 @@ class rrdgraph
 	private $content = array();
 	private $defs = array();
 	
-	public function __construct($rrdtoolbin, $period, $title = null)
+	public function __construct($rrdtoolbin, $start, $end = null)
 	{
 		$this->rrdtoolbin = $rrdtoolbin;
-		$this->period = $period;
+		$this->start = $start;
+		$this->end = $end;
+	}
+	
+	public function setTitle($title)
+	{
 		$this->title = $title;
+	}
+	
+	public function setWidth($width)
+	{
+		$this->width = $width;
+	}
+	
+	public function setHeight($height)
+	{
+		$this->height = $height;
 	}
 	
 	public function addDEF($name, $ds, $rrdfile, $cf = 'AVERAGE')
@@ -115,7 +131,11 @@ class rrdgraph
 		{
 			$params .= ' -t ' . escapeshellarg($this->title);
 		}
-		$params .= ' -s ' . escapeshellarg('-' . $this->period);
+		$params .= ' -s ' . escapeshellarg($this->start);
+		if (isset($this->end))
+		{
+			$params .= ' -e ' . escapeshellarg($this->end);
+		}
 		$params .= ' -a ' . escapeshellarg($this->format);
 		$params .= ' -w ' . escapeshellarg($this->width);
 		$params .= ' -h ' . escapeshellarg($this->height);

@@ -32,9 +32,8 @@ $config = array(
 	'defaultperiod' => 86400,
 	// Define the look of the graphs, mostly unused
 	'graph' => array(
-		'format' => 'png', // ununsed
-		'height' => 200, // unused
-		'width' => 300, // unused
+		'height' => 150,
+		'width' => 500,
 		'usecache' => true 
 	),
 	// Define the graphs
