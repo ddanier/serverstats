@@ -16,11 +16,11 @@ a {
 #menu {
 	position: fixed;
 	top: 0px;
-	left: 0px;
+	right: 0px;
 	border-bottom: 2px solid #000000;
 	padding: 10px;
 	background-color: #FFFFFF;
-	width: 100%;
+	width: 100px;
 }
 
 #menu ul, #menu li {

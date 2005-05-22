@@ -1,8 +1,11 @@
 <?php
 
+// Load all needed classes, function and everything else
 require_once('init.php');
+// Set the content-type (comment this out for debugging)
 header('Content-type: image/png');
 
+// Init the needed Vars
 $usecache = (isset($_GET['usecache']) && $_GET['usecache']) ? true : false;
 $graphindex = $_GET['graph'];
 $period = $_GET['period'];
@@ -12,21 +15,26 @@ if (isset($_GET['title']))
 {
 	$title = $title . ' - ' . $_GET['title'];
 }
+// Cachefilename is generated from all vars that can change
 $filename = md5($graphindex . $period . $title);
 $graphfile = GRAPHPATH . $filename . '.png';
 
+// Create Graph
 $rrdgraph = new rrdgraph($config['rrdtool'], $period, $title);
 
 foreach($graph['content'] as $c)
 {
 	$intname = '';
 	$rrdfile = '';
+	// If the Graphcontent need is generated from a RRD-file we need
+	// to add a DEF here
 	if (in_array($c['type'], array('line', 'area', 'stack')))
 	{
 		$intname = $c['source'] . '_' . $c['ds'];
 		$rrdfile = RRDPATH . $c['source'] . '.rrd';
 		$rrdgraph->addDEF($intname, $c['ds'], $rrdfile, $c['cf']);
 	}
+	// Add the content
 	switch ($c['type'])
 	{
 		case 'line':
