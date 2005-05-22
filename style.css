@@ -1,0 +1,39 @@
+body {
+	font-family: verdana, arial, sans-serif;
+	padding: 10px;
+	margin: 0px;
+	padding-top: 80px;
+}
+
+img {
+	border: 0px none;
+}
+
+a {
+	color: #000000;
+}
+
+#menu {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	border-bottom: 2px solid #000000;
+	padding: 10px;
+	background-color: #FFFFFF;
+	width: 100%;
+}
+
+#menu ul, #menu li {
+	padding: 0px;
+	margin: 0px;
+}
+
+#menu ul {
+	list-style: none;
+}
+
+#menu li {
+	white-space: nowrap;
+	display: inline;
+	padding-right: 10px;
+}
