@@ -1,0 +1,6 @@
+* Copy includes/config.sample.php to includes/config.php
+* Change includes/config.php, perhaps the comments help you when doing this
+* graph/ must be writeable for the webserver
+* cache/ and rrd/ must be writeable by the user updating the stats
+* add update.php to the crontab, for example:
+	* * * * * php /path/to/serverstats/update.php
