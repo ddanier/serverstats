@@ -4,9 +4,6 @@
 // Load all needed classes, function and everything else
 require_once('init.php');
 
-var_dump($_SERVER);
-exit;
-
 foreach ($config['sources'] as $sourcename => $source)
 {
 	echo "Working on $sourcename\n";
@@ -17,6 +14,10 @@ foreach ($config['sources'] as $sourcename => $source)
 	// The classes may throw exceptions, so we need to catch them
 	try
 	{
+		if (!($source instanceof source))
+		{
+			throw new Exception('Source not instanceof source');
+		}
 		$source->init();
 		if ($source->useCache())
 		{

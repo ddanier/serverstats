@@ -16,11 +16,10 @@ require_once(INCLUDEPATH . 'rrd.class.php');
 require_once(INCLUDEPATH . 'rrdgraph.class.php');
 require_once(INCLUDEPATH . 'source.class.php');
 
-// Load the config
-require_once(INCLUDEPATH . 'config.php');
-
 // Load all needed functions
 require_once(INCLUDEPATH . 'functions.php');
 
+// Load the config
+require_once(INCLUDEPATH . 'config.php');
 
 ?>

@@ -2,12 +2,17 @@
 
 class traffic extends source
 {
-	const LOGDIR = '/var/www/localhost/htdocs/serverstats/sources/traffic';
+	private $logdir;
 	private $chain;
 	private $cache;
 	
-	public function __construct($chain)
+	public function __construct($chain, $logdir = null)
 	{
+		if (!isset($logdir))
+		{
+			$logdir = SOURCEPATH . 'traffic';
+		}
+		$this->logdir = $logdir;
 		$this->chain = $chain;
 	}
 	
@@ -15,7 +20,7 @@ class traffic extends source
 	{
 		$this->cache['last'] = $this->cache['current'];
 		$this->cache['current'] = array();
-		if (!($traffic = @file_get_contents(self::LOGDIR . '/' . $this->chain)))
+		if (!($traffic = @file_get_contents($this->logdir . DIRECTORY_SEPARATOR . $this->chain)))
 		{
 			$traffic = 0;
 		}

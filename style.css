@@ -2,7 +2,6 @@ body {
 	font-family: verdana, arial, sans-serif;
 	padding: 10px;
 	margin: 0px;
-	padding-top: 80px;
 }
 
 img {
@@ -17,10 +16,10 @@ a {
 	position: fixed;
 	top: 0px;
 	right: 0px;
-	border-bottom: 2px solid #000000;
+	border-left: 2px dotted #AAAAAA;
+	border-bottom: 2px dotted #AAAAAA;
 	padding: 10px;
 	background-color: #FFFFFF;
-	width: 100px;
 }
 
 #menu ul, #menu li {
@@ -34,6 +33,4 @@ a {
 
 #menu li {
 	white-space: nowrap;
-	display: inline;
-	padding-right: 10px;
 }

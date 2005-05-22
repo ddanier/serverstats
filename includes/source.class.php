@@ -5,8 +5,6 @@ abstract class source
 {
 	// Called when updating the data, __construct should not be used
 	public function init() { }
-	// Called directly after init(), if $config['sourceconfig'][<sourcename>] is set
-	public function loadConfig($config) { }
 	// Called to refresh the data
 	abstract function refreshData();
 	// Called to test if the source needs the cache

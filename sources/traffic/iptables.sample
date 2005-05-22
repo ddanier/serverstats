@@ -1,0 +1,8 @@
+# Log WWW-Traffic and accept it
+iptables -N WWW
+iptables -A INPUT -p tcp -m tcp --dport 80 -j WWW
+iptables -A OUTPUT -p tcp -m tcp --sport 80 -j WWW
+iptables -A WWW -j ACCEPT
+# additional rules for HTTPS
+iptables -A INPUT -p tcp -m tcp --dport 443 -j WWW
+iptables -A OUTPUT -p tcp -m tcp --sport 443 -j WWW

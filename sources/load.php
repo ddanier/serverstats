@@ -2,15 +2,22 @@
 
 class load extends source
 {
+	private $loadavgfile;
+	
 	private $min1;
 	private $min5;
 	private $min15;
 	private $running;
 	private $tasks;
 	
+	public function __construct($loadavgfile = '/proc/loadavg')
+	{
+		$this->loadavgfile = $loadavgfile;
+	}
+	
 	public function refreshData()
 	{
-		$temp = file_get_contents('/proc/loadavg');
+		$temp = file_get_contents($this->loadavgfile);
 		$temp = explode(' ', $temp);
 		$this->min1 = $temp[0];
 		$this->min5 = $temp[1];

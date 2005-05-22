@@ -3,7 +3,7 @@
 // All sources should be loaded on demand
 function __autoload($class)
 {
-	require_once(PATH . '/sources/' . $class . '.php');
+	require_once(SOURCEPATH . $class . '.php');
 }
 
 // Function to  draw the menu
