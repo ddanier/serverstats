@@ -1,6 +1,6 @@
 <?php
 /**
- * rrdgraph.class.php $Id$
+ * $Id$
  *
  * Author: David Danier, david.danier@team23.de
  * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
