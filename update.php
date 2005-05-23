@@ -1,8 +1,17 @@
 #!/usr/bin/php
 <?php
+/**
+ * update.php $Id$
+ *
+ * Author: David Danier, david.danier@team23.de
+ * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
+ * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
+ */
 
 // Load all needed classes, function and everything else
 require_once('init.php');
+// Validate the config without the graphes
+validateConfig(false);
 
 foreach ($config['sources'] as $sourcename => $source)
 {
@@ -16,7 +25,7 @@ foreach ($config['sources'] as $sourcename => $source)
 	{
 		if (!($source instanceof source))
 		{
-			throw new Exception('Source not instanceof source');
+			throw new Exception('Source "' . $sourcename . '" not instanceof source');
 		}
 		$source->init();
 		if ($source->useCache())

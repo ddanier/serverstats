@@ -1,13 +1,23 @@
 <?php
+/**
+ * detail.php $Id$
+ *
+ * Author: David Danier, david.danier@team23.de
+ * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
+ * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
+ */
 
 // Load all needed classes, function and everything else
 require_once('init.php');
+// Validate the config and the selected graph
+validateConfig(true);
+if (!isset($_GET['graph']))
+{
+	die('$_GET["graph"] missing');
+}
+validateGraph($_GET['graph']);
 
 // Init Vars used in this script
-if (!isset($_GET['graph']) || ! isset($config['graphlist'][$_GET['graph']]))
-{
-	die('Graph not found');
-}
 $graphindex = $_GET['graph'];
 $graph = $config['graphlist'][$graphindex];
 

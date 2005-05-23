@@ -1,7 +1,21 @@
 <?php
+/**
+ * graph.php $Id$
+ *
+ * Author: David Danier, david.danier@team23.de
+ * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
+ * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
+ */
 
 // Load all needed classes, function and everything else
 require_once('init.php');
+// Validate the config and the selected graph
+validateConfig(false);
+if (!isset($_GET['graph']))
+{
+	die('$_GET["graph"] missing');
+}
+validateGraph($_GET['graph']);
 // Set the content-type (comment this out for debugging)
 header('Content-type: image/png');
 
@@ -33,23 +47,44 @@ foreach($graph['content'] as $c)
 	$rrdfile = '';
 	// If the Graphcontent need is generated from a RRD-file we need
 	// to add a DEF here
-	if (in_array($c['type'], array('line', 'area', 'stack')))
+	if (in_array($c['type'], array('line', 'area', 'stack', 'gprint')))
 	{
-		$intname = $c['source'] . '_' . $c['ds'];
-		$rrdfile = RRDPATH . $c['source'] . '.rrd';
-		$rrdgraph->addDEF($intname, $c['ds'], $rrdfile, $c['cf']);
+		if (isset($c['source']))
+		{
+			$intname = $c['source'] . '_' . $c['ds'];
+			$rrdfile = RRDPATH . $c['source'] . '.rrd';
+			$rrdgraph->addDEF($intname, $c['ds'], $rrdfile, $c['cf']);
+		}
+		elseif (isset($c['name']))
+		{
+			$intname = $c['name'];
+		}
+		else
+		{
+			throw new Exception('You need to set either "source" or "name"');
+		}
 	}
 	// Add the content
 	switch ($c['type'])
 	{
+		case 'def':
+			$rrdfile = RRDPATH . $c['source'] . '.rrd';
+			$rrdgraph->addDEF($c['name'], $c['ds'], $rrdfile, $c['cf']);
+			break;
+		case 'cdef':
+			$rrdgraph->addCDEF($c['name'], $c['expression']);
+			break;
 		case 'line':
-			$rrdgraph->addLINE($intname, $c['legend'], $c['color']);
+			$rrdgraph->addLINE($intname, $c['legend'], $c['color'], $c['width']);
 			break;
 		case 'area':
 			$rrdgraph->addAREA($intname, $c['legend'], $c['color']);
 			break;
 		case 'stack':
 			$rrdgraph->addSTACK($intname, $c['legend'], $c['color']);
+			break;
+		case 'gprint':
+			$rrdgraph->addGPRINT($intname, $c['format'], $c['cf']);
 			break;
 		case 'hrule':
 			$rrdgraph->addHRULE($c['value'], $c['legend'], $c['color']);

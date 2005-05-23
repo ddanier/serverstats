@@ -1,4 +1,11 @@
 <?php
+/**
+ * rrdgraph.class.php $Id$
+ *
+ * Author: David Danier, david.danier@team23.de
+ * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
+ * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
+ */
 
 class rrdgraph
 {
@@ -39,7 +46,7 @@ class rrdgraph
 	{
 		if (in_array($name, $this->defs))
 		{
-			return;
+			throw new Exception('Name already in use');
 		}
 		$this->content[] = array(
 			'type' => 'def',
@@ -51,11 +58,25 @@ class rrdgraph
 		$this->defs[] = $name;
 	}
 	
+	public function addCDEF($name, $expression)
+	{
+		if (in_array($name, $this->defs))
+		{
+			throw new Exception('Name already in use');
+		}
+		$this->content[] = array(
+			'type' => 'cdef',
+			'name' => $name,
+			'expression' => $expression
+		);
+		$this->defs[] = $name;
+	}
+	
 	public function addLINE($name, $legend, $color = '000000', $width = 2)
 	{
 		if (!in_array($name, $this->defs))
 		{
-			return;
+			throw new Exception('Unknown name');
 		}
 		$this->content[] = array(
 			'type' => 'line',
@@ -70,7 +91,7 @@ class rrdgraph
 	{
 		if (!in_array($name, $this->defs))
 		{
-			return;
+			throw new Exception('Unknown name');
 		}
 		$this->content[] = array(
 			'type' => 'area',
@@ -84,7 +105,7 @@ class rrdgraph
 	{
 		if (!in_array($name, $this->defs))
 		{
-			return;
+			throw new Exception('Unknown name');
 		}
 		$this->content[] = array(
 			'type' => 'stack',
@@ -93,7 +114,21 @@ class rrdgraph
 			'color' => $color
 		);
 	}
-
+	
+	public function addGPRINT($name, $format, $cf = 'AVERAGE')
+	{
+		if (!in_array($name, $this->defs))
+		{
+			throw new Exception('Unknown name');
+		}
+		$this->content[] = array(
+			'type' => 'gprint',
+			'name' => $name,
+			'format' => $format,
+			'cf' => $cf
+		);
+	}
+	
 	public function addHRULE($value, $legend, $color = '000000')
 	{
 		$this->content[] = array(
@@ -121,9 +156,7 @@ class rrdgraph
 			'text' => $text
 		);
 	}
-
-
-
+	
 	private function command($file = '-')
 	{
 		$params = ' graph ' . escapeshellarg($file);
@@ -148,6 +181,9 @@ class rrdgraph
 				case 'def':
 					$optline = 'DEF:' . $c['name'] . '=' . $c['rrdfile'] . ':' . $c['ds'] . ':' . $c['cf'];
 					break;
+				case 'cdef':
+					$optline = 'CDEF:' . $c['name'] . '=' . $c['expression'];
+					break;
 				case 'line':
 					$optline = 'LINE' . $c['width'] . ':' . $c['name'] . '#' . $c['color'] . ':' . $c['legend'];
 					break;
@@ -156,6 +192,9 @@ class rrdgraph
 					break;
 				case 'stack':
 					$optline = 'STACK:' . $c['name'] . '#' . $c['color'] . ':' . $c['legend'];
+					break;
+				case 'gprint':
+					$optline = 'GPRINT:' . $c['name'] . ':' . $c['cf'] . ':' . $c['format'];
 					break;
 				case 'hrule':
 					$optline = 'HRULE:' . $c['value'] . '#' . $c['color'] . ':' . $c['legend'];

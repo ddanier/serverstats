@@ -1,7 +1,16 @@
 <?php
+/**
+ * index.php $Id$
+ *
+ * Author: David Danier, david.danier@team23.de
+ * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
+ * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
+ */
 
 // Load all needed classes, function and everything else
 require_once('init.php');
+// Validate the config with the graphes
+validateConfig(true);
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">  

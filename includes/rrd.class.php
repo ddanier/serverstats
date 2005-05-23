@@ -1,4 +1,11 @@
 <?php
+/**
+ * rrd.class.php $Id$
+ *
+ * Author: David Danier, david.danier@team23.de
+ * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
+ * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
+ */
 
 class rrd
 {
@@ -67,7 +74,7 @@ class rrd
 	{
 		if ($this->created)
 		{
-			return;
+			throw new Exception('RRD is created, you cannot add any datasources');
 		}
 		if (!isset($heartbeat))
 		{
@@ -87,7 +94,7 @@ class rrd
 	{
 		if ($this->created)
 		{
-			return;
+			throw new Exception('RRD is created, you cannot add any archives');
 		}
 		$this->archives[] = array(
 			'steps' => $steps,
@@ -99,9 +106,13 @@ class rrd
 
 	public function setValue($dsname, $value)
 	{
+		if (!isset($this->values[$dsname]))
+		{
+			throw new Exception('Datasource unknown');
+		}
 		if ($this->values[$dsname] != 'U')
 		{
-			return;
+			throw new Exception('Datasource already set');
 		}
 		$this->values[$dsname] = $value;
 	}
