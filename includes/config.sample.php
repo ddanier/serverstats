@@ -1,6 +1,8 @@
 <?php
 
 $config = array(
+	// Language
+	'language' => 'en_US',
 	// Where to find the rrdtool binary
 	'rrdtool' => '/usr/bin/rrdtool',
 	// Define the sources, read the sourcefiles for the needed details

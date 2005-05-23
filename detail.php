@@ -14,7 +14,7 @@ $graph = $config['graphlist'][$graphindex];
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">  
 <head>
-	<title>Statistik: <?php echo $graph['title']; ?></title>
+	<title><?php echo lang::t('Statistics'); ?> - <?php echo $graph['title']; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen, projection" />
 </head>
@@ -25,7 +25,7 @@ $graph = $config['graphlist'][$graphindex];
 menu();
 
 ?>
-<h1>Statistik: <?php echo $graph['title']; ?></h1>
+<h1><?php echo lang::t('Statistics'); ?> - <?php echo $graph['title']; ?></h1>
 <?php
 
 // List all configured graphs

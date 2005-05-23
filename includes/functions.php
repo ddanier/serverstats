@@ -21,7 +21,7 @@ function menu()
 	foreach ($config['graphlist'] as $graphindex => $graph)
 	{
 		?>
-		<li class="graph">
+		<li class="detail">
 			<a href="detail.php?graph=<?php echo $graphindex; ?>"><?php echo $graph['title']; ?></a>
 		</li>
 		<?php

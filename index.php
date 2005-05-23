@@ -6,7 +6,7 @@ require_once('init.php');
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">  
 <head>
-	<title>Statistik - Übersicht</title>
+	<title><?php echo lang::t('Statistics'); ?> - <?php echo lang::t('Summary'); ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen, projection" />
 </head>
@@ -17,7 +17,7 @@ require_once('init.php');
 menu();
 
 ?>
-<h1>Statistik - Übersicht</h1>
+<h1><?php echo lang::t('Statistics'); ?> - <?php echo lang::t('Summary'); ?></h1>
 <?php
 
 foreach ($config['graphlist'] as $graphindex => $graph)

@@ -10,11 +10,13 @@ define('GRAPHPATH', PATH . 'graph' . DIRECTORY_SEPARATOR);
 define('SOURCEPATH', PATH . 'sources' . DIRECTORY_SEPARATOR);
 define('CACHEPATH', PATH . 'cache' . DIRECTORY_SEPARATOR);
 define('RRDPATH', PATH . 'rrd' . DIRECTORY_SEPARATOR);
+define('LANGPATH', PATH . 'lang' . DIRECTORY_SEPARATOR);
 
 // Load the needed classes
 require_once(INCLUDEPATH . 'rrd.class.php');
 require_once(INCLUDEPATH . 'rrdgraph.class.php');
 require_once(INCLUDEPATH . 'source.class.php');
+require_once(INCLUDEPATH . 'lang.class.php');
 
 // Load all needed functions
 require_once(INCLUDEPATH . 'functions.php');
