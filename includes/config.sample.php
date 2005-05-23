@@ -14,6 +14,7 @@ $config = array(
 	'rrdtool' => '/usr/bin/rrdtool',
 	// Define the sources, read the sourcefiles for the needed details
 	'sources' => array(
+		'cactisourcesample' => new external(SOURCEPATH . 'external/cacti/XYZ.pl'),
 		'trafficCHAIN' => new traffic('CHAIN'),
 		'mysql' => new mysql('user', 'password', 'localhost'),
 		'load' => new load(),
