@@ -16,7 +16,7 @@ function menu()
 	}
 	?><div id="menu">
 	<ul>
-	<li class="index"><a href="index.php">Übersicht</a></li>
+	<li class="index"><a href="index.php"><?php echo lang::t('Summary'); ?></a></li>
 	<?php
 	foreach ($config['graphlist'] as $graphindex => $graph)
 	{
