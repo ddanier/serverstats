@@ -33,7 +33,7 @@ foreach ($config['graphtypes'] as $graphtype)
 {
 	?>
 	<h2><?php echo $graphtype['title']; ?></h2>
-	<img src="graph.php?graph=<?php echo $graphindex; ?>&period=<?php echo $graphtype['period']; ?>&title=<?php echo $graphtype['title']; ?>&usecache=<?php echo $config['graph']['usecache']; ?>" alt="<?php echo $graphtype['title']; ?>" />
+	<img src="graph.php?graph=<?php echo $graphindex; ?>&start=<?php echo -$graphtype['period']; ?>&title=<?php echo $graphtype['title']; ?>" alt="<?php echo $graphtype['title']; ?>" />
 	<?php
 }
 ?>

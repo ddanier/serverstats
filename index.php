@@ -25,7 +25,7 @@ foreach ($config['graphlist'] as $graphindex => $graph)
 	?>
 	<h2><?php echo $graph['title']; ?></h2>
 	<a href="detail.php?graph=<?php echo $graphindex; ?>">
-		<img src="graph.php?graph=<?php echo $graphindex; ?>&period=<?php echo $config['defaultperiod']; ?>&usecache=<?php echo $config['graph']['usecache']; ?>" alt="<?php echo $graph['title']; ?>" />
+		<img src="graph.php?graph=<?php echo $graphindex; ?>" alt="<?php echo $graph['title']; ?>" />
 	</a>
 	<?php
 }

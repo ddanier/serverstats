@@ -6,21 +6,23 @@ require_once('init.php');
 header('Content-type: image/png');
 
 // Init the needed Vars
-$usecache = (isset($_GET['usecache']) && $_GET['usecache']) ? true : false;
 $graphindex = $_GET['graph'];
-$period = $_GET['period'];
+$start = isset($_GET['start']) ? $_GET['start'] : -$config['defaultperiod'];
+$end = isset($_GET['end']) ? $_GET['end'] : null;
 $graph = $config['graphlist'][$graphindex];
 $title = $graph['title'];
 if (isset($_GET['title']))
 {
 	$title = $title . ' - ' . $_GET['title'];
 }
-// Cachefilename is generated from all vars that can change
-$filename = md5($graphindex . $period . $title);
+$usecache = $config['graph']['usecache'];
+
+// Cachefilename is generated from all vars that may change
+$filename = md5($graphindex . '_' . $start . '_' . $end . '_' . $title);
 $graphfile = GRAPHPATH . $filename . '.png';
 
 // Create Graph
-$rrdgraph = new rrdgraph($config['rrdtool'], -$period);
+$rrdgraph = new rrdgraph($config['rrdtool'], $start, $end);
 $rrdgraph->setTitle($title);
 $rrdgraph->setWidth($config['graph']['width']);
 $rrdgraph->setHeight($config['graph']['height']);
