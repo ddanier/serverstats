@@ -24,11 +24,11 @@ $config = array(
 	// see 'man rrdcreate' for details
 	'archives' => array (
 		// step = 60 (can not be changed)
-		'hour' => array('steps' => 1, 'rows' => 1800, 'cf' => 'AVERAGE'), // ca. 24 Stunden
-		'day' => array('steps' => 5, 'rows' => 1200, 'cf' => 'AVERAGE'), // ca. 4 Tage
-		'week' => array('steps' => 10, 'rows' => 1800, 'cf' => 'AVERAGE'), // ca. 2 Wochen
-		'month' => array('steps' => 60, 'rows' => 1500, 'cf' => 'AVERAGE'), // ca. 2 Monate
-		'year' => array('steps' => 180, 'rows' => 12000, 'cf' => 'AVERAGE') // ca. 4 Jahre
+		'hour' => array('steps' => 1, 'rows' => 1800, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 24 Stunden
+		'day' => array('steps' => 5, 'rows' => 1200, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 4 Tage
+		'week' => array('steps' => 10, 'rows' => 1800, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 2 Wochen
+		'month' => array('steps' => 60, 'rows' => 1500, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 2 Monate
+		'year' => array('steps' => 180, 'rows' => 12000, 'cf' => 'AVERAGE', 'xff' => 0.5) // ca. 4 Jahre
 	),
 	// Define what Graphes we want in the detail view (detail.php)
 	'graphtypes' => array(

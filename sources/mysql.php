@@ -13,6 +13,9 @@ class mysql extends source
 	private $host;
 	private $user;
 	private $password;
+
+	private $questions;
+	private $processcount;
 	
 	public function __construct($user = 'status', $password = '', $host = 'localhost')
 	{
@@ -31,9 +34,6 @@ class mysql extends source
 	
 	public function refreshData()
 	{
-		$this->cache['last'] = $this->cache['current'];
-		$this->cache['current'] = array();
-		
 		// Questions
 		$sql = "SHOW STATUS LIKE 'QUESTIONS';";
 		$result = mysql_query($sql, $this->db);
@@ -44,55 +44,22 @@ class mysql extends source
 		$result = mysql_query($sql, $this->db);
 		$processcount = mysql_num_rows($result) - 1;
 		
-		$this->cache['current']['questions'] = $questions;
-		$this->cache['current']['processcount'] = $processcount;
-		$this->cache['current']['date'] = time();
+		$this->questions = $questions;
+		$this->processcount = $processcount;
 	}
 
 	public function initRRD(rrd $rrd)
 	{
-		$rrd->addDatasource('questions');
-		$rrd->addDatasource('questionsps');
-		$rrd->addDatasource('processcount');
+		$rrd->addDatasource('questions', 'GAUGE', null, 0);
+		$rrd->addDatasource('questionsps', 'DERIVE', null, 0);
+		$rrd->addDatasource('processcount', 'GAUGE', null, 0);
 	}
 
 	public function updateRRD(rrd $rrd)
 	{
-		$questions = $this->cache['current']['questions'];
-		$questionsD = $this->cache['current']['questions'] - $this->cache['last']['questions'];
-		$dateD = $this->cache['current']['date'] - $this->cache['last']['date'];
-		$questionsps = $questionsD / $dateD;
-		if ($questionsps < 0 || $this->cache['last']['date'] == -1)
-		{
-			$questionsps = 0;
-		}
-		$processcount = $this->cache['current']['processcount'];
-		$rrd->setValue('questions', $questions);
-		$rrd->setValue('questionsps', $questionsps);
-		$rrd->setValue('processcount', $processcount);
-	}
-	
-	public function useCache()
-	{
-		return true;
-	}
-	
-	public function initCache()
-	{
-		$this->cache = array(
-			'last' => array('questions' => 0, 'processcount' => 0, 'date' => -1),
-			'current' => array('questions' => 0, 'processcount' => 0, 'date' => -1)
-		);
-	}
-	
-	public function loadCache($cachedata)
-	{
-		$this->cache = $cachedata;
-	}
-	
-	public function getCache()
-	{
-		return $this->cache;
+		$rrd->setValue('questions', $this->questions);
+		$rrd->setValue('questionsps', $this->questions);
+		$rrd->setValue('processcount', $this->processcount);
 	}
 }
 

@@ -24,7 +24,7 @@ class users extends source
 
 	public function initRRD(rrd $rrd)
 	{
-		$rrd->addDatasource('users');
+		$rrd->addDatasource('users', 'GAUGE', null, 0);
 	}
 
 	public function updateRRD(rrd $rrd)

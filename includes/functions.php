@@ -156,7 +156,7 @@ function validateConfig($withgraphlist = false)
 			throw new Exception('Source "' . $sourcename . '" not instanceof source');
 		}
 	}
-	$needed = array('steps', 'rows', 'cf');
+	$needed = array('steps', 'rows', 'cf', 'xff');
 	foreach ($config['archives'] as $a)
 	{
 		validateArray($a, $needed, '"%s" missing in archive configuration');

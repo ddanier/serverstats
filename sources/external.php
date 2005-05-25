@@ -12,10 +12,22 @@ class external extends source
 	private $command;
 	private $datarow;
 	private $data;
+
+	private $dsdef = array();
 	
 	public function __construct($command)
 	{
 		$this->command = $command;
+	}
+
+	public function addDatasourceDefinition($name, $type = 'GAUGE', $heartbeat = null, $min = 'U', $max = 'U')
+	{
+		$this->dsdef[$name] = array(
+			'type' => $type,
+			'heartbeat' => $heartbeat,
+			'min' => $min,
+			'max' => $max
+		);
 	}
 	
 	private function getDatarow()
@@ -65,7 +77,15 @@ class external extends source
 		$this->getData();
 		foreach ($this->data as $key => $value)
 		{
-			$rrd->addDatasource($key);
+			if (isset($this->dsdef[$key]))
+			{
+				$opt = $this->dsdef[$key];
+				$rrd->addDatasource($key, $opt['type'], $opt['heartbeat'], $opt['min'], $opt['max']);
+			}
+			else
+			{
+				$rrd->addDatasource($key);
+			}
 		}
 	}
 	

@@ -61,7 +61,7 @@ foreach ($config['sources'] as $sourcename => $source)
 			$source->initRRD($sourcerrd);
 			foreach ($config['archives'] as $rra)
 			{
-				$sourcerrd->addArchive($rra['steps'], $rra['rows'], $rra['cf']);
+				$sourcerrd->addArchive($rra['cf'], $rra['xff'], $rra['steps'], $rra['rows']);
 			}
 			$sourcerrd->create();
 			$cache = serialize($sourcerrd->getOptions());

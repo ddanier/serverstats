@@ -36,11 +36,11 @@ class load extends source
 
 	public function initRRD(rrd $rrd)
 	{
-		$rrd->addDatasource('1min');
-		$rrd->addDatasource('5min');
-		$rrd->addDatasource('15min');
-		$rrd->addDatasource('running');
-		$rrd->addDatasource('tasks');
+		$rrd->addDatasource('1min', 'GAUGE', null, 0);
+		$rrd->addDatasource('5min', 'GAUGE', null, 0);
+		$rrd->addDatasource('15min', 'GAUGE', null, 0);
+		$rrd->addDatasource('running', 'GAUGE', null, 0);
+		$rrd->addDatasource('tasks', 'GAUGE', null, 0);
 	}
 
 	public function updateRRD(rrd $rrd)

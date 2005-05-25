@@ -70,7 +70,7 @@ class rrd
 		$this->created = true;
 	}
 
-	public function addDatasource($name, $heartbeat = null, $min = 'U', $max = 'U', $type = 'GAUGE')
+	public function addDatasource($name, $type = 'GAUGE', $heartbeat = null, $min = 'U', $max = 'U')
 	{
 		if ($this->created)
 		{
@@ -78,7 +78,7 @@ class rrd
 		}
 		if (!isset($heartbeat))
 		{
-			$heartbeat = $this->step * 4;
+			$heartbeat = $this->getDefaultHeartbeat();
 		}
 		$this->datasources[] = array(
 			'name' => $name,
@@ -90,7 +90,7 @@ class rrd
 		$this->values[$name] = 'U';
 	}
 
-	public function addArchive($steps, $rows, $cf = 'AVERAGE', $xff = '0.5')
+	public function addArchive($cf, $xff, $steps, $rows)
 	{
 		if ($this->created)
 		{
@@ -114,6 +114,11 @@ class rrd
 		{
 			throw new Exception('Datasource already set');
 		}
+		if ($value == null)
+		{
+			// No need to update
+			return;
+		}
 		$this->values[$dsname] = $value;
 	}
 
@@ -121,10 +126,14 @@ class rrd
 	{
 		$params = ' update ' . escapeshellarg($this->rrdfile);
 		$updatestr = 'N';
-		foreach ($this->datasources as $ds)
+		$templatestr = '';
+		foreach ($this->values as $dsname => $dsvalue)
 		{
-			$updatestr .= ':' . $this->values[$ds['name']];
+			$templatestr .= $dsname . ':';
+			$updatestr .= ':' . $dsvalue;
 		}
+		$templatestr = substr($templatestr, 0, -1);
+		$params .= ' -t  ' . escapeshellarg($templatestr);
 		$params .= ' ' . escapeshellarg($updatestr);
 		system(escapeshellcmd($this->rrdtoolbin) . $params);
 
@@ -148,6 +157,21 @@ class rrd
 	public function getRRDToolBin()
 	{
 		return $this->rrdtoolbin;
+	}
+
+	public function setStep($step)
+	{
+		$this->step = $step;
+	}
+
+	public function getStep()
+	{
+		return $this->step;
+	}
+
+	public function getDefaultHeartbeat()
+	{
+		return $this->step * 4;
 	}
 }
 
