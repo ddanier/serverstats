@@ -1,6 +1,6 @@
 <?php
 /**
- * $Id$
+ * $Id: config.sample.php 32 2005-05-25 11:38:38Z ddanier $
  *
  * Author: David Danier, david.danier@team23.de
  * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
@@ -13,6 +13,7 @@ $config = array(
 	// Where to find the rrdtool binary
 	'rrdtool' => '/usr/bin/rrdtool',
 	// Define the sources, read the sourcefiles for the needed details
+	/*
 	'sources' => array(
 		'cactisourcesample' => new external(SOURCEPATH . 'external/cacti/XYZ.pl'),
 		'trafficCHAIN' => new traffic('CHAIN'),
@@ -20,6 +21,7 @@ $config = array(
 		'load' => new load(),
 		'users' => new users()
 	),
+	*/
 	// Define what archives will be used (-> RRA)
 	// see 'man rrdcreate' for details
 	'archives' => array (
@@ -47,6 +49,7 @@ $config = array(
 		'usecache' => true 
 	),
 	// Define the graphs
+	/*
 	'graphlist' => array(
 		array(
 			'title' => 'Sample',
@@ -136,6 +139,7 @@ $config = array(
 			)
 		)
 	)
+	*/
 );
 
 ?>
