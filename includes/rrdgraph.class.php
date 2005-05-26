@@ -41,6 +41,7 @@ class rrdgraph
 	private $altYMrtg = false;
 	private $altAutoscale = false;
 	private $altAutoscaleMax = false;
+	private $lazy = false;
 	
 	private $content = array();
 	private $defs = array();
@@ -197,7 +198,42 @@ class rrdgraph
 		$params .= ' -a ' . escapeshellarg($this->format);
 		$params .= ' -w ' . escapeshellarg($this->width);
 		$params .= ' -h ' . escapeshellarg($this->height);
-		$params .= ' -z ';
+		if (isset($this->base))
+		{
+			$params .= ' -b ' . escapeshellarg($this->base);
+		}
+		if (isset($this->upperLimit))
+		{
+			$params .= ' -u ' . escapeshellarg($this->upperLimit);
+		}
+		if (isset($this->lowerLimit))
+		{
+			$params .= ' -l ' . escapeshellarg($this->lowerLimit);
+		}
+		if (isset($this->verticalLabel))
+		{
+			$params .= ' -v ' . escapeshellarg($this->verticalLabel);
+		}
+		if (isset($this->unitsExponent))
+		{
+			$params .= ' -X ' . escapeshellarg($this->unitsExponent);
+		}
+		if ($this->altYMrtg)
+		{
+			$params .= ' -R ';
+		}
+		if ($this->altAutoscale)
+		{
+			$params .= ' -A ';
+		}
+		if ($this->altAutoscaleMax)
+		{
+			$params .= ' -M ';
+		}
+		if ($this->lazy)
+		{
+			$params .= ' -z ';
+		}
 		foreach ($this->content as $c)
 		{
 			$optline = '';
@@ -253,37 +289,42 @@ class rrdgraph
 	
 	public function setUpperLimit($upperLimit)
 	{
-		$this->base = $base;
+		$this->upperLimit = $upperLimit;
 	}
 	
-	public function setLowerLimit($base)
+	public function setLowerLimit($lowerLimit)
 	{
-		$this->base = $base;
+		$this->lowerLimit = $lowerLimit;
 	}
 	
-	public function setVerticalLabel($base)
+	public function setVerticalLabel($verticalLabel)
 	{
-		$this->base = $base;
+		$this->verticalLabel = $verticalLabel;
 	}
 	
-	public function setUnitsExponent($base)
+	public function setUnitsExponent($unitsExponent)
 	{
-		$this->base = $base;
+		$this->unitsExponent = $unitsExponent;
 	}
 	
-	public function setAltYMrtg($base = true)
+	public function setAltYMrtg($altYMrtg = true)
 	{
-		$this->base = $base;
+		$this->altYMrtg = $altYMrtg;
 	}
 	
-	public function setAltAutoscale($base = true)
+	public function setAltAutoscale($altAutoscale = true)
 	{
-		$this->base = $base;
+		$this->altAutoscale = $altAutoscale;
 	}
 	
-	public function setAltAutoscaleMax($base = true)
+	public function setAltAutoscaleMax($altAutoscaleMax = true)
 	{
-		$this->base = $base;
+		$this->altAutoscaleMax = $altAutoscaleMax;
+	}
+	
+	public function setLazy($lazy = true)
+	{
+		$this->lazy = $lazy;
 	}
 }
 

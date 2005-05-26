@@ -54,14 +54,38 @@ $rrdgraph->setTitle($title);
 $rrdgraph->setWidth($config['graph']['width']);
 $rrdgraph->setHeight($config['graph']['height']);
 
-$rrdgraph->setBase($config['graph']['width']);
-$rrdgraph->setUpperLimit($config['graph']['height']);
-$rrdgraph->setLowerLimit($config['graph']['width']);
-$rrdgraph->setVerticalLabel($config['graph']['height']);
-$rrdgraph->setUnitsExponent($config['graph']['width']);
-$rrdgraph->setAltYMrtg($config['graph']['height']);
-$rrdgraph->setAltAutoscale($config['graph']['width']);
-$rrdgraph->setAltAutoscaleMax($config['graph']['height']);
+if (isset($graph['base']))
+{
+	$rrdgraph->setBase($graph['base']);
+}
+if (isset($graph['upperLimit']))
+{
+	$rrdgraph->setUpperLimit($graph['upperLimit']);
+}
+if (isset($graph['lowerLimit']))
+{
+	$rrdgraph->setLowerLimit($graph['lowerLimit']);
+}
+if (isset($graph['verticalLabel']))
+{
+	$rrdgraph->setVerticalLabel($graph['verticalLabel']);
+}
+if (isset($graph['unitsExponent']))
+{
+	$rrdgraph->setUnitsExponent($graph['unitsExponent']);
+}
+if (isset($graph['altYMrtg']))
+{
+	$rrdgraph->setAltYMrtg($graph['altYMrtg']);
+}
+if (isset($graph['altAutoscale']))
+{
+	$rrdgraph->setAltAutoscale($graph['altAutoscale']);
+}
+if (isset($graph['altAutoscaleMax']))
+{
+	$rrdgraph->setAltAutoscaleMax($graph['altAutoscaleMax']);
+}
 
 foreach($graph['content'] as $c)
 {
@@ -97,6 +121,10 @@ foreach($graph['content'] as $c)
 			$rrdgraph->addCDEF($c['name'], $c['expression']);
 			break;
 		case 'line':
+			if (!isset($c['width']))
+			{
+				$c['width'] = 2;
+			}
 			$rrdgraph->addLINE($intname, $c['legend'], $c['color'], $c['width']);
 			break;
 		case 'area':
@@ -122,6 +150,7 @@ foreach($graph['content'] as $c)
 
 if ($usecache)
 {
+	$rrdgraph->setLazy(true);
 	$rrdgraph->save($graphfile);
 	readfile($graphfile);
 }

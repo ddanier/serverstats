@@ -32,6 +32,13 @@ $config['usecache'] = true;
 $config['list'] = array(
 	array(
 		'title' => 'Sample',
+		// You can use some of the options for 'rrdtool graph' here:
+		// base, upperLimit, lowerLimit, verticalLabel, unitsExponent, 
+		// altYMrtg (bool), altAutoscale (bool), altAutoscaleMax (bool)
+		// Options marked with 'bool' can only be true or false
+		// for example:
+		'verticalLabel' => 'SampleLabel',
+		'altAutoscaleMax' => true,
 		// Here you see all supported contenttypes
 		// Every type needs _exactly_ the options
 		// shown here
@@ -39,7 +46,7 @@ $config['list'] = array(
 			// Simple Options, no need to care about the DEFs
 			array(
 				'type' => 'line',
-				'width' => 2, // may be 1, 2 or 3
+				'width' => 2, // may be 1, 2 or 3 (optional, default: 2)
 				'source' => 'sample',
 				'ds' => 's1',
 				'cf' => 'AVERAGE',
