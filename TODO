@@ -1,6 +1,4 @@
 # SNMP support like in cacti?
-# Page might not work in IE, should fix this
 # Support for more graph features (axis-naming, see 'man rrdgraph')
-# source to combine multiple sources
 # add more sources
 # add more documentation

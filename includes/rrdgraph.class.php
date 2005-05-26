@@ -33,6 +33,15 @@ class rrdgraph
 	private $height = 150;
 	private $format = 'PNG';
 	
+	private $base;
+	private $upperLimit;
+	private $lowerLimit;
+	private $verticalLabel;
+	private $unitsExponent;
+	private $altYMrtg = false;
+	private $altAutoscale = false;
+	private $altAutoscaleMax = false;
+	
 	private $content = array();
 	private $defs = array();
 	
@@ -235,6 +244,46 @@ class rrdgraph
 	public function output()
 	{
 		passthru($this->command());
+	}
+	
+	public function setBase($base)
+	{
+		$this->base = $base;
+	}
+	
+	public function setUpperLimit($upperLimit)
+	{
+		$this->base = $base;
+	}
+	
+	public function setLowerLimit($base)
+	{
+		$this->base = $base;
+	}
+	
+	public function setVerticalLabel($base)
+	{
+		$this->base = $base;
+	}
+	
+	public function setUnitsExponent($base)
+	{
+		$this->base = $base;
+	}
+	
+	public function setAltYMrtg($base = true)
+	{
+		$this->base = $base;
+	}
+	
+	public function setAltAutoscale($base = true)
+	{
+		$this->base = $base;
+	}
+	
+	public function setAltAutoscaleMax($base = true)
+	{
+		$this->base = $base;
 	}
 }
 

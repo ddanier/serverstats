@@ -54,6 +54,15 @@ $rrdgraph->setTitle($title);
 $rrdgraph->setWidth($config['graph']['width']);
 $rrdgraph->setHeight($config['graph']['height']);
 
+$rrdgraph->setBase($config['graph']['width']);
+$rrdgraph->setUpperLimit($config['graph']['height']);
+$rrdgraph->setLowerLimit($config['graph']['width']);
+$rrdgraph->setVerticalLabel($config['graph']['height']);
+$rrdgraph->setUnitsExponent($config['graph']['width']);
+$rrdgraph->setAltYMrtg($config['graph']['height']);
+$rrdgraph->setAltAutoscale($config['graph']['width']);
+$rrdgraph->setAltAutoscaleMax($config['graph']['height']);
+
 foreach($graph['content'] as $c)
 {
 	$intname = '';

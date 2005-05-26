@@ -37,13 +37,17 @@ a {
 }
 
 #menu {
+	border-bottom: 2px dotted #AAAAAA;
+	padding: 10px;
+	background-color: #FFFFFF;
+}
+
+html > body #menu {
 	position: fixed;
 	top: 0px;
 	right: 0px;
 	border-left: 2px dotted #AAAAAA;
-	border-bottom: 2px dotted #AAAAAA;
-	padding: 10px;
-	background-color: #FFFFFF;
+	max-width: 400px;
 }
 
 #menu ul, #menu li {
@@ -56,5 +60,13 @@ a {
 }
 
 #menu li {
+	display: inline;
+	padding-right: 10px;
 	white-space: nowrap;
 }
+
+html > body #menu li {
+	display: block;
+	padding-right: 0px;
+}
+
