@@ -25,8 +25,8 @@
 
 $config = array();
 // Define the look of the graphs
-$config['width'] = 150;
-$config['height'] = 500;
+$config['width'] = 500;
+$config['height'] = 150;
 $config['usecache'] = true;
 // List of all Graphs
 $config['list'] = array(
