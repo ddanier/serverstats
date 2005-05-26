@@ -38,6 +38,7 @@ $config['list'] = array(
 		// Options marked with 'bool' can only be true or false
 		// for example:
 		'verticalLabel' => 'SampleLabel',
+		'lowerLimit' => 0,
 		'altAutoscaleMax' => true,
 		// Here you see all supported contenttypes
 		// Every type needs _exactly_ the options
@@ -50,7 +51,7 @@ $config['list'] = array(
 				'source' => 'sample',
 				'ds' => 's1',
 				'cf' => 'AVERAGE',
-				'legend' => 'Sample1\n',
+				'legend' => 'Sample1\n', // Always optional
 				'color' => 'FF0000'
 			),
 			array(

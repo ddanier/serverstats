@@ -110,6 +110,14 @@ foreach($graph['content'] as $c)
 			throw new Exception('You need to set either "source" or "name"');
 		}
 	}
+	// Set legend to default ('') if not set
+	if (in_array($c['type'], array('line', 'area', 'stack', 'gprint', 'hrule', 'vrule')))
+	{
+		if (!isset($c['legend']))
+		{
+			$c['legend'] = '';
+		}
+	}
 	// Add the content
 	switch ($c['type'])
 	{
