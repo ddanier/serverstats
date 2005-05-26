@@ -23,7 +23,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$config = array(
+$config = array();
+// Define the look of the graphs
+$config['width'] = 150;
+$config['height'] = 500;
+$config['usecache'] = true;
+// List of all Graphs
+$config['list'] = array(
 	array(
 		'title' => 'Sample',
 		// Here you see all supported contenttypes
@@ -77,7 +83,7 @@ $config = array(
 				'source' => 'sample',
 				'ds' => 's3',
 				'cf' => 'AVERAGE', // Must be set even if using own (C)DEFs
-						   // see below
+				                   // see below
 				'format' => '%lf'
 			),
 			// Advanced Options
@@ -92,7 +98,7 @@ $config = array(
 				'type' => 'cdef',
 				'name' => 'vname2',
 				'expression' => 'vname1,2,/' // See 'man rrdgraph'
-							     // vnames used here are not validated!
+				                             // vnames used here are not validated!
 			),
 			array( // Use own (C)DEFs
 				'type' => 'line',
@@ -103,7 +109,7 @@ $config = array(
 				'color' => 'FF0000'
 			),
 			array( // Use own (C)DEF with GPRINT
-			       // Attention: 'cf' MUST stay
+				   // Attention: 'cf' MUST stay
 				'type' => 'gprint',
 				'name' => 'vname2',
 				'cf' => 'AVERAGE',
@@ -112,5 +118,15 @@ $config = array(
 		)
 	)
 );
+// Define what Graphes we want in the detail view (detail.php)
+$config['types'] = array(
+	array('title' => 'Hour', 'period' => 3600),
+	array('title' => 'Day', 'period' => 86400),
+	array('title' => 'Week', 'period' => 604800),
+	array('title' => 'Month', 'period' => 2678400),
+	array('title' => 'Year', 'period' => 31536000)
+);
+// The period uses in the graph overview (index.php)
+$config['defaultperiod'] = 86400;
 
 ?>

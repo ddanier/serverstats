@@ -25,21 +25,18 @@
 
 // Load all needed classes, function and everything else
 require_once('init.php');
-// Validate the config and the selected graph
-validateConfig(false);
 if (!isset($_GET['graph']))
 {
 	die('$_GET["graph"] missing');
 }
-validateGraph($_GET['graph']);
 // Set the content-type (comment this out for debugging)
 header('Content-type: image/png');
 
 // Init the needed Vars
 $graphindex = $_GET['graph'];
-$start = isset($_GET['start']) ? $_GET['start'] : -$config['defaultperiod'];
+$start = isset($_GET['start']) ? $_GET['start'] : -$config['graph']['defaultperiod'];
 $end = isset($_GET['end']) ? $_GET['end'] : null;
-$graph = $config['graphlist'][$graphindex];
+$graph = $config['graph']['list'][$graphindex];
 $title = $graph['title'];
 if (isset($_GET['title']))
 {

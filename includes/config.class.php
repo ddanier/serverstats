@@ -23,10 +23,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class config implements ArrayAccess
+class config implements ArrayAccess, IteratorAggregate
 {
 	private $vars;
 	private $dir;
+	static public $loaded = array();
 
 	public function __construct(&$vars, $dir)
 	{
@@ -36,9 +37,9 @@ class config implements ArrayAccess
 	
 	private function checkOffset($offset)
 	{
-		if (!preg_match('/[a-z0-9]+/i'))
+		if (!preg_match('/[a-z0-9]+/i', $offset))
 		{
-			throw new Exception('Offsetname "' . $offset . '" is not allowed');
+			throw new Exception('Offsetname "' . $offset . '" is not allowed for external files');
 		}
 	}
 	
@@ -66,6 +67,7 @@ class config implements ArrayAccess
 	{
 		if (file_exists($file) && include_once($file))
 		{
+			self::$loaded[] = $file;
 			return $config;
 		}
 		else
@@ -93,6 +95,11 @@ class config implements ArrayAccess
 			$this->vars[$offset] = self::loadConfig($this->dir . $offset . '.php');
 			return $this->offsetGet($offset);
 		}
+	}
+	
+	public function getIterator()
+	{
+		return new ArrayIterator($this->vars);
 	}
 	
 	public function offsetSet($offset, $value)

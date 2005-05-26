@@ -26,12 +26,11 @@
 
 // Load all needed classes, function and everything else
 require_once('init.php');
-// Validate the config without the graphes
-validateConfig(false);
 
-foreach ($config['sources'] as $sourcename => $source)
+foreach ($config['sources'] as $sourcename => $sourcedata)
 {
 	echo "Working on $sourcename\n";
+	$source = $sourcedata['module'];
 	// All needed Vars
 	$cachefile = CACHEPATH . $sourcename . '.sav';
 	$rrdcachefile = CACHEPATH . $sourcename . '.rrd.sav';
@@ -75,7 +74,9 @@ foreach ($config['sources'] as $sourcename => $source)
 		{
 			echo "\tCreating RRD-file\n";
 			$source->initRRD($sourcerrd);
-			foreach ($config['archives'] as $rra)
+			$sourcerrd->setStep($config['step']);
+			$sourcerra = $sourcedata['rra'];
+			foreach ($config['rra'][$sourcerra] as $rra)
 			{
 				$sourcerrd->addArchive($rra['cf'], $rra['xff'], $rra['steps'], $rra['rows']);
 			}

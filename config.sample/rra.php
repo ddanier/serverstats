@@ -23,17 +23,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// Define the sources, read the sourcefiles for the needed details
 $config = array();
-$config['cactisample']['module'] = new external(SOURCEPATH . 'external/cacti/XYZ.pl');
-$config['cactisample']['rra'] = 'default';
-$config['trafficCHAIN']['module'] = new traffic('CHAIN');
-$config['trafficCHAIN']['rra'] = 'default';
-$config['mysql']['module'] = new mysql('user', 'password', 'localhost');
-$config['mysql']['rra'] = 'default';
-$config['load']['module'] = new load();
-$config['load']['rra'] = 'default';
-$config['users']['module'] = new users();
-$config['users']['rra'] = 'default';
+// Define what archives will be used (-> RRA)
+// see 'man rrdcreate' for details
+
+// You can define multiple RRAs, this is the default:
+$config['default'] = array(
+	'hour' => array('steps' => 1, 'rows' => 1800, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 24 hours
+	'day' => array('steps' => 5, 'rows' => 1200, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 4 days
+	'week' => array('steps' => 10, 'rows' => 1800, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 2 weeks
+	'month' => array('steps' => 60, 'rows' => 1500, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 2 month
+	'year' => array('steps' => 180, 'rows' => 12000, 'cf' => 'AVERAGE', 'xff' => 0.5) // ca. 4 years
+);
 
 ?>

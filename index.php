@@ -25,8 +25,6 @@
 
 // Load all needed classes, function and everything else
 require_once('init.php');
-// Validate the config with the graphes
-validateConfig(true);
 
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">  
@@ -45,7 +43,7 @@ menu();
 <h1><?php echo lang::t('Statistics'); ?> - <?php echo lang::t('Summary'); ?></h1>
 <?php
 
-foreach ($config['graphlist'] as $graphindex => $graph)
+foreach ($config['graph']['list'] as $graphindex => $graph)
 {
 	?>
 	<h2><?php echo $graph['title']; ?></h2>
