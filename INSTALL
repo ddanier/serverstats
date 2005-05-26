@@ -1,4 +1,4 @@
-* Move config.sample to config
+* Copy/Move config.sample/ to config/
 * Change config/*.php, perhaps the comments help you when doing this
 * graph/ must be writeable for the webserver
 * cache/ and rrd/ must be writeable by the user updating the stats
