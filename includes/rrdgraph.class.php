@@ -188,7 +188,7 @@ class rrdgraph
 		$params .= ' -a ' . escapeshellarg($this->format);
 		$params .= ' -w ' . escapeshellarg($this->width);
 		$params .= ' -h ' . escapeshellarg($this->height);
-		$params .= ' -M -z -l 0 ';
+		$params .= ' -z ';
 		foreach ($this->content as $c)
 		{
 			$optline = '';

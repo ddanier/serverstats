@@ -36,4 +36,8 @@ $config['load']['rra'] = 'default';
 $config['users']['module'] = new users();
 $config['users']['rra'] = 'default';
 
+// The external source uses default values for the datasources, you can change
+// these values using:
+// $config['externalsample']['module']->addDatasourceDefinition(<dsname>, <DST>, <heartbeat>, <min>, <max>)
+
 ?>
