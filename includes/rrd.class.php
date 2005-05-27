@@ -45,9 +45,14 @@ class rrd
 		$this->step = $temp['step'];
 		$this->datasources = $temp['datasources'];
 		$this->archives = $temp['archives'];
-		foreach ($this->datasources as $ds)
+		foreach ($this->datasources as $name => $ds)
 		{
-			$this->values[$ds['name']] = 'U';
+			// Backwards compability
+			if (isset($ds['name']))
+			{
+				$name = $ds['name'];
+			}
+			$this->values[$name] = 'U';
 		}
 		if (!file_exists($this->rrdfile))
 		{
@@ -72,9 +77,14 @@ class rrd
 	{
 		$params = ' create ' . escapeshellarg($this->rrdfile);
 		$params .= ' -s ' . escapeshellarg($this->step);
-		foreach ($this->datasources as $ds)
+		foreach ($this->datasources as $name => $ds)
 		{
-			$dsstring = 'DS:' . $ds['name'] . ':' . $ds['type'] . ':' . $ds['heartbeat'] . ':' . $ds['min'] . ':' . $ds['max'];
+			// Backwards compability
+			if (isset($ds['name']))
+			{
+				$name = $ds['name'];
+			}
+			$dsstring = 'DS:' . $name . ':' . $ds['type'] . ':' . $ds['heartbeat'] . ':' . $ds['min'] . ':' . $ds['max'];
 			$params .= ' ' . escapeshellarg($dsstring);
 		}
 		foreach ($this->archives as $rra)
@@ -92,12 +102,15 @@ class rrd
 		{
 			throw new Exception('RRD is created, you cannot add any datasources');
 		}
+		if (isset($this->datasources[$name]))
+		{
+			throw new Exception('Datasourcename "' . $name .'" already taken');
+		}
 		if (!isset($heartbeat))
 		{
 			$heartbeat = $this->getDefaultHeartbeat();
 		}
-		$this->datasources[] = array(
-			'name' => $name,
+		$this->datasources[$name] = array(
 			'min' => $min,
 			'max' => $max,
 			'type' => $type,
@@ -155,6 +168,11 @@ class rrd
 
 	}
 
+	public function hasDatasource($name)
+	{
+		return isset($this->datasources[$name]);
+	}
+	
 	public function getDatasources()
 	{
 		return $this->datasources;
