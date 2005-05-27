@@ -73,14 +73,16 @@ class memory extends source
 				$this->data[$split[1]] = $split[2];
 			}
 		}
-		var_dump($this->data);
 	}
 
 	public function initRRD(rrd $rrd)
 	{
 		foreach ($this->data as $name => $value)
 		{
-			$rrd->addDatasource($name, 'GAUGE', null, 0);
+			if (in_array($name, $this->show))
+			{
+				$rrd->addDatasource($name, 'GAUGE', null, 0);
+			}
 		}
 	}
 
