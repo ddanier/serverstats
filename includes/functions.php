@@ -52,7 +52,7 @@ function menu()
 	{
 		?>
 		<li class="detail">
-			<a href="detail.php?graph=<?php echo $graphindex; ?>"><?php echo $graph['title']; ?></a>
+			<a href="detail.php?graph=<?php echo $graphindex; ?>"><?php echo htmlspecialchars($graph['title']); ?></a>
 		</li>
 		<?php
 	}

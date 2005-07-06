@@ -29,7 +29,7 @@ CHAINLIST="FILL SOMETHING IN HERE"
 
 SLEEP_BIN="/usr/bin/sleep"
 IPTABLES_BIN="/sbin/iptables"
-GREP_BIN="/in/grep"
+GREP_BIN="/bin/grep"
 TAIL_BIN="/usr/bin/tail"
 AWK_BIN="/bin/awk"
 

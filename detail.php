@@ -37,7 +37,7 @@ $graph = $config['graph']['list'][$graphindex];
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">  
 <head>
-	<title><?php echo lang::t('Statistics'); ?> - <?php echo $graph['title']; ?></title>
+	<title><?php echo lang::t('Statistics'); ?> - <?php echo htmlspecialchars($graph['title']); ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen, projection" />
 </head>
@@ -56,7 +56,7 @@ foreach ($config['graph']['types'] as $graphtype)
 {
 	?>
 	<h2><?php echo $graphtype['title']; ?></h2>
-	<img src="graph.php?graph=<?php echo $graphindex; ?>&start=<?php echo -$graphtype['period']; ?>&title=<?php echo $graphtype['title']; ?>" alt="<?php echo $graphtype['title']; ?>" />
+	<img src="graph.php?graph=<?php echo $graphindex; ?>&start=<?php echo -$graphtype['period']; ?>&title=<?php echo htmlspecialchars($graphtype['title']); ?>" alt="<?php echo htmlspecialchars($graphtype['title']); ?>" />
 	<?php
 }
 ?>

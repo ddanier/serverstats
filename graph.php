@@ -30,7 +30,7 @@ if (!isset($_GET['graph']))
 	die('$_GET["graph"] missing');
 }
 // Set the content-type (comment this out for debugging)
-header('Content-type: image/png');
+header('Content-Type: image/png');
 
 // Init the needed Vars
 $graphindex = $_GET['graph'];

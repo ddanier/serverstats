@@ -46,9 +46,9 @@ menu();
 foreach ($config['graph']['list'] as $graphindex => $graph)
 {
 	?>
-	<h2><?php echo $graph['title']; ?></h2>
+	<h2><?php echo htmlspecialchars($graph['title']); ?></h2>
 	<a href="detail.php?graph=<?php echo $graphindex; ?>">
-		<img src="graph.php?graph=<?php echo $graphindex; ?>" alt="<?php echo $graph['title']; ?>" />
+		<img src="graph.php?graph=<?php echo $graphindex; ?>" alt="<?php echo htmlspecialchars($graph['title']); ?>" />
 	</a>
 	<?php
 }
