@@ -1,6 +1,9 @@
 <?php
 /**
+ * $Id$
+ *
  * Author: Andreas Korthaus, akorthaus@web.de
+ * Enhancements: David Danier, david.danier@team23.de
  * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
  * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
  *
@@ -30,7 +33,7 @@
  *     SetHandler server-status
  *     Order deny,allow
  *     Deny from all
- *     allow from 127.0.0.1
+ *     Allow from 127.0.0.1
  * </Location>
  * ExtendedStatus On
  */
@@ -38,43 +41,80 @@
 class apache extends source
 {
 	private $url_serverstatus;
-	private $lines;
-	private $requests;
-	private $kbytes;
-	private $serv_busy;
-	private $serv_idle;
-
-	public function __construct($url_serverstatus = 'http://localhost/server-status?auto')
+	private $show;
+	
+	private $data;
+	
+	public function __construct($url_serverstatus = 'http://localhost/server-status?auto', $show = null, $psshow = null)
 	{
+		// What lines should be saved
+		// (and how to call them)
+		if (!isset($show))
+		{
+			$this->show = array(
+				'Total Accesses' => 'requests',
+				'Total kBytes' => 'kilobytes',
+				'BytesPerReq' => 'bytesperreq',
+				'CPULoad' => 'cpuload',
+				'BusyWorkers' => 'busyprocs',
+				'IdleWorkers' => 'idleprocs'
+			);
+		}
+		// What values should be saved as per second fields
+		// (and the changed name)
+		if (!isset($psshow))
+		{
+			$this->psshow = array(
+				'requests' => 'requestsps',
+				'kilobytes' => 'kilobytesps'
+			);
+		}
 		$this->url_serverstatus = $url_serverstatus;
 	}
-
+	
 	public function refreshData()
 	{
-		$lines = file($this->url_serverstatus);
-		$this->requests = trim(substr(strrchr($lines[0], ':'), 1));
-		$this->kbytes = trim(substr(strrchr($lines[1], ':'), 1));
-		$this->uptime = trim(substr(strrchr($lines[3], ':'), 1));
-		$this->serv_busy = trim(substr(strrchr($lines[7], ':'), 1));
-		$this->serv_idle = trim(substr(strrchr($lines[8], ':'), 1));
+		if (!($lines = @file($this->url_serverstatus)))
+		{
+			throw new Exception('Error while reading Apache-status');
+			return;
+		}
+		foreach ($lines as $line)
+		{
+			foreach ($this->show as $apachename => $dsname)
+			{
+				$apachename = quotemeta($apachename);
+				if (preg_match('/^' . $apachename . '\s*:\s*(.*)$/', $line, $parts))
+				{
+					$this->data[$dsname] = $parts[1];
+					break;
+				}
+			}
+		}
 	}
-
+	
 	public function initRRD(rrd $rrd)
 	{
-		$rrd->addDatasource('requests', 'DERIVE', null, 0);
-		$rrd->addDatasource('kbytes', 'DERIVE', null, 0);
-		$rrd->addDatasource('uptime', 'GAUGE', null, 0);
-		$rrd->addDatasource('serv_busy', 'GAUGE', null, 0);
-		$rrd->addDatasource('serv_idle', 'GAUGE', null, 0);
+		foreach ($this->show as $dsname)
+		{
+			$rrd->addDatasource($dsname, 'GAUGE');
+			if (isset($this->psshow[$dsname]))
+			{
+				$rrd->addDatasource($this->psshow[$dsname], 'DERIVE', null, 0);
+			}
+		}
 	}
-
+	
 	public function updateRRD(rrd $rrd)
 	{
-		$rrd->setValue('requests', $this->requests);
-		$rrd->setValue('kbytes', $this->kbytes);
-		$rrd->setValue('uptime', $this->uptime);
-		$rrd->setValue('serv_busy', $this->serv_busy);
-		$rrd->setValue('serv_idle', $this->serv_idle);
+		foreach ($this->data as $dsname => $value)
+		{
+			$rrd->setValue($dsname, $value);
+			if (isset($this->psshow[$dsname]))
+			{
+				$rrd->setValue($this->psshow[$dsname], $value);
+			}
+		}
 	}
 }
 

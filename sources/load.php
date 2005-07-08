@@ -40,7 +40,10 @@ class load extends source
 	
 	public function refreshData()
 	{
-		$temp = file_get_contents($this->loadavgfile);
+		if (!($temp = file_get_contents($this->loadavgfile)))
+		{
+			throw new Exception('Could not read "' . $this->loadavgfile . '"');
+		}
 		$temp = explode(' ', $temp);
 		$this->min1 = $temp[0];
 		$this->min5 = $temp[1];

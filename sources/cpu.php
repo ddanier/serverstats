@@ -1,7 +1,9 @@
 <?php
 /**
+ * $Id$
+ *
  * Author: Andreas Korthaus, akorthaus@web.de
- * Bugfixes: David Danier, david.danier@team23.de
+ * Enhancements/Bugfixes: David Danier, david.danier@team23.de
  * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
  * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
  *
@@ -24,28 +26,28 @@
 
 class cpu extends source
 {
-        private $path_stat;
+	private $path_stat;
 	private $user_hz;
 	
-        private $stats;
+	private $stats;
 	private $time;
-
+	
 	private $oldstats;
 	private $oldtime;
-
-        public function __construct($path_stat = '/proc/stat', $user_hz = 100)
-        {
-                $this->path_stat = $path_stat;
-                $this->user_hz = $user_hz;
-        }
-
-        public function refreshData()
-        {
+	
+	public function __construct($path_stat = '/proc/stat', $user_hz = 100)
+	{
+		$this->path_stat = $path_stat;
+		$this->user_hz = $user_hz;
+	}
+	
+	public function refreshData()
+	{
 		$this->getStats();
-        }
-
-        public function initRRD(rrd $rrd)
-        {
+	}
+	
+	public function initRRD(rrd $rrd)
+	{
 		$this->getStats();
 		foreach ($this->stats as $cpu => $values)
 		{
@@ -54,37 +56,43 @@ class cpu extends source
 				$rrd->addDatasource($cpu . '_' . $key, 'GAUGE', null, 0, 100);
 			}
 		}
-        }
-
-        public function updateRRD(rrd $rrd)
-        {
+	}
+	
+	public function updateRRD(rrd $rrd)
+	{
 		foreach ($this->stats as $cpu => $values)
 		{
 			$sumProc = array_sum($values) - array_sum($this->oldstats[$cpu]);
-			foreach ($values as $key => $value)
+			if ($sumProc > 0)
 			{
-				if ($sumProc <= 0)
+				foreach ($values as $key => $value)
 				{
-					$rrd->setValue($cpu . '_' . $key, 0);
-				}
-				else
-				{
-					$rrd->setValue($cpu . '_' . $key, (($value - $this->oldstats[$cpu][$key]) * $this->user_hz) / $sumProc);
+					if ($sumProc == 0)
+					{
+						$rrd->setValue($cpu . '_' . $key, 0);
+					}
+					else
+					{
+						$rrd->setValue($cpu . '_' . $key, (($value - $this->oldstats[$cpu][$key]) * $this->user_hz) / $sumProc);
+					}
 				}
 			}
 		}
-        }
-
-        private function getStats()
-        {
+	}
+	
+	private function getStats()
+	{
 		if (isset($this->stats))
 		{
 			return;
 		}
 		
-                $lines = file($this->path_stat);
+		if (!($lines = file($this->path_stat)))
+		{
+			throw new Exception('Could not read "' . $this->path_stat . '"');
+		}
 		$this->stats = array();
-
+		
 		foreach ($lines as $line)
 		{
 			if (preg_match('/^(cpu[0-9]*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)/i', $line, $parts))
@@ -97,9 +105,9 @@ class cpu extends source
 				);
 			}
 		}
-
+		
 		$this->time = microtime(true);
-        }
+	}
 	
 	public function useCache()
 	{

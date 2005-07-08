@@ -35,7 +35,11 @@ class users extends source
 	
 	public function refreshData()
 	{
-		$this->count = count(explode(' ', trim(exec(escapeshellcmd($this->usersbin)) . ' x'))) - 1;
+		if (!($cmdoutput = exec(escapeshellcmd($this->usersbin))))
+		{
+			throw new Exception('Could not execute "' . $this->usersbin . '"');
+		}
+		$this->count = count(explode(' ', trim($cmdoutput . ' x'))) - 1;
 	}
 
 	public function initRRD(rrd $rrd)

@@ -40,6 +40,8 @@ define('CONFIGPATH', PATH . 'config' . DIRECTORY_SEPARATOR);
 require_once(INCLUDEPATH . 'functions.php');
 
 // Load the config
-$config = new config(config::loadConfig(CONFIGPATH . 'main.php'), CONFIGPATH);
+$configvars = config::loadConfig(CONFIGPATH . 'main.php'); /* todo: besseren Weg finden */
+$config = new config($configvars, CONFIGPATH);
+unset($configvars);
 
 ?>

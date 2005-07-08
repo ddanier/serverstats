@@ -52,7 +52,10 @@ class memory extends source
 	
 	public function refreshData()
 	{
-		$temp = file($this->meminfofile);
+		if (!($temp = file($this->meminfofile)))
+		{
+			throw new Exception('Could not read "' . $this->meminfofile . '"');
+		}
 		foreach($temp as &$row)
 		{
 			if (preg_match('/^([a-zA-Z0-9_]{1,19})\s*:\s*([0-9\.]+)(\s*(.+))?$/', $row, $split))
