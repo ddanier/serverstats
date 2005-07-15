@@ -27,7 +27,7 @@ $config = array();
 // Define what archives will be used (-> RRA)
 // see 'man rrdcreate' for details
 
-// You can define multiple RRAs, this is the default:
+// You can define multiple RRAs, this is the default: (don't delete the default)
 $config['default'] = array(
 	'hour' => array('steps' => 1, 'rows' => 1800, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 24 hours
 	'day' => array('steps' => 5, 'rows' => 1200, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 4 days

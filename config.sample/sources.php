@@ -26,15 +26,11 @@
 // Define the sources, read the sourcefiles for the needed details
 $config = array();
 $config['cactisample']['module'] = new external(SOURCEPATH . 'external/cacti/XYZ.pl');
-$config['cactisample']['rra'] = 'default';
+$config['cactisample']['rra'] = 'default'; // 'default' is the default if this is not set
 $config['trafficCHAIN']['module'] = new traffic('CHAIN');
-$config['trafficCHAIN']['rra'] = 'default';
 $config['mysql']['module'] = new mysql('user', 'password', 'localhost');
-$config['mysql']['rra'] = 'default';
 $config['load']['module'] = new load();
-$config['load']['rra'] = 'default';
 $config['users']['module'] = new users();
-$config['users']['rra'] = 'default';
 
 // The external source uses default values for the datasources, you can change
 // these values using:

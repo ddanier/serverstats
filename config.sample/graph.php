@@ -46,16 +46,16 @@ $config['list'] = array(
 		'content' => array(
 			// Simple Options, no need to care about the DEFs
 			array(
-				'type' => 'line',
+				'type' => 'LINE',
 				'width' => 2, // may be 1, 2 or 3 (optional, default: 2)
-				'source' => 'sample',
+				'source' => 'sample', // vname is generated: $source . '_' . $ds
 				'ds' => 's1',
 				'cf' => 'AVERAGE',
 				'legend' => 'Sample1\n', // Always optional
 				'color' => 'FF0000'
 			),
 			array(
-				'type' => 'area',
+				'type' => 'AREA',
 				'source' => 'sample',
 				'ds' => 's2',
 				'cf' => 'AVERAGE',
@@ -63,7 +63,7 @@ $config['list'] = array(
 				'color' => 'FF0000'
 			),
 			array(
-				'type' => 'stack',
+				'type' => 'STACK', // Deprecated, use option stacked with LINE or AREA
 				'source' => 'sample',
 				'ds' => 's3',
 				'cf' => 'AVERAGE',
@@ -71,23 +71,23 @@ $config['list'] = array(
 				'color' => 'FF0000'
 			),
 			array(
-				'type' => 'hrule',
+				'type' => 'HRULE',
 				'value' => 10,
 				'legend' => 'Sample4',
 				'color' => 'FF0000'
 			),
 			array(
-				'type' => 'vrule',
+				'type' => 'VRULE',
 				'time' => 1116659895,
 				'legend' => 'Sample5',
 				'color' => 'FF0000'
 			),
 			array(
-				'type' => 'comment',
+				'type' => 'COMMENT',
 				'text' => 'Sample6'
 			),
 			array(
-				'type' => 'gprint',
+				'type' => 'GPRINT',
 				'source' => 'sample',
 				'ds' => 's3',
 				'cf' => 'AVERAGE', // Must be set even if using own (C)DEFs
@@ -95,21 +95,28 @@ $config['list'] = array(
 				'format' => '%lf'
 			),
 			// Advanced Options
+			array( // Use own RRD-Files
+				'type' => 'DEF',
+				'name' => 'vname',
+				'file' => '/path/too/sample.rrd',
+				'ds' => 'rrd_source',
+				'cf' => 'AVERAGE'
+			),
 			array( // Define own DEF
-				'type' => 'def',
+				'type' => 'DEF',
 				'name' => 'vname1',
 				'source' => 'sample',
 				'ds' => 's4',
 				'cf' => 'AVERAGE'
 			),
 			array( // Define own CDEF
-				'type' => 'cdef',
+				'type' => 'CDEF',
 				'name' => 'vname2',
 				'expression' => 'vname1,2,/' // See 'man rrdgraph'
 				                             // vnames used here are not validated!
 			),
 			array( // Use own (C)DEFs
-				'type' => 'line',
+				'type' => 'LINE',
 				'width' => 2,
 				// 'source', 'ds' and 'cf' is replaced with:
 				'name' => 'vname2',
@@ -118,7 +125,7 @@ $config['list'] = array(
 			),
 			array( // Use own (C)DEF with GPRINT
 				   // Attention: 'cf' MUST stay
-				'type' => 'gprint',
+				'type' => 'GPRINT',
 				'name' => 'vname2',
 				'cf' => 'AVERAGE',
 				'format' => '%lf'

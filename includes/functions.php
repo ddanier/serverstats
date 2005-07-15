@@ -62,4 +62,34 @@ function menu()
 	<?php
 }
 
+// Function to test if some values are set in an array
+function array_check($array, $values)
+{
+	if (!is_array($values))
+	{
+		$values = array($values);
+	}
+	foreach ($values as $value)
+	{
+		if (!isset($array[$value]))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+// Function to get a value out of an array and return a defaultvalue if value is not set in array
+function array_get($array, $value, $default = null)
+{
+	if (isset($array[$value]))
+	{
+		return $array[$value];
+	}
+	else
+	{
+		return $default;
+	}
+}
+
 ?>

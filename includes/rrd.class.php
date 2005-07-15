@@ -52,7 +52,7 @@ class rrd
 			{
 				$name = $ds['name'];
 			}
-			switch($type)
+			switch($ds['type'])
 			{
 				case 'GAUGE':
 				case 'COUNTER':
@@ -117,7 +117,7 @@ class rrd
 		}
 		foreach ($this->archives as $rra)
 		{
-			switch ($cf)
+			switch ($rra['cf'])
 			{
 				case 'AVERAGE':
 				case 'MIN':

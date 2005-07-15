@@ -75,7 +75,14 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			echo "\tCreating RRD-file\n";
 			$source->initRRD($sourcerrd);
 			$sourcerrd->setStep($config['step']);
-			$sourcerra = $sourcedata['rra'];
+			if (isset($sourcedata['rra']))
+			{
+				$sourcerra = $sourcedata['rra'];
+			}
+			else
+			{
+				$sourcerra = 'default';
+			}
 			foreach ($config['rra'][$sourcerra] as $rra)
 			{
 				$sourcerrd->addArchive($rra['cf'], $rra['xff'], $rra['steps'], $rra['rows']);
@@ -91,8 +98,9 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 	}
 	catch (Exception $e)
 	{
-		echo "\tError\n";
+		echo "\tError:\n";
 		echo $e;
+		echo "\n";
 	}
 }
 ?>

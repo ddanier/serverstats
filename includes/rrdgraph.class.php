@@ -79,9 +79,9 @@ class rrdgraph
 		{
 			case 'DEF':
 				// DEF:<vname>=<rrdfile>:<dsname>:<CF>[:step=<step>][:start=<time>][:end=<time>][:reduce=<CF>]
-				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p3)))
+				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p4)))
 				{
-					throw new Exception('Wrong Paramcount ' . $type);
+					throw new Exception('Wrong Paramcount for ' . $type);
 				}
 				if (isset($this->defs[$p1]))
 				{
@@ -90,7 +90,7 @@ class rrdgraph
 				$this->content[] = array(
 					'type' => $type,
 					'cf' => $p4,
-					'name' => $p1,
+					'vname' => $p1,
 					'ds' => $p3,
 					'rrdfile' => $p2,
 					'start' => $p6,
@@ -106,7 +106,7 @@ class rrdgraph
 				// VDEF:vname=RPN expression
 				if (!(isset($p1) && isset($p2)))
 				{
-					throw new Exception('Wrong Paramcount ' . $type);
+					throw new Exception('Wrong Paramcount for ' . $type);
 				}
 				if (isset($this->defs[$p1]))
 				{
@@ -114,24 +114,16 @@ class rrdgraph
 				}
 				$this->content[] = array(
 					'type' => $type,
-					'name' => $p1,
+					'vname' => $p1,
 					'expression' => $p2
 				);
 				$this->defs[$p1] = $type;
 				break;
 			case 'LINE':
 				// LINE[width]:value[#color][:[legend][:STACK]]
-				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p4) && isset($p5)))
+				if (!isset($p2))
 				{
-					throw new Exception('Wrong Paramcount ' . $type);
-				}
-				if (!isset($this->defs[$p1]))
-				{
-					throw new Exception('Unknown name');
-				}
-				if ($this->defs[$p1] == 'VDEF')
-				{
-					throw new Exception('Cannot plot a VDEF');
+					throw new Exception('Wrong Paramcount for ' . $type);
 				}
 				if (!isset($p5))
 				{
@@ -140,7 +132,7 @@ class rrdgraph
 				$this->content[] = array(
 					'type' => $type,
 					'width' => $p1,
-					'name' => $p2,
+					'vname' => $p2,
 					'color' => $p3,
 					'legend' => $p4,
 					'stacked' => $p5
@@ -148,17 +140,9 @@ class rrdgraph
 				break;
 			case 'AREA':
 				// AREA:value[#color][:[legend][:STACK]]
-				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p4)))
+				if (!isset($p1))
 				{
-					throw new Exception('Wrong Paramcount ' . $type);
-				}
-				if (!isset($this->defs[$p1]))
-				{
-					throw new Exception('Unknown name');
-				}
-				if ($this->defs[$p1] == 'VDEF')
-				{
-					throw new Exception('Cannot plot a VDEF');
+					throw new Exception('Wrong Paramcount for ' . $type);
 				}
 				if (!isset($p4))
 				{
@@ -166,7 +150,7 @@ class rrdgraph
 				}
 				$this->content[] = array(
 					'type' => $type,
-					'name' => $p1,
+					'vname' => $p1,
 					'color' => $p2,
 					'legend' => $p3,
 					'stacked' => $p4
@@ -174,17 +158,13 @@ class rrdgraph
 				break;
 			case 'TICK':
 				// TICK:vname#rrggbb[aa][:fraction[:legend]]
-				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p4)))
+				if (!(isset($p1) && isset($p2)))
 				{
-					throw new Exception('Wrong Paramcount ' . $type);
-				}
-				if (!isset($this->defs[$p1]))
-				{
-					throw new Exception('Unknown name');
+					throw new Exception('Wrong Paramcount for ' . $type);
 				}
 				$this->content[] = array(
 					'type' => $type,
-					'name' => $p1,
+					'vname' => $p1,
 					'color' => $p2,
 					'fraction' => $p3,
 					'legend' => $p4
@@ -192,13 +172,9 @@ class rrdgraph
 				break;
 			case 'VRULE':
 				// VRULE:time#color[:legend]
-				if (!(isset($p1) && isset($p2) && isset($p3)))
+				if (!(isset($p1) && isset($p2)))
 				{
-					throw new Exception('Wrong Paramcount ' . $type);
-				}
-				if (!isset($this->defs[$p1]))
-				{
-					throw new Exception('Unknown name');
+					throw new Exception('Wrong Paramcount for ' . $type);
 				}
 				$this->content[] = array(
 					'type' => $type,
@@ -211,15 +187,11 @@ class rrdgraph
 				// GPRINT:vname:format
 				if (!(isset($p1) && isset($p2)))
 				{
-					throw new Exception('Wrong Paramcount ' . $type);
-				}
-				if (!isset($this->defs[$p1]))
-				{
-					throw new Exception('Unknown name');
+					throw new Exception('Wrong Paramcount for ' . $type);
 				}
 				$this->content[] = array(
 					'type' => $type,
-					'name' => $p1,
+					'vname' => $p1,
 					'format' => $p2
 				);
 				break;
@@ -227,11 +199,7 @@ class rrdgraph
 				// COMMENT:text
 				if (!isset($p1))
 				{
-					throw new Exception('Wrong Paramcount ' . $type);
-				}
-				if (!isset($this->defs[$p1]))
-				{
-					throw new Exception('Unknown name');
+					throw new Exception('Wrong Paramcount for ' . $type);
 				}
 				$this->content[] = array(
 					'type' => $type,
@@ -242,15 +210,11 @@ class rrdgraph
 				// SHIFT:vname:offset
 				if (!(isset($p1) && isset($p2)))
 				{
-					throw new Exception('Wrong Paramcount ' . $type);
-				}
-				if (!isset($this->defs[$p1]))
-				{
-					throw new Exception('Unknown name');
+					throw new Exception('Wrong Paramcount for ' . $type);
 				}
 				$this->content[] = array(
 					'type' => $type,
-					'name' => $p1,
+					'vname' => $p1,
 					'offset' => $p2
 				);
 				break;
@@ -260,39 +224,44 @@ class rrdgraph
 		}
 	}
 	
-	public function addDEF($name, $rrdfile, $ds, $cf, $step = null, $start = null, $end = null, $reduce = null)
+	public function addDEF($vname, $rrdfile, $ds, $cf, $step = null, $start = null, $end = null, $reduce = null)
 	{
-		$this->add('DEF', $name, $rrdfile, $ds, $cf, $step, $start, $end, $reduce);
+		$this->add('DEF', $vname, $rrdfile, $ds, $cf, $step, $start, $end, $reduce);
 	}
 	
-	public function addCDEF($name, $expression)
+	public function addCDEF($vname, $expression)
 	{
-		$this->add('CDEF', $name, $expression);
+		$this->add('CDEF', $vname, $expression);
 	}
 	
-	public function addVDEF($name, $expression)
+	public function addVDEF($vname, $expression)
 	{
-		$this->add('VDEF', $name, $expression);
+		$this->add('VDEF', $vname, $expression);
 	}
 	
-	public function addLINE($width = null, $name, $color = null, $legend = null, $stacked = false)
+	public function addLINE($width = null, $vname, $color = null, $legend = null, $stacked = false)
 	{
-		$this->add('LINE', $width, $name, $color, $legend, $stacked);
+		$this->add('LINE', $width, $vname, $color, $legend, $stacked);
 	}
 	
-	public function addAREA($name, $color = null, $legend = null, $stacked = false)
+	public function addAREA($vname, $color = null, $legend = null, $stacked = false)
 	{
-		$this->add('AREA', $name, $color, $legend, $stacked);
+		$this->add('AREA', $vname, $color, $legend, $stacked);
 	}
 	
-	public function addTICK($name, $color, $fraction = null, $legend = null)
+	public function addTICK($vname, $color, $fraction = null, $legend = null)
 	{
-		$this->add('TICK', $name, $color, $fraction, $legend);
+		$this->add('TICK', $vname, $color, $fraction, $legend);
 	}
 	
-	public function addGPRINT($name, $format)
+	public function addSHIFT($vname, $offset)
 	{
-		$this->add('GPRINT', $name, $format);
+		$this->add('SHIFT', $vname, $offset);
+	}
+	
+	public function addGPRINT($vname, $format)
+	{
+		$this->add('GPRINT', $vname, $format);
 	}
 	
 	public function addVRULE($time, $color, $legend = null)
@@ -362,7 +331,7 @@ class rrdgraph
 			switch ($c['type'])
 			{
 				case 'DEF':
-					$optline .= ':' . $c['name'] . '=' . $c['rrdfile'] . ':' . $c['ds'] . ':' . $c['cf'];
+					$optline .= ':' . $c['vname'] . '=' . $c['rrdfile'] . ':' . $c['ds'] . ':' . $c['cf'];
 					if (isset($c['start']))
 					{
 						$optline .= ':start=' . $c['start'];
@@ -382,14 +351,14 @@ class rrdgraph
 					break;
 				case 'CDEF':
 				case 'VDEF':
-					$optline .= ':' . $c['name'] . '=' . $c['expression'];
+					$optline .= ':' . $c['vname'] . '=' . $c['expression'];
 					break;
 				case 'LINE':
 					if (isset($c['width']))
 					{
 						$optline .= $c['width'];
 					}
-					$optline .= ':' . $c['name'];
+					$optline .= ':' . $c['vname'];
 					if (isset($c['color']))
 					{
 						$optline .= '#' . $c['color'];
@@ -404,7 +373,7 @@ class rrdgraph
 					}
 					break;
 				case 'AREA':
-					$optline .= ':' . $c['name'];
+					$optline .= ':' . $c['vname'];
 					if (isset($c['color']))
 					{
 						$optline .= '#' . $c['color'];
@@ -419,7 +388,7 @@ class rrdgraph
 					}
 					break;
 				case 'GPRINT':
-					$optline .= ':' . $c['name'] . ':' . $c['format'];
+					$optline .= ':' . $c['vname'] . ':' . $c['format'];
 					break;
 				case 'VRULE':
 					$optline .= ':' . $c['time'] . '#' . $c['color'];
