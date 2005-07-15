@@ -147,14 +147,6 @@ class rrd
 					throw new Exception('Unknown CF: ' . $cf);
 					break;
 			}
-			if (in_array($rra['cf'], array('AVERAGE', 'MIN', 'MAX', 'LAST')))
-			{
-				$rrastring = 'RRA:' . $rra['cf'] . ':' . $rra['xff'] . ':' . $rra['steps'] . ':' . $rra['rows'];
-			}
-			else
-			{
-				throw new Exception('NOT IMPLEMENTED');
-			}
 			$params .= ' ' . escapeshellarg($rrastring);
 		}
 		system(escapeshellcmd($this->rrdtoolbin) . $params);
