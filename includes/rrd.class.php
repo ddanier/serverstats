@@ -84,12 +84,27 @@ class rrd
 			{
 				$name = $ds['name'];
 			}
-			$dsstring = 'DS:' . $name . ':' . $ds['type'] . ':' . $ds['heartbeat'] . ':' . $ds['min'] . ':' . $ds['max'];
+			switch($ds['type'])
+			{
+				case 'COMPUTE':
+					$dsstring = 'DS:' . $name . ':' . $ds['type'] . ':' . $ds['expression'];
+					break;
+				default:
+					$dsstring = 'DS:' . $name . ':' . $ds['type'] . ':' . $ds['heartbeat'] . ':' . $ds['min'] . ':' . $ds['max'];
+					break;
+			}
 			$params .= ' ' . escapeshellarg($dsstring);
 		}
 		foreach ($this->archives as $rra)
 		{
-			$rrastring = 'RRA:' . $rra['cf'] . ':' . $rra['xff'] . ':' . $rra['steps'] . ':' . $rra['rows'];
+			if (in_array($rra['cf'], array('AVERAGE', 'MIN', 'MAX', 'LAST')))
+			{
+				$rrastring = 'RRA:' . $rra['cf'] . ':' . $rra['xff'] . ':' . $rra['steps'] . ':' . $rra['rows'];
+			}
+			else
+			{
+				throw new Exception('NOT IMPLEMENTED');
+			}
 			$params .= ' ' . escapeshellarg($rrastring);
 		}
 		system(escapeshellcmd($this->rrdtoolbin) . $params);
@@ -110,6 +125,11 @@ class rrd
 		{
 			$heartbeat = $this->getDefaultHeartbeat();
 		}
+		$type = strtoupper($type);
+		if (!in_array($type, array('GAUGE', 'COUNTER', 'DERIVE', 'ABSOLUTE')))
+		{
+			throw new Exception('Unknown Datasource-type: ' . $type);
+		}
 		$this->datasources[$name] = array(
 			'min' => $min,
 			'max' => $max,
@@ -119,18 +139,105 @@ class rrd
 		$this->values[$name] = 'U';
 	}
 
-	public function addArchive($cf, $xff, $steps, $rows)
+	public function addComputedDatasource($name, $expression)
+	{
+		if ($this->created)
+		{
+			throw new Exception('RRD is created, you cannot add any datasources');
+		}
+		if (isset($this->datasources[$name]))
+		{
+			throw new Exception('Datasourcename "' . $name .'" already taken');
+		}
+		$this->datasources[$name] = array(
+			'type' => 'COMPUTE',
+			'expression' => $expression
+		);
+	}
+
+	public function addArchive($cf, $p1 = null, $p2 = null, $p3 = null, $p4 = null, $p5 = null)
 	{
 		if ($this->created)
 		{
 			throw new Exception('RRD is created, you cannot add any archives');
 		}
-		$this->archives[] = array(
-			'steps' => $steps,
-			'rows' => $rows,
-			'cf' => $cf,
-			'xff' => $xff
-		);
+		$cf = strtoupper($cf);
+		if (in_array($cf, array('AVERAGE', 'MIN', 'MAX', 'LAST')))
+		{
+			if (isset($p1) && isset($p2) && isset($p3))
+			{
+				// Params: xff, steps, rows
+				$this->archives[] = array(
+					'cf' => $cf,
+					'xff' => $p1,
+					'steps' => $p2,
+					'rows' => $p3
+				);
+			}
+			else
+			{
+				throw new Exception('Wrong Paramcount for CF ' . $cf);
+			}
+		}
+		elseif ($cf == 'HWPREDICT')
+		{
+			if (isset($p1) && isset($p2) && isset($p3) && isset($p4) && isset($p5))
+			{
+				throw new Exception('NOT IMPLEMENTED');
+			}
+			else
+			{
+				throw new Exception('Wrong Paramcount for CF ' . $cf);
+			}
+		}
+		elseif ($cf == 'SEASONAL')
+		{
+			if (isset($p1) && isset($p2) && isset($p3))
+			{
+				throw new Exception('NOT IMPLEMENTED');
+			}
+			else
+			{
+				throw new Exception('Wrong Paramcount for CF ' . $cf);
+			}
+		}
+		elseif ($cf == 'DEVSEASONAL')
+		{
+			if (isset($p1) && isset($p2) && isset($p3))
+			{
+				throw new Exception('NOT IMPLEMENTED');
+			}
+			else
+			{
+				throw new Exception('Wrong Paramcount for CF ' . $cf);
+			}
+		}
+		elseif ($cf == 'DEVPREDICT')
+		{
+			if (isset($p1) && isset($p2))
+			{
+				throw new Exception('NOT IMPLEMENTED');
+			}
+			else
+			{
+				throw new Exception('Wrong Paramcount for CF ' . $cf);
+			}
+		}
+		elseif ($cf == 'FAILURES')
+		{
+			if (isset($p1) && isset($p2) && isset($p3) && isset($p4))
+			{
+				throw new Exception('NOT IMPLEMENTED');
+			}
+			else
+			{
+				throw new Exception('Wrong Paramcount for CF ' . $cf);
+			}
+		}
+		else
+		{
+			throw new Exception('Unknown Archive-CF: ' . $cf);
+		}
 	}
 
 	public function setValue($dsname, $value)

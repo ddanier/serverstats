@@ -67,8 +67,13 @@ class rrdgraph
 	{
 		$this->height = $height;
 	}
+
+	public static function escape($text)
+	{
+		return str_replace(':', '\\:', $text);
+	}
 	
-	public function addDEF($name, $ds, $rrdfile, $cf = 'AVERAGE')
+	public function addDEF($name, $ds, $rrdfile, $cf = 'AVERAGE', $step = null, $start = null, $end = null)
 	{
 		if (in_array($name, $this->defs))
 		{
@@ -79,7 +84,10 @@ class rrdgraph
 			'cf' => $cf,
 			'name' => $name,
 			'ds' => $ds,
-			'rrdfile' => $rrdfile
+			'rrdfile' => $rrdfile,
+			'start' => $start,
+			'step' => $step,
+			'end' => $end
 		);
 		$this->defs[] = $name;
 	}
@@ -98,7 +106,21 @@ class rrdgraph
 		$this->defs[] = $name;
 	}
 	
-	public function addLINE($name, $legend, $color = '000000', $width = 2)
+	public function addVDEF($name, $expression)
+	{
+		if (in_array($name, $this->defs))
+		{
+			throw new Exception('Name already in use');
+		}
+		$this->content[] = array(
+			'type' => 'vdef',
+			'name' => $name,
+			'expression' => $expression
+		);
+		$this->defs[] = $name;
+	}
+	
+	public function addLINE($width = null, $name, $color = null, $legend = null, $stacked = false)
 	{
 		if (!in_array($name, $this->defs))
 		{
@@ -109,11 +131,12 @@ class rrdgraph
 			'name' => $name,
 			'legend' => $legend,
 			'color' => $color,
-			'width' => $width
+			'width' => $width,
+			'stacked' = $stacked
 		);
 	}
 
-	public function addAREA($name, $legend, $color = '000000')
+	public function addAREA($name, $color = null, $legend = null, $stacked = false)
 	{
 		if (!in_array($name, $this->defs))
 		{
@@ -123,25 +146,26 @@ class rrdgraph
 			'type' => 'area',
 			'name' => $name,
 			'legend' => $legend,
-			'color' => $color
+			'color' => $color,
+			'stacked' = $stacked
 		);
 	}
-	
-	public function addSTACK($name, $legend, $color = '000000')
+
+	public function addTICK($name, $color, $fraction = null, $legend = null)
 	{
 		if (!in_array($name, $this->defs))
 		{
 			throw new Exception('Unknown name');
 		}
 		$this->content[] = array(
-			'type' => 'stack',
+			'type' => 'tick',
 			'name' => $name,
 			'legend' => $legend,
 			'color' => $color
 		);
 	}
-	
-	public function addGPRINT($name, $format, $cf = 'AVERAGE')
+
+	public function addGPRINT($name, $format)
 	{
 		if (!in_array($name, $this->defs))
 		{
@@ -150,12 +174,11 @@ class rrdgraph
 		$this->content[] = array(
 			'type' => 'gprint',
 			'name' => $name,
-			'format' => $format,
-			'cf' => $cf
+			'format' => $format
 		);
 	}
 	
-	public function addHRULE($value, $legend, $color = '000000')
+	public function addHRULE($value, $color, $legend = null)
 	{
 		$this->content[] = array(
 			'type' => 'hrule',
@@ -165,7 +188,7 @@ class rrdgraph
 		);
 	}
 	
-	public function addVRULE($time, $legend, $color = '000000')
+	public function addVRULE($time, $color, $legend = null)
 	{
 		$this->content[] = array(
 			'type' => 'vrule',
@@ -241,9 +264,24 @@ class rrdgraph
 			{
 				case 'def':
 					$optline = 'DEF:' . $c['name'] . '=' . $c['rrdfile'] . ':' . $c['ds'] . ':' . $c['cf'];
+					if (isset($c['start']))
+					{
+						$optline .= ':start=' . $c['start'];
+					}
+					if (isset($c['step']))
+					{
+						$optline .= ':step=' . $c['step'];
+					}
+					if (isset($c['end']))
+					{
+						$optline .= ':end=' . $c['end'];
+					}
 					break;
 				case 'cdef':
 					$optline = 'CDEF:' . $c['name'] . '=' . $c['expression'];
+					break;
+				case 'vdef':
+					$optline = 'VDEF:' . $c['name'] . '=' . $c['expression'];
 					break;
 				case 'line':
 					$optline = 'LINE' . $c['width'] . ':' . $c['name'] . '#' . $c['color'] . ':' . $c['legend'];
@@ -251,20 +289,28 @@ class rrdgraph
 				case 'area':
 					$optline = 'AREA:' . $c['name'] . '#' . $c['color'] . ':' . $c['legend'];
 					break;
-				case 'stack':
-					$optline = 'STACK:' . $c['name'] . '#' . $c['color'] . ':' . $c['legend'];
-					break;
 				case 'gprint':
-					$optline = 'GPRINT:' . $c['name'] . ':' . $c['cf'] . ':' . $c['format'];
+					$optline = 'GPRINT:' . $c['name'] . ':' . $c['format'];
 					break;
 				case 'hrule':
-					$optline = 'HRULE:' . $c['value'] . '#' . $c['color'] . ':' . $c['legend'];
+					$optline = 'HRULE:' . $c['value'] . '#' . $c['color'];
+					if (isset($c['legend']))
+					{
+						$optline .= ':' . $c['legend'];
+					}
 					break;
 				case 'vrule':
-					$optline = 'VRULE:' . $c['time'] . '#' . $c['color'] . ':' . $c['legend'];
+					$optline = 'VRULE:' . $c['time'] . '#' . $c['color'];
+					if (isset($c['legend']))
+					{
+						$optline .= ':' . $c['legend'];
+					}
 					break;
 				case 'comment':
 					$optline = 'COMMENT:' . $c['text'];
+					break;
+				default:
+					throw new Exception('NOT IMPLEMENTED');
 					break;
 			}
 			$params .= ' ' . escapeshellarg($optline);
