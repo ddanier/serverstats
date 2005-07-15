@@ -52,7 +52,20 @@ class rrd
 			{
 				$name = $ds['name'];
 			}
-			$this->values[$name] = 'U';
+			switch($type)
+			{
+				case 'GAUGE':
+				case 'COUNTER':
+				case 'DERIVE':
+				case 'ABSOLUTE':
+					$this->values[$name] = 'U';
+					break;
+				case 'COMPUTE':
+					break;
+				default:
+					throw new Exception('Unknown Datasource-type: ' . $type);
+					break;
+			}
 		}
 		if (!file_exists($this->rrdfile))
 		{
@@ -86,17 +99,54 @@ class rrd
 			}
 			switch($ds['type'])
 			{
+				case 'GAUGE':
+				case 'COUNTER':
+				case 'DERIVE':
+				case 'ABSOLUTE':
+					// Params: heartbeat, min, max
+					$dsstring = 'DS:' . $name . ':' . $ds['type'] . ':' . $ds['heartbeat'] . ':' . $ds['min'] . ':' . $ds['max'];
+					break;
 				case 'COMPUTE':
 					$dsstring = 'DS:' . $name . ':' . $ds['type'] . ':' . $ds['expression'];
 					break;
 				default:
-					$dsstring = 'DS:' . $name . ':' . $ds['type'] . ':' . $ds['heartbeat'] . ':' . $ds['min'] . ':' . $ds['max'];
+					throw new Exception('Unknown Datasource-type: ' . $type);
 					break;
 			}
 			$params .= ' ' . escapeshellarg($dsstring);
 		}
 		foreach ($this->archives as $rra)
 		{
+			switch ($cf)
+			{
+				case 'AVERAGE':
+				case 'MIN':
+				case 'MAX':
+				case 'LAST':
+					// Params: xff, steps, rows
+					$rrastring = 'RRA:' . $rra['cf'] . ':' . $rra['xff'] . ':' . $rra['steps'] . ':' . $rra['rows'];
+					break;
+				case 'HWPREDICT':
+					// Params: rows, alpha, beta, seasonal_period, rra-num
+					$rrastring = 'RRA:' . $rra['cf'] . ':' . $rra['rows'] . ':' . $rra['alpha'] . ':' . $rra['beta'] . ':' . $rra['seasonal_period'] . ':' . $rra['rra-num'];
+					break;
+				case 'SEASONAL':
+				case 'DEVSEASONAL':
+					// Params: seasonal_period, gamma, rra-num
+					$rrastring = 'RRA:' . $rra['cf'] . ':' . $rra['seasonal_period'] . ':' . $rra['gamma'] . ':' . $rra['rra-num'];
+					break;
+				case 'DEVPREDICT':
+					// Params: rows, rra-num
+					$rrastring = 'RRA:' . $rra['cf'] . ':' . $rra['rows'] . ':' . $rra['rra-num'];
+					break;
+				case 'FAILURES':
+					// Params: rows, threshold, window_length, rra-num
+					$rrastring = 'RRA:' . $rra['cf'] . ':' . $rra['rows'] . ':' . $rra['threshold'] . ':' . $rra['window_length'] . ':' . $rra['rra-num'];
+					break;
+				default:
+					throw new Exception('Unknown CF: ' . $cf);
+					break;
+			}
 			if (in_array($rra['cf'], array('AVERAGE', 'MIN', 'MAX', 'LAST')))
 			{
 				$rrastring = 'RRA:' . $rra['cf'] . ':' . $rra['xff'] . ':' . $rra['steps'] . ':' . $rra['rows'];
@@ -111,7 +161,7 @@ class rrd
 		$this->created = true;
 	}
 
-	public function addDatasource($name, $type = 'GAUGE', $heartbeat = null, $min = 'U', $max = 'U')
+	public function addDatasource($name, $type, $p1 = null, $p2 = null, $p3 = null)
 	{
 		if ($this->created)
 		{
@@ -121,38 +171,48 @@ class rrd
 		{
 			throw new Exception('Datasourcename "' . $name .'" already taken');
 		}
-		if (!isset($heartbeat))
+		switch($type)
 		{
-			$heartbeat = $this->getDefaultHeartbeat();
+			case 'GAUGE':
+			case 'COUNTER':
+			case 'DERIVE':
+			case 'ABSOLUTE':
+				// Params: heartbeat, min, max
+				if (!isset($p1))
+				{
+					$p1 = $this->getDefaultHeartbeat();
+				}
+				if (!isset($p2))
+				{
+					$p2 = 'U';
+				}
+				if (!isset($p3))
+				{
+					$p3 = 'U';
+				}
+				$this->datasources[$name] = array(
+					'min' => $p2,
+					'max' => $p3,
+					'type' => $type,
+					'heartbeat' => $p1
+				);
+				$this->values[$name] = 'U';
+				break;
+			case 'COMPUTE':
+				// Params: expression
+				if (!isset($p1))
+				{
+					throw new Exception('Wrong Paramcount for DST ' . $type);
+				}
+				$this->datasources[$name] = array(
+					'type' => $type,
+					'expression' => $expression
+				);
+				break;
+			default:
+				throw new Exception('Unknown Datasource-type: ' . $type);
+				break;
 		}
-		$type = strtoupper($type);
-		if (!in_array($type, array('GAUGE', 'COUNTER', 'DERIVE', 'ABSOLUTE')))
-		{
-			throw new Exception('Unknown Datasource-type: ' . $type);
-		}
-		$this->datasources[$name] = array(
-			'min' => $min,
-			'max' => $max,
-			'type' => $type,
-			'heartbeat' => $heartbeat
-		);
-		$this->values[$name] = 'U';
-	}
-
-	public function addComputedDatasource($name, $expression)
-	{
-		if ($this->created)
-		{
-			throw new Exception('RRD is created, you cannot add any datasources');
-		}
-		if (isset($this->datasources[$name]))
-		{
-			throw new Exception('Datasourcename "' . $name .'" already taken');
-		}
-		$this->datasources[$name] = array(
-			'type' => 'COMPUTE',
-			'expression' => $expression
-		);
 	}
 
 	public function addArchive($cf, $p1 = null, $p2 = null, $p3 = null, $p4 = null, $p5 = null)
@@ -161,82 +221,82 @@ class rrd
 		{
 			throw new Exception('RRD is created, you cannot add any archives');
 		}
-		$cf = strtoupper($cf);
-		if (in_array($cf, array('AVERAGE', 'MIN', 'MAX', 'LAST')))
+		switch ($cf)
 		{
-			if (isset($p1) && isset($p2) && isset($p3))
-			{
+			case 'AVERAGE':
+			case 'MIN':
+			case 'MAX':
+			case 'LAST':
 				// Params: xff, steps, rows
+				if (!(isset($p1) && isset($p2) && isset($p3)))
+				{
+					throw new Exception('Wrong Paramcount for CF ' . $cf);
+				}
 				$this->archives[] = array(
 					'cf' => $cf,
 					'xff' => $p1,
 					'steps' => $p2,
 					'rows' => $p3
 				);
-			}
-			else
-			{
-				throw new Exception('Wrong Paramcount for CF ' . $cf);
-			}
-		}
-		elseif ($cf == 'HWPREDICT')
-		{
-			if (isset($p1) && isset($p2) && isset($p3) && isset($p4) && isset($p5))
-			{
-				throw new Exception('NOT IMPLEMENTED');
-			}
-			else
-			{
-				throw new Exception('Wrong Paramcount for CF ' . $cf);
-			}
-		}
-		elseif ($cf == 'SEASONAL')
-		{
-			if (isset($p1) && isset($p2) && isset($p3))
-			{
-				throw new Exception('NOT IMPLEMENTED');
-			}
-			else
-			{
-				throw new Exception('Wrong Paramcount for CF ' . $cf);
-			}
-		}
-		elseif ($cf == 'DEVSEASONAL')
-		{
-			if (isset($p1) && isset($p2) && isset($p3))
-			{
-				throw new Exception('NOT IMPLEMENTED');
-			}
-			else
-			{
-				throw new Exception('Wrong Paramcount for CF ' . $cf);
-			}
-		}
-		elseif ($cf == 'DEVPREDICT')
-		{
-			if (isset($p1) && isset($p2))
-			{
-				throw new Exception('NOT IMPLEMENTED');
-			}
-			else
-			{
-				throw new Exception('Wrong Paramcount for CF ' . $cf);
-			}
-		}
-		elseif ($cf == 'FAILURES')
-		{
-			if (isset($p1) && isset($p2) && isset($p3) && isset($p4))
-			{
-				throw new Exception('NOT IMPLEMENTED');
-			}
-			else
-			{
-				throw new Exception('Wrong Paramcount for CF ' . $cf);
-			}
-		}
-		else
-		{
-			throw new Exception('Unknown Archive-CF: ' . $cf);
+				break;
+			case 'HWPREDICT':
+				// Params: rows, alpha, beta, seasonal_period, rra-num
+				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p4) && isset($p5)))
+				{
+					throw new Exception('Wrong Paramcount for CF ' . $cf);
+				}
+				$this->archives[] = array(
+					'cf' => $cf,
+					'rows' => $p1,
+					'alpha' => $p2,
+					'beta' => $p3,
+					'seasonal_period' => $p4,
+					'rra-num' => $p5
+				);
+				break;
+			case 'SEASONAL':
+			case 'DEVSEASONAL':
+				// Params: seasonal_period, gamma, rra-num
+				if (!(isset($p1) && isset($p2) && isset($p3)))
+				{
+					throw new Exception('Wrong Paramcount for CF ' . $cf);
+				}
+				$this->archives[] = array(
+					'cf' => $cf,
+					'seasonal_period' => $p1,
+					'gamma' => $p2,
+					'rra-num' => $p3
+				);
+				break;
+			case 'DEVPREDICT':
+				// Params: rows, rra-num
+				if (!(isset($p1) && isset($p2)))
+				{
+					throw new Exception('Wrong Paramcount for CF ' . $cf);
+				}
+				$this->archives[] = array(
+					'cf' => $cf,
+					'rows' => $p1,
+					'rra-num' => $p2
+				);
+				break;
+			case 'FAILURES':
+				// Params: rows, threshold, window_length, rra-num
+				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p4)))
+				{
+					throw new Exception('Wrong Paramcount for CF ' . $cf);
+				}
+				$this->archives[] = array(
+					'cf' => $cf,
+					'rows' => $p1,
+					'threshold' => $p2,
+					'window_length' => $p3,
+					'rra-num' => $p4
+				);
+				break;
+			default:
+				throw new Exception('Unknown CF: ' . $cf);
+				break;
 		}
 	}
 
@@ -244,7 +304,7 @@ class rrd
 	{
 		if (!isset($this->values[$dsname]))
 		{
-			throw new Exception('Datasource unknown');
+			throw new Exception('Datasource unknown or computed');
 		}
 		if ($this->values[$dsname] != 'U')
 		{

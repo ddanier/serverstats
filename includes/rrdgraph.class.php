@@ -73,137 +73,236 @@ class rrdgraph
 		return str_replace(':', '\\:', $text);
 	}
 	
-	public function addDEF($name, $ds, $rrdfile, $cf = 'AVERAGE', $step = null, $start = null, $end = null)
+	public function add($type, $p1 = null, $p2 = null, $p3 = null, $p4 = null, $p5 = null, $p6 = null, $p7 = null, $p8 = null)
 	{
-		if (in_array($name, $this->defs))
+		switch ($type)
 		{
-			throw new Exception('Name already in use');
+			case 'DEF':
+				// DEF:<vname>=<rrdfile>:<dsname>:<CF>[:step=<step>][:start=<time>][:end=<time>][:reduce=<CF>]
+				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p3)))
+				{
+					throw new Exception('Wrong Paramcount ' . $type);
+				}
+				if (isset($this->defs[$p1]))
+				{
+					throw new Exception('Name already in use');
+				}
+				$this->content[] = array(
+					'type' => $type,
+					'cf' => $p4,
+					'name' => $p1,
+					'ds' => $p3,
+					'rrdfile' => $p2,
+					'start' => $p6,
+					'step' => $p5,
+					'end' => $p7,
+					'reduce' => $p8
+				);
+				$this->defs[$p1] = $type;
+				break;
+			case 'CDEF':
+				// CDEF:vname=RPN expression
+			case 'VDEF':
+				// VDEF:vname=RPN expression
+				if (!(isset($p1) && isset($p2)))
+				{
+					throw new Exception('Wrong Paramcount ' . $type);
+				}
+				if (isset($this->defs[$p1]))
+				{
+					throw new Exception('Name already in use');
+				}
+				$this->content[] = array(
+					'type' => $type,
+					'name' => $p1,
+					'expression' => $p2
+				);
+				$this->defs[$p1] = $type;
+				break;
+			case 'LINE':
+				// LINE[width]:value[#color][:[legend][:STACK]]
+				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p4) && isset($p5)))
+				{
+					throw new Exception('Wrong Paramcount ' . $type);
+				}
+				if (!isset($this->defs[$p1]))
+				{
+					throw new Exception('Unknown name');
+				}
+				if ($this->defs[$p1] == 'VDEF')
+				{
+					throw new Exception('Cannot plot a VDEF');
+				}
+				if (!isset($p5))
+				{
+					$p5 = false;
+				}
+				$this->content[] = array(
+					'type' => $type,
+					'width' => $p1,
+					'name' => $p2,
+					'color' => $p3,
+					'legend' => $p4,
+					'stacked' => $p5
+				);
+				break;
+			case 'AREA':
+				// AREA:value[#color][:[legend][:STACK]]
+				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p4)))
+				{
+					throw new Exception('Wrong Paramcount ' . $type);
+				}
+				if (!isset($this->defs[$p1]))
+				{
+					throw new Exception('Unknown name');
+				}
+				if ($this->defs[$p1] == 'VDEF')
+				{
+					throw new Exception('Cannot plot a VDEF');
+				}
+				if (!isset($p4))
+				{
+					$p4 = false;
+				}
+				$this->content[] = array(
+					'type' => $type,
+					'name' => $p1,
+					'color' => $p2,
+					'legend' => $p3,
+					'stacked' => $p4
+				);
+				break;
+			case 'TICK':
+				// TICK:vname#rrggbb[aa][:fraction[:legend]]
+				if (!(isset($p1) && isset($p2) && isset($p3) && isset($p4)))
+				{
+					throw new Exception('Wrong Paramcount ' . $type);
+				}
+				if (!isset($this->defs[$p1]))
+				{
+					throw new Exception('Unknown name');
+				}
+				$this->content[] = array(
+					'type' => $type,
+					'name' => $p1,
+					'color' => $p2,
+					'fraction' => $p3,
+					'legend' => $p4
+				);
+				break;
+			case 'VRULE':
+				// VRULE:time#color[:legend]
+				if (!(isset($p1) && isset($p2) && isset($p3)))
+				{
+					throw new Exception('Wrong Paramcount ' . $type);
+				}
+				if (!isset($this->defs[$p1]))
+				{
+					throw new Exception('Unknown name');
+				}
+				$this->content[] = array(
+					'type' => $type,
+					'time' => $p1,
+					'color' => $p2,
+					'legend' => $p3
+				);
+				break;
+			case 'GPRINT':
+				// GPRINT:vname:format
+				if (!(isset($p1) && isset($p2)))
+				{
+					throw new Exception('Wrong Paramcount ' . $type);
+				}
+				if (!isset($this->defs[$p1]))
+				{
+					throw new Exception('Unknown name');
+				}
+				$this->content[] = array(
+					'type' => $type,
+					'name' => $p1,
+					'format' => $p2
+				);
+				break;
+			case 'COMMENT':
+				// COMMENT:text
+				if (!isset($p1))
+				{
+					throw new Exception('Wrong Paramcount ' . $type);
+				}
+				if (!isset($this->defs[$p1]))
+				{
+					throw new Exception('Unknown name');
+				}
+				$this->content[] = array(
+					'type' => $type,
+					'text' => $p1
+				);
+				break;
+			case 'SHIFT':
+				// SHIFT:vname:offset
+				if (!(isset($p1) && isset($p2)))
+				{
+					throw new Exception('Wrong Paramcount ' . $type);
+				}
+				if (!isset($this->defs[$p1]))
+				{
+					throw new Exception('Unknown name');
+				}
+				$this->content[] = array(
+					'type' => $type,
+					'name' => $p1,
+					'offset' => $p2
+				);
+				break;
+			default:
+				throw new Exception('Unknown Graphcontent ' . $type);
+				break;
 		}
-		$this->content[] = array(
-			'type' => 'def',
-			'cf' => $cf,
-			'name' => $name,
-			'ds' => $ds,
-			'rrdfile' => $rrdfile,
-			'start' => $start,
-			'step' => $step,
-			'end' => $end
-		);
-		$this->defs[] = $name;
+	}
+	
+	public function addDEF($name, $rrdfile, $ds, $cf, $step = null, $start = null, $end = null, $reduce = null)
+	{
+		$this->add('DEF', $name, $rrdfile, $ds, $cf, $step, $start, $end, $reduce);
 	}
 	
 	public function addCDEF($name, $expression)
 	{
-		if (in_array($name, $this->defs))
-		{
-			throw new Exception('Name already in use');
-		}
-		$this->content[] = array(
-			'type' => 'cdef',
-			'name' => $name,
-			'expression' => $expression
-		);
-		$this->defs[] = $name;
+		$this->add('CDEF', $name, $expression);
 	}
 	
 	public function addVDEF($name, $expression)
 	{
-		if (in_array($name, $this->defs))
-		{
-			throw new Exception('Name already in use');
-		}
-		$this->content[] = array(
-			'type' => 'vdef',
-			'name' => $name,
-			'expression' => $expression
-		);
-		$this->defs[] = $name;
+		$this->add('VDEF', $name, $expression);
 	}
 	
 	public function addLINE($width = null, $name, $color = null, $legend = null, $stacked = false)
 	{
-		if (!in_array($name, $this->defs))
-		{
-			throw new Exception('Unknown name');
-		}
-		$this->content[] = array(
-			'type' => 'line',
-			'name' => $name,
-			'legend' => $legend,
-			'color' => $color,
-			'width' => $width,
-			'stacked' = $stacked
-		);
-	}
-
-	public function addAREA($name, $color = null, $legend = null, $stacked = false)
-	{
-		if (!in_array($name, $this->defs))
-		{
-			throw new Exception('Unknown name');
-		}
-		$this->content[] = array(
-			'type' => 'area',
-			'name' => $name,
-			'legend' => $legend,
-			'color' => $color,
-			'stacked' = $stacked
-		);
-	}
-
-	public function addTICK($name, $color, $fraction = null, $legend = null)
-	{
-		if (!in_array($name, $this->defs))
-		{
-			throw new Exception('Unknown name');
-		}
-		$this->content[] = array(
-			'type' => 'tick',
-			'name' => $name,
-			'legend' => $legend,
-			'color' => $color
-		);
-	}
-
-	public function addGPRINT($name, $format)
-	{
-		if (!in_array($name, $this->defs))
-		{
-			throw new Exception('Unknown name');
-		}
-		$this->content[] = array(
-			'type' => 'gprint',
-			'name' => $name,
-			'format' => $format
-		);
+		$this->add('LINE', $width, $name, $color, $legend, $stacked);
 	}
 	
-	public function addHRULE($value, $color, $legend = null)
+	public function addAREA($name, $color = null, $legend = null, $stacked = false)
 	{
-		$this->content[] = array(
-			'type' => 'hrule',
-			'value' => $value,
-			'legend' => $legend,
-			'color' => $color
-		);
+		$this->add('AREA', $name, $color, $legend, $stacked);
+	}
+	
+	public function addTICK($name, $color, $fraction = null, $legend = null)
+	{
+		$this->add('TICK', $name, $color, $fraction, $legend);
+	}
+	
+	public function addGPRINT($name, $format)
+	{
+		$this->add('GPRINT', $name, $format);
 	}
 	
 	public function addVRULE($time, $color, $legend = null)
 	{
-		$this->content[] = array(
-			'type' => 'vrule',
-			'time' => $time,
-			'legend' => $legend,
-			'color' => $color
-		);
+		$this->add('VRULE', $time, $color, $legend);
 	}
 	
 	public function addCOMMENT($text)
 	{
-		$this->content[] = array(
-			'type' => 'comment',
-			'text' => $text
-		);
+		$this->add('COMMENT', $text);
 	}
 	
 	private function command($file = '-')
@@ -259,11 +358,11 @@ class rrdgraph
 		}
 		foreach ($this->content as $c)
 		{
-			$optline = '';
+			$optline = $c['type'];
 			switch ($c['type'])
 			{
-				case 'def':
-					$optline = 'DEF:' . $c['name'] . '=' . $c['rrdfile'] . ':' . $c['ds'] . ':' . $c['cf'];
+				case 'DEF':
+					$optline .= ':' . $c['name'] . '=' . $c['rrdfile'] . ':' . $c['ds'] . ':' . $c['cf'];
 					if (isset($c['start']))
 					{
 						$optline .= ':start=' . $c['start'];
@@ -276,38 +375,61 @@ class rrdgraph
 					{
 						$optline .= ':end=' . $c['end'];
 					}
+					if (isset($c['reduce']))
+					{
+						$optline .= ':reduce=' . $c['reduce'];
+					}
 					break;
-				case 'cdef':
-					$optline = 'CDEF:' . $c['name'] . '=' . $c['expression'];
+				case 'CDEF':
+				case 'VDEF':
+					$optline .= ':' . $c['name'] . '=' . $c['expression'];
 					break;
-				case 'vdef':
-					$optline = 'VDEF:' . $c['name'] . '=' . $c['expression'];
+				case 'LINE':
+					if (isset($c['width']))
+					{
+						$optline .= $c['width'];
+					}
+					$optline .= ':' . $c['name'];
+					if (isset($c['color']))
+					{
+						$optline .= '#' . $c['color'];
+					}
+					if (isset($c['legend']))
+					{
+						$optline .= ':' . $c['legend'];
+					}
+					if ($c['stacked'])
+					{
+						$optline .= ':STACK';
+					}
 					break;
-				case 'line':
-					$optline = 'LINE' . $c['width'] . ':' . $c['name'] . '#' . $c['color'] . ':' . $c['legend'];
+				case 'AREA':
+					$optline .= ':' . $c['name'];
+					if (isset($c['color']))
+					{
+						$optline .= '#' . $c['color'];
+					}
+					if (isset($c['legend']))
+					{
+						$optline .= ':' . $c['legend'];
+					}
+					if ($c['stacked'])
+					{
+						$optline .= ':STACK';
+					}
 					break;
-				case 'area':
-					$optline = 'AREA:' . $c['name'] . '#' . $c['color'] . ':' . $c['legend'];
+				case 'GPRINT':
+					$optline .= ':' . $c['name'] . ':' . $c['format'];
 					break;
-				case 'gprint':
-					$optline = 'GPRINT:' . $c['name'] . ':' . $c['format'];
-					break;
-				case 'hrule':
-					$optline = 'HRULE:' . $c['value'] . '#' . $c['color'];
+				case 'VRULE':
+					$optline .= ':' . $c['time'] . '#' . $c['color'];
 					if (isset($c['legend']))
 					{
 						$optline .= ':' . $c['legend'];
 					}
 					break;
-				case 'vrule':
-					$optline = 'VRULE:' . $c['time'] . '#' . $c['color'];
-					if (isset($c['legend']))
-					{
-						$optline .= ':' . $c['legend'];
-					}
-					break;
-				case 'comment':
-					$optline = 'COMMENT:' . $c['text'];
+				case 'COMMENT':
+					$optline .= ':' . $c['text'];
 					break;
 				default:
 					throw new Exception('NOT IMPLEMENTED');
