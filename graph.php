@@ -241,7 +241,10 @@ try
 	{
 		$rrdgraph->setLazy(true);
 		$rrdgraph->save($graphfile);
-		readfile($graphfile);
+		if (!@readfile($graphfile))
+		{
+			throw new Exception('Unable to read imagefile');
+		}
 	}
 	else
 	{
