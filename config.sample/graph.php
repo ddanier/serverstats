@@ -30,108 +30,439 @@ $config['height'] = 150;
 $config['usecache'] = true;
 // List of all Graphs
 $config['list'] = array(
-	array(
-		'title' => 'Sample',
-		// You can use some of the options for 'rrdtool graph' here:
-		// base, upperLimit, lowerLimit, verticalLabel, unitsExponent, 
-		// altYMrtg (bool), altAutoscale (bool), altAutoscaleMax (bool)
-		// Options marked with 'bool' can only be true or false
-		// for example:
-		'verticalLabel' => 'SampleLabel',
-		'lowerLimit' => 0,
-		'altAutoscaleMax' => true,
-		// Here you see all supported contenttypes
-		// Every type needs _exactly_ the options
-		// shown here
-		'content' => array(
-			// Simple Options, no need to care about the DEFs
-			array(
-				'type' => 'LINE',
-				'width' => 2, // may be 1, 2 or 3 (optional, default: 2)
-				'source' => 'sample', // vname is generated: $source . '_' . $ds
-				'ds' => 's1',
-				'cf' => 'AVERAGE',
-				'legend' => 'Sample1\n', // Always optional
-				'color' => 'FF0000'
-			),
-			array(
-				'type' => 'AREA',
-				'source' => 'sample',
-				'ds' => 's2',
-				'cf' => 'AVERAGE',
-				'legend' => 'Sample2',
-				'color' => 'FF0000'
-			),
-			array(
-				'type' => 'STACK', // Deprecated, use option stacked with LINE or AREA
-				'source' => 'sample',
-				'ds' => 's3',
-				'cf' => 'AVERAGE',
-				'legend' => 'Sample3',
-				'color' => 'FF0000'
-			),
-			array(
-				'type' => 'HRULE',
-				'value' => 10,
-				'legend' => 'Sample4',
-				'color' => 'FF0000'
-			),
-			array(
-				'type' => 'VRULE',
-				'time' => 1116659895,
-				'legend' => 'Sample5',
-				'color' => 'FF0000'
-			),
-			array(
-				'type' => 'COMMENT',
-				'text' => 'Sample6'
-			),
-			array(
-				'type' => 'GPRINT',
-				'source' => 'sample',
-				'ds' => 's3',
-				'cf' => 'AVERAGE', // Must be set even if using own (C)DEFs
-				                   // see below
-				'format' => '%lf'
-			),
-			// Advanced Options
-			array( // Use own RRD-Files
-				'type' => 'DEF',
-				'name' => 'vname',
-				'file' => '/path/too/sample.rrd',
-				'ds' => 'rrd_source',
-				'cf' => 'AVERAGE'
-			),
-			array( // Define own DEF
-				'type' => 'DEF',
-				'name' => 'vname1',
-				'source' => 'sample',
-				'ds' => 's4',
-				'cf' => 'AVERAGE'
-			),
-			array( // Define own CDEF
-				'type' => 'CDEF',
-				'name' => 'vname2',
-				'expression' => 'vname1,2,/' // See 'man rrdgraph'
-				                             // vnames used here are not validated!
-			),
-			array( // Use own (C)DEFs
-				'type' => 'LINE',
-				'width' => 2,
-				// 'source', 'ds' and 'cf' is replaced with:
-				'name' => 'vname2',
-				'legend' => 'Sample1',
-				'color' => 'FF0000'
-			),
-			array( // Use own (C)DEF with GPRINT
-				   // Attention: 'cf' MUST stay
-				'type' => 'GPRINT',
-				'name' => 'vname2',
-				'cf' => 'AVERAGE',
-				'format' => '%lf'
-			)
-		)
-	)
+    array(
+        'title' => 'Users logged in',
+        'lowerLimit' => 0,
+        'altAutoscaleMax' => true,
+        'content' => array(
+            array(
+                'type' => 'AREA',
+                'source' => 'users',
+                'ds' => 'users',
+                'cf' => 'AVERAGE',
+                'legend' => 'users logged in',
+                'color' => '4444DD'
+            )
+        )
+    ),
+    array(
+        'title' => 'Load',
+        'lowerLimit' => 0,
+        'altAutoscaleMax' => true,
+        'content' => array(
+            array(
+                'type' => 'COMMENT',
+                'text' => 'average number of tasks in the queue\:\n'
+            ),
+            array(
+                'type' => 'LINE',
+                'source' => 'load',
+                'ds' => '1min',
+                'cf' => 'AVERAGE',
+                'legend' => '1 minute',
+                'width' => 1,
+                'color' => 'FFDD00'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_1min',
+                'cf' => 'LAST',
+                'format' => '  cur\: %01.2lf'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_1min',
+                'cf' => 'MAXIMUM',
+                'format' => 'max\: %01.2lf'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_1min',
+                'cf' => 'MINIMUM',
+                'format' => 'min\: %01.2lf'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_1min',
+                'cf' => 'AVERAGE',
+                'format' => 'avg\: %01.2lf\n'
+            ),
+            array(
+                'type' => 'LINE',
+                'source' => 'load',
+                'ds' => '5min',
+                'cf' => 'AVERAGE',
+                'legend' => '5 minutes',
+                'width' => 1,
+                'color' => 'FF8800'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_5min',
+                'cf' => 'LAST',
+                'format' => ' cur\: %01.2lf'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_5min',
+                'cf' => 'MAXIMUM',
+                'format' => 'max\: %01.2lf'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_5min',
+                'cf' => 'MINIMUM',
+                'format' => 'min\: %01.2lf'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_5min',
+                'cf' => 'AVERAGE',
+                'format' => 'avg\: %01.2lf\n'
+            ),
+            array(
+                'type' => 'LINE',
+                'source' => 'load',
+                'ds' => '15min',
+                'cf' => 'AVERAGE',
+                'legend' => '15 minutes',
+                'width' => 1,
+                'color' => 'FF0000'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_15min',
+                'cf' => 'LAST',
+                'format' => 'cur\: %01.2lf'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_15min',
+                'cf' => 'MAXIMUM',
+                'format' => 'max\: %01.2lf'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_15min',
+                'cf' => 'MINIMUM',
+                'format' => 'min\: %01.2lf'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'load_15min',
+                'cf' => 'AVERAGE',
+                'format' => 'avg\: %01.2lf\n'
+            )
+        )
+    ),
+    array(
+        'title' => 'Memory',
+        'lowerLimit' => 0,
+        'altAutoscaleMax' => true,
+        'content' => array(
+            array(
+                'type' => 'DEF',
+                'source' => 'mem',
+                'ds' => 'MemTotal',
+                'cf' => 'AVERAGE',
+                'name' => 'total'
+            ),
+            array(
+                'type' => 'CDEF',
+                'expression' => 'total,1024,/,1024,/',
+                'name' => 'total_mb'
+            ),
+            array(
+                'type' => 'DEF',
+                'source' => 'mem',
+                'ds' => 'MemFree',
+                'cf' => 'AVERAGE',
+                'name' => 'free'
+            ),
+            array(
+                'type' => 'CDEF',
+                'expression' => 'free,1024,/,1024,/',
+                'name' => 'free_mb'
+            ),
+            array(
+                'type' => 'DEF',
+                'source' => 'mem',
+                'ds' => 'Cached',
+                'cf' => 'AVERAGE',
+                'name' => 'cached'
+            ),
+            array(
+                'type' => 'CDEF',
+                'expression' => 'cached,1024,/,1024,/',
+                'name' => 'cached_mb'
+            ),
+            array(
+                'type' => 'AREA',
+                'name' => 'total',
+                'legend' => 'total',
+                'color' => 'FFFFCC'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'total_mb',
+                'cf' => 'LAST',
+                'format' => ' cur\: %01.2lf MB\n'
+            ),
+            array(
+                'type' => 'AREA',
+                'name' => 'free',
+                'legend' => 'free',
+                'color' => 'FF0000'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'free_mb',
+                'cf' => 'LAST',
+                'format' => '   cur\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'free_mb',
+                'cf' => 'MINIMUM',
+                'format' => 'min\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'free_mb',
+                'cf' => 'MAXIMUM',
+                'format' => 'max\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'free_mb',
+                'cf' => 'AVERAGE',
+                'format' => 'avg\: %01.2lf MB\n'
+            ),
+            array(
+                'type' => 'STACK',
+                'name' => 'cached',
+                'legend' => 'cached',
+                'color' => 'EEDD22'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'cached_mb',
+                'cf' => 'LAST',
+                'format' => 'cur\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'cached_mb',
+                'cf' => 'MINIMUM',
+                'format' => 'min\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'cached_mb',
+                'cf' => 'MAXIMUM',
+                'format' => 'max\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'cached_mb',
+                'cf' => 'AVERAGE',
+                'format' => 'avg\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'LINE',
+                'width' => 1,
+                'name' => 'total',
+                'color' => '000000'
+            )
+        )
+    ),
+    array(
+        'title' => 'Swap',
+        'lowerLimit' => 0,
+        'altAutoscaleMax' => true,
+        'content' => array(
+            array(
+                'type' => 'DEF',
+                'source' => 'mem',
+                'ds' => 'SwapTotal',
+                'cf' => 'AVERAGE',
+                'name' => 'total'
+            ),
+            array(
+                'type' => 'CDEF',
+                'expression' => 'total,1024,/,1024,/',
+                'name' => 'total_mb'
+            ),
+            array(
+                'type' => 'DEF',
+                'source' => 'mem',
+                'ds' => 'SwapFree',
+                'cf' => 'AVERAGE',
+                'name' => 'free'
+            ),
+            array(
+                'type' => 'CDEF',
+                'expression' => 'free,1024,/,1024,/',
+                'name' => 'free_mb'
+            ),
+            array(
+                'type' => 'DEF',
+                'source' => 'mem',
+                'ds' => 'SwapCached',
+                'cf' => 'AVERAGE',
+                'name' => 'cached'
+            ),
+            array(
+                'type' => 'CDEF',
+                'expression' => 'cached,1024,/,1024,/',
+                'name' => 'cached_mb'
+            ),
+            array(
+                'type' => 'AREA',
+                'name' => 'total',
+                'legend' => 'total',
+                'color' => 'FFFFCC'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'total_mb',
+                'cf' => 'LAST',
+                'format' => ' cur\: %01.2lf MB\n'
+            ),
+            array(
+                'type' => 'AREA',
+                'name' => 'free',
+                'legend' => 'free',
+                'color' => 'FF0000'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'free_mb',
+                'cf' => 'LAST',
+                'format' => '   cur\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'free_mb',
+                'cf' => 'MINIMUM',
+                'format' => 'min\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'free_mb',
+                'cf' => 'MAXIMUM',
+                'format' => 'max\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'free_mb',
+                'cf' => 'AVERAGE',
+                'format' => 'avg\: %01.2lf MB\n'
+            ),
+            array(
+                'type' => 'STACK',
+                'name' => 'cached',
+                'legend' => 'cached',
+                'color' => 'EEDD22'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'cached_mb',
+                'cf' => 'LAST',
+                'format' => 'cur\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'cached_mb',
+                'cf' => 'MINIMUM',
+                'format' => 'min\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'cached_mb',
+                'cf' => 'MAXIMUM',
+                'format' => 'max\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'GPRINT',
+                'name' => 'cached_mb',
+                'cf' => 'AVERAGE',
+                'format' => 'avg\: %01.2lf MB'
+            ),
+            array(
+                'type' => 'LINE',
+                'width' => 1,
+                'name' => 'total',
+                'color' => '000000'
+            )
+        )
+    ),
+    array(
+        'title' => 'CPU usage',
+        'upperLimit' => 100,
+        'lowerLimit' => 0,
+        'altAutoscaleMax' => true,
+        'content' => array(
+            array(
+                'type' => 'AREA',
+                'source' => 'cpu',
+                'ds' => 'cpu_system',
+                'cf' => 'AVERAGE',
+                'legend' => 'System',
+                'color' => 'FF0000'
+            ),
+            array(
+                'type' => 'AREA',
+                'source' => 'cpu',
+                'ds' => 'cpu_user',
+                'cf' => 'AVERAGE',
+                'legend' => 'User',
+                'color' => '00FF00',
+                                'stacked' => true
+            ),
+            array(
+                'type' => 'AREA',
+                'source' => 'cpu',
+                'ds' => 'cpu_nice',
+                'cf' => 'AVERAGE',
+                'legend' => 'Nice',
+                'color' => '0000FF',
+                                'stacked' => true
+            ),
+            array(
+                'type' => 'AREA',
+                'source' => 'cpu',
+                'ds' => 'cpu_idle',
+                'cf' => 'AVERAGE',
+                'legend' => 'Idle',
+                'color' => 'FFFF00',
+                                'stacked' => true
+            )
+        )
+    ),
+    array(
+        'title' => 'Processes',
+        'lowerLimit' => 0,
+        'altAutoscaleMax' => true,
+        'content' => array(
+            array(
+                'type' => 'AREA',
+                'source' => 'load',
+                'ds' => 'tasks',
+                'cf' => 'AVERAGE',
+                'legend' => 'number of processes',
+                'color' => 'FFDD00'
+            ),
+            array(
+                'type' => 'AREA',
+                'source' => 'load',
+                'ds' => 'running',
+                'cf' => 'AVERAGE',
+                'legend' => 'running processes',
+                'color' => 'FF0000'
+            )
+        )
+    )
 );
 // Define what Graphes we want in the detail view (detail.php)
 $config['types'] = array(
