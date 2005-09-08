@@ -25,8 +25,8 @@
 
 // Define the sources, read the sourcefiles for the needed details
 $config = array();
-$config['cp']['module'] = new cpu();
-$config['memory']['module'] = new memory();
+$config['cpu']['module'] = new cpu();
+$config['mem']['module'] = new memory();
 $config['load']['module'] = new load();
 $config['users']['module'] = new users();
 

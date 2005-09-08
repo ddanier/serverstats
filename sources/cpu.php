@@ -27,7 +27,6 @@
 class cpu extends source
 {
 	private $path_stat;
-	private $user_hz;
 	
 	private $stats;
 	private $time;
@@ -35,10 +34,9 @@ class cpu extends source
 	private $oldstats;
 	private $oldtime;
 	
-	public function __construct($path_stat = '/proc/stat', $user_hz = 100)
+	public function __construct($path_stat = '/proc/stat')
 	{
 		$this->path_stat = $path_stat;
-		$this->user_hz = $user_hz;
 	}
 	
 	public function refreshData()
@@ -73,7 +71,7 @@ class cpu extends source
 					}
 					else
 					{
-						$rrd->setValue($cpu . '_' . $key, (($value - $this->oldstats[$cpu][$key]) * $this->user_hz) / $sumProc);
+						$rrd->setValue($cpu . '_' . $key, (($value - $this->oldstats[$cpu][$key]) * 100) / $sumProc);
 					}
 				}
 			}
