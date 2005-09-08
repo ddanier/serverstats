@@ -89,8 +89,9 @@ class cpu extends source
 		{
 			throw new Exception('Could not read "' . $this->path_stat . '"');
 		}
-		$this->stats = array();
+		$this->time = microtime(true);
 		
+		$this->stats = array();
 		foreach ($lines as $line)
 		{
 			if (preg_match('/^(cpu[0-9]*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)/i', $line, $parts))
@@ -103,8 +104,6 @@ class cpu extends source
 				);
 			}
 		}
-		
-		$this->time = microtime(true);
 	}
 	
 	public function useCache()

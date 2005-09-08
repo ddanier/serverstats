@@ -1,13 +1,12 @@
 <?php
 /**
- * $Id: cpu.php 92 2005-07-15 11:00:26Z ddanier $
+ * $Id$
  *
- * Author: Andreas Korthaus, akorthaus@web.de
- * Enhancements/Bugfixes: David Danier, david.danier@team23.de
+ * Author: David Danier, david.danier@team23.de
  * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
  * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
  *
- * Copyright (C) 2005 Andreas Korthaus
+ * Copyright (C) 2005 David Danier
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +23,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-die('This is not ready!');
 class disk extends source
 {
 	private $path_stat;
@@ -35,11 +33,10 @@ class disk extends source
 	private $stats_part;
 	private $time;
 	
-	private $oldstats_disk;
-	private $oldstats_part;
-	private $oldtime;
+	private static $cachetime = array();
+	private static $cache = array();
 	
-	public function __construct($path_stat = '/proc/diskstats', $filter_disk = null, $filter_part = null)
+	public function __construct($filter_disk = null, $filter_part = null, $path_stat = '/proc/diskstats')
 	{
 		$this->path_stat = $path_stat;
 		if (isset($filter_disk))
@@ -84,17 +81,13 @@ class disk extends source
 		$this->getStats();
 		foreach ($this->stats_disk as $disk => $values)
 		{
-			foreach ($values as $key => $value)
-			{
-				$rrd->addDatasource($disk . '_' . $key, 'GAUGE', null, 0);
-			}
+			$rrd->addDatasource($disk . '_rps', 'DERIVE', null, 0);
+			$rrd->addDatasource($disk . '_wps', 'DERIVE', null, 0);
 		}
 		foreach ($this->stats_part as $part => $values)
 		{
-			foreach ($values as $key => $value)
-			{
-				$rrd->addDatasource($part . '_' . $key, 'GAUGE', null, 0);
-			}
+			$rrd->addDatasource($part . '_rps', 'DERIVE', null, 0);
+			$rrd->addDatasource($part . '_wps', 'DERIVE', null, 0);
 		}
 	}
 	
@@ -102,39 +95,13 @@ class disk extends source
 	{
 		foreach ($this->stats_disk as $disk => $values)
 		{
-			$sumProc = array_sum($values) - array_sum($this->oldstats[$cpu]);
-			if ($sumProc > 0)
-			{
-				foreach ($values as $key => $value)
-				{
-					if ($sumProc == 0)
-					{
-						$rrd->setValue($disk . '_' . $key, 0);
-					}
-					else
-					{
-						$rrd->setValue($disk . '_' . $key, (($value - $this->oldstats[$cpu][$key]) * 100) / $sumProc);
-					}
-				}
-			}
+			$rrd->setValue($disk . '_rps', $values['sectors_read'] * $values['sector_size']);
+			$rrd->setValue($disk . '_wps', $values['sectors_written'] * $values['sector_size']);
 		}
 		foreach ($this->stats_part as $part => $values)
 		{
-			$sumProc = array_sum($values) - array_sum($this->oldstats[$cpu]);
-			if ($sumProc > 0)
-			{
-				foreach ($values as $key => $value)
-				{
-					if ($sumProc == 0)
-					{
-						$rrd->setValue($part . '_' . $key, 0);
-					}
-					else
-					{
-						$rrd->setValue($part . '_' . $key, (($value - $this->oldstats[$cpu][$key]) * 100) / $sumProc);
-					}
-				}
-			}
+			$rrd->setValue($part . '_rps', $values['sectors_read'] * $this->stats_disk[$values['disk']]['sector_size']);
+			$rrd->setValue($part . '_wps', $values['sectors_written'] * $this->stats_disk[$values['disk']]['sector_size']);
 		}
 	}
 	
@@ -145,49 +112,31 @@ class disk extends source
 			return;
 		}
 		
-		if (!($lines = file($this->path_stat)))
+		if (isset(self::$cache[$this->path_stat]))
 		{
-			throw new Exception('Could not read "' . $this->path_stat . '"');
+			$lines = self::$cache[$this->path_stat];
+			$this->time = self::$cachetime[$this->path_stat];
+		}
+		else
+		{
+			if (!($lines = file($this->path_stat)))
+			{
+				throw new Exception('Could not read "' . $this->path_stat . '"');
+			}
+			$this->time = microtime(true);
+			self::$cache[$this->path_stat] = $lines;
+			self::$cachetime[$this->path_stat] = $this->time;
 		}
 		
+		$lastdisk = null;
 		$this->stats_disk = array();
-		$this->filter_part = array();
+		$this->stats_part = array();
 		foreach ($lines as $line)
 		{
-			if (preg_match('/^([a-z]+[0-9]*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)/i', $line, $parts))
+			if (preg_match('/^\s*[0-9]+\s+[0-9]+\s+([a-z]+[0-9]*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s*$/i', $line, $parts))
 			{
-				if (isset($this->filter_part))
-				{
-					$use = false;
-					foreach ($this->filter_part as $test)
-					{
-						if (preg_match($test, $parts[1]))
-						{
-							$use = true;
-							break;
-						}
-					}
-					if (!$use)
-					{
-						continue;
-					}
-					$this->stats_part[$parts[1]] = array(
-						'num_reads' => $parts[2],
-						'merged_reads' => $parts[3],
-						'sectors_read' => $parts[4],
-						'ms_read' => $parts[5],
-						'num_writes' => $parts[6],
-						'merged_writes' => $parts[7],
-						'sectors_written' => $parts[8],
-						'ms_write' => $parts[9],
-						'cur_io_procs' => $parts[10],
-						'ms_io' => $parts[11],
-						'idle' => $parts[12]
-					);
-				}
-			}
-			elseif (preg_match('/^([a-z]+[0-9]*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)/i', $line, $parts))
-			{
+				$lastdisk = $parts[1];
+				$sector_size = 512; /*todo: fix this!!*/
 				if (isset($this->filter_disk))
 				{
 					$use = false;
@@ -206,43 +155,50 @@ class disk extends source
 				}
 				$this->stats_disk[$parts[1]] = array(
 					'num_reads' => $parts[2],
-					'sectors_read' => $parts[3],
-					'num_writes' => $parts[4],
-					'sectors_written' => $parts[5]
+					'merged_reads' => $parts[3],
+					'sectors_read' => $parts[4],
+					'ms_read' => $parts[5],
+					'num_writes' => $parts[6],
+					'merged_writes' => $parts[7],
+					'sectors_written' => $parts[8],
+					'ms_write' => $parts[9],
+					'cur_io_procs' => $parts[10],
+					'ms_io' => $parts[11],
+					'idle' => $parts[12],
+					'sector_size' => $sector_size
 				);
 			}
+			elseif (preg_match('/^\s*[0-9]+\s+[0-9]+\s+([a-z]+[0-9]*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s*$/i', $line, $parts))
+			{
+				if (isset($this->filter_part))
+				{
+					$use = false;
+					foreach ($this->filter_part as $test)
+					{
+						if (preg_match($test, $parts[1]))
+						{
+							$use = true;
+							break;
+						}
+					}
+					if (!$use)
+					{
+						continue;
+					}
+					if (!isset($lastdisk))
+					{
+						throw new Exception('/*todo*/');
+					}
+					$this->stats_part[$parts[1]] = array(
+						'num_reads' => $parts[2],
+						'sectors_read' => $parts[3],
+						'num_writes' => $parts[4],
+						'sectors_written' => $parts[5],
+						'disk' => $lastdisk
+					);
+				}
+			}
 		}
-		
-		$this->time = microtime(true);
-	}
-	
-	public function useCache()
-	{
-		return true;
-	}
-	
-	public function initCache()
-	{
-		$this->getStats();
-		$this->oldstats_disk = $this->stats_disk;
-		$this->oldstats_part = $this->stats_part;
-		$this->oldtime = 0;
-	}
-	
-	public function loadCache($cachedata)
-	{
-		$this->oldstats_disk = $cachedata['stats_disk'];
-		$this->oldstats_part = $cachedata['stats_part'];
-		$this->oldtime = $cachedata['time'];
-	}
-	
-	public function getCache()
-	{
-		return array(
-			'stats_disk' => $this->stats_disk,
-			'stats_part' => $this->stats_part,
-			'time' => $this->time
-		);
 	}
 }
 
