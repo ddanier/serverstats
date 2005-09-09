@@ -32,7 +32,6 @@ class disk extends source
 	
 	private $stats_disk;
 	private $stats_part;
-	private $time;
 	
 	private static $cache = array();
 	
@@ -98,8 +97,7 @@ class disk extends source
 		
 		if (isset(self::$cache[$this->path_stat]))
 		{
-			$lines = self::$cache[$this->path_stat]['file'];
-			$this->time = self::$cache[$this->path_stat]['time'];
+			$lines = self::$cache[$this->path_stat];
 		}
 		else
 		{
@@ -107,10 +105,7 @@ class disk extends source
 			{
 				throw new Exception('Could not read "' . $this->path_stat . '"');
 			}
-			$this->time = microtime(true);
-			self::$cache[$this->path_stat] = array();
-			self::$cache[$this->path_stat]['file'] = $lines;
-			self::$cache[$this->path_stat]['time'] = $this->time;
+			self::$cache[$this->path_stat] = $lines;
 		}
 		
 		$this->stats_disk = array();
