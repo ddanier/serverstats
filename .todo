@@ -23,6 +23,9 @@
     <note priority="medium" time="1121445220">
         Support all graph options
     </note>
+    <note priority="medium" time="1126281625">
+        sources/disk.php: deriveValue() -&gt; Hier sollte ein für das System passender Maximalwert ausgelesen werden
+    </note>
     <note priority="low" time="1120030175">
         add more sources
     </note>
