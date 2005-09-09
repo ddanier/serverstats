@@ -13,7 +13,7 @@ Basic Installation:
 
   Basic Installation will install a few simple graphs which should work without
   any additional installation (like CPU, RAM, Users...). To find out how to
-  get more advanced graphs, have a look at docs/ directory.
+  get more advanced graphs, have a look at doc/ directory.
 
 Basic Installation Steps:
 
@@ -28,7 +28,7 @@ Basic Installation Steps:
         
 Advanced Configuration:
 
-  Have a look at docs/ directory, to find out how to configure additional
+  Have a look at doc/ directory, to find out how to configure additional
   graphs or how to write new sources for collecting data.
 
 Advanced Example:
