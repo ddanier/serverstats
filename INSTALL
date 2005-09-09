@@ -26,6 +26,10 @@ Basic Installation Steps:
 
         * * * * * php /path/to/serverstats/update.php
         
+"It doesn't work":
+
+  Have a look at doc/faq.txt, to find out what to do if no graphs are displayed.
+        
 Advanced Configuration:
 
   Have a look at doc/ directory, to find out how to configure additional
