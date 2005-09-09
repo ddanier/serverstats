@@ -1,0 +1,202 @@
+===============================================================================
+ serverstats - GRAPH CONFIGURATION
+===============================================================================
+
+1. Introduction
+2. Example: Configure graphs for loadavg and use
+3. What to do if it does not work
+4. More complex examples
+
+
+===============================================================================
+ 1. Introduction
+===============================================================================
+
+  Here we will explain the configuration needed for two typical graphs (by 
+  example).
+
+
+===============================================================================
+ 2. Example: Configure graphs for loadavg and users (logged in)
+===============================================================================
+
+  The configuration for graphs is splitted in two PHP files:
+
+  * config/sources.php - settings for the data sources
+  * config/graph.php - settings for graph image to display
+
+  Settings in config/graph.php are mapped to 'rrdtool graph' parameters,
+  it's a good idea to have a look at 'man rrdgraph' for detailed description
+  of the used parameters.
+
+  ---------------------------------------------------------------------------
+  
+  Settings in config/sources.php (for data sources 'load' and 'users'):
+  
+    $config = array(); // this line is only needed once in this file
+    $config['load']['module'] = new load();
+    $config['load']['rra'] = 'default';
+    $config['users']['module'] = new users();
+    $config['users']['rra'] = 'default';
+
+  Explaination:
+
+  For every source you have to enter the following:
+
+    $config[<name>]['module'] = new <sourcemodulname>([parameters]);
+    $config[<name>]['rra'] = 'default';
+  
+  <sourcemodulname> is a class in sources/ directory, which is used to collect
+  the data. Serverstats ships with a lot of sources, we will use 
+  sources/load.php and sources/users.php in this guide, because they don't need
+  any additional configuration to work.
+   
+  For information on how to set up sources for Traffic, Apache requests/s, ...
+  have a lock at doc/sources.txt.
+
+  Available [parameters] can be found in __construct() methode 
+  in sources/<sourcemodulname>.php. For 'load' and 'users' no additional 
+  parameters are available.
+
+  ---------------------------------------------------------------------------
+
+  Example for settings in config/graph.php
+  
+  (for only two graphs from data source 'load' and 'users'):
+
+    $config['list'] = array(
+            array(
+                    'title' => 'Number of User logged in',
+                    'verticalLabel' => 'Users',
+                    'lowerLimit' => 0,
+                    'altAutoscaleMax' => true,
+                    'content' => array(
+                            array(
+                                    'type' => 'LINE',
+                                    'width' => 2,
+                                    'source' => 'users',
+                                    'ds' => 'users',
+                                    'cf' => 'AVERAGE',
+                                    'legend' => 'Number of Users',
+                                    'color' => 'FF0000'
+                            )
+                    )
+            ),
+            array(
+                    'title' => 'Load Average'
+                    'verticalLabel' => 'loadavg',
+                    'lowerLimit' => 0,
+                    'altAutoscaleMax' => true,
+                    'content' => array(
+                            array(
+                                    'type' => 'AREA',
+                                    'source' => 'load',
+                                    'ds' => '1min',
+                                    'cf' => 'AVERAGE',
+                                    'legend' => '1min',
+                                    'color' => 'FF0000'
+                            ),
+                            array(
+                                    'type' => 'AREA',
+                                    'source' => 'load',
+                                    'ds' => '5min',
+                                    'cf' => 'AVERAGE',
+                                    'legend' => '5min',
+                                    'color' => 'EE0000'
+                            ),
+                            array(
+                                    'type' => 'AREA',
+                                    'source' => 'load',
+                                    'ds' => '15min',
+                                    'cf' => 'AVERAGE',
+                                    'legend' => '15min',
+                                    'color' => 'DD0000'
+                            )
+                    )
+            )
+    );
+
+  Explaination:
+
+    $config['list']
+
+  is the array with al the graphs you would like to display. If you want to use
+  additional graphs, you have to add them here (see config.sample/graph.php for
+  examples). 
+  Every element of 'list' is a graph.
+
+    $config['list'][0]
+
+  the first graph, in this case 'Number of User logged in'.
+  
+  Settings in element 'content':
+
+    * 'type' - that's the Typ of graph (line, area..., see: http://people.ee.ethz.ch/oetiker/webtools/rrdtool/doc/rrdgraph_graph.en.html#graph)
+
+    * 'source' - that's the mapping to the source, as defined in 
+      config/sources.php
+      This setting has to fit to an existing source class in sources/ directory.
+
+    * 'ds' (Datasource, see rrdtool manual: 'DS') - that's the name if the 
+      datasource, which is used to create and update the stats data (in rrd file).
+      One rrd file / source class can have more than one datasource.
+      
+      - 'sources" are the PHP scripts / classes used to collect data, and write 
+        them to rrd files 
+      - datasources are 'fields' in the rrd file.
+
+	  this value has to match to the datasource settings in the 
+	  sources/<sourcemodulname>.php file, which aren't defined in config/ dir
+	  but in sources/<sourcemodulname>.php file.
+	  
+	  For example, the matching part from sources/load.php:
+
+    public function initRRD(rrd $rrd) {
+          $rrd->addDatasource('1min', 'GAUGE', null, 0);
+          $rrd->addDatasource('5min', 'GAUGE', null, 0);
+          $rrd->addDatasource('15min', 'GAUGE', null, 0);
+          $rrd->addDatasource('running', 'GAUGE', null, 0);
+          $rrd->addDatasource('tasks', 'GAUGE', null, 0);
+    }
+
+      see: http://people.ee.ethz.ch/oetiker/webtools/rrdtool/doc/rrdcreate.en.html#item_ds_3ads_2dname_3adst_3adst_arguments
+
+    * 'cf' (consolidation function) - that's the type of 'data consolidation'
+      (possible values: average, minimum, maximum, total, last - have a look at
+      man rrdgraph for details!). 
+      In most cases you want to see an average value, so choose 'average'. A
+      CF can only be choosen, if the rrd data archive has been created with
+      the matching CF. If you choose only AVERAGE values for the archive in 
+      config/rra.php, you'll not be able to plot MAX values.
+      ('LAST' has been relaced by VDEFs in rrdtool 1.2
+
+      see: http://people.ee.ethz.ch/oetiker/webtools/rrdtool/doc/rrdtool.en.html#item_consolidation
+
+    * 'legend' (optional) - that's the legend displayed below the graph
+    
+      - if you want to display ':' you have to escape it (":" -> "\:")
+      - you get new lines using "\n"  (see 'man rrdgraph')
+
+    * 'color' - that's the graph color (the color of the plotted AREA or LINE)
+
+
+===============================================================================
+ 3. What to do if it does not work:
+===============================================================================
+
+  Have a look at doc/faq.txt, to find out what to do if no graphs are 
+  displayed.
+
+
+===============================================================================
+ 4. More complex examples:
+===============================================================================
+
+  More complex, working examples can be found in config.sample/.
+  
+  A more advanced configuration with a lot of nice graphs can be found here:
+
+	* demo -> http://www.webmasterpro.de/~ddanier/serverstats/demo/
+	* config -> http://www.webmasterpro.de/~ddanier/serverstats/graph_example.phps
+
+
