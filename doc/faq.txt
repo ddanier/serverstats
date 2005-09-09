@@ -1,0 +1,24 @@
+serverstats FAQ (Frequently Asked Questions)
+
+1. I have installed serverstats, but my browser does not display one or more graphs / images are broken
+
+* have you a complete config in config/ directory?
+	->	copy config.sample/ to config/ will install a simple, but usually working config
+	->	or set up you own config in config/ directory
+
+* have you set up the cronjob to update the stats?
+	->	set up a cronjob with like:
+	
+		* * * * * php /path/to/serverstats/update.php
+
+* is rrd/ and cache/ writable for the user running the update.php cronjob?
+	->	use 'chown' to set the correct permissions
+
+* is graph/ writable for the webserver user, which should create the graphs here?
+	->	use 'chown' to set the correct permissions
+
+* have a look at rrd/ directory - is there a .rrd file for every graph?
+	->	run 'php update.php' from commandline to see any errors
+
+* right-click the broken graph image, and select "view image"
+	->	this should display a serverstats error message, to help you where to look at
