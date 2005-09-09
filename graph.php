@@ -32,9 +32,6 @@ if (!isset($_GET['graph']))
 
 try
 {
-	// Set the content-type (comment this out for debugging)
-	header('Content-Type: image/png');
-	
 	// Init the needed Vars
 	$graphindex = $_GET['graph'];
 	$start = isset($_GET['start']) ? $_GET['start'] : -$config['graph']['defaultperiod'];
@@ -237,6 +234,9 @@ try
 		}
 	}
 	
+	// Set the content-type
+	@header('Content-Type: image/png');
+	
 	if ($usecache)
 	{
 		$rrdgraph->setLazy(true);
@@ -253,7 +253,7 @@ try
 }
 catch (Exception $e)
 {
-	header('Content-Type: text/plain');
+	@header('Content-Type: text/plain');
 	echo $e;
 }
 
