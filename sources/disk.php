@@ -64,27 +64,18 @@ class disk extends source
 		}
 	}
 	
-	public static function deriveValue($value)
-	{
-		if (is_double($value))
-		{
-			$value = (int)fmod($value, 2147483647);
-		}
-		return $value;
-	}
-	
 	public function updateRRD(rrd $rrd)
 	{
 		$rrd->setValue('read', $this->stats_disk['sectors_read'] * $this->sector_size);
 		$rrd->setValue('write', $this->stats_disk['sectors_written'] * $this->sector_size);
-		$rrd->setValue('readps', self::deriveValue($this->stats_disk['sectors_read'] * $this->sector_size));
-		$rrd->setValue('writeps', self::deriveValue($this->stats_disk['sectors_written'] * $this->sector_size));
+		$rrd->setValue('readps', $this->stats_disk['sectors_read'] * $this->sector_size);
+		$rrd->setValue('writeps', $this->stats_disk['sectors_written'] * $this->sector_size);
 		foreach ($this->stats_part as $part => $values)
 		{
 			$rrd->setValue('part' . $part . '_read', $values['sectors_read'] * $this->sector_size);
 			$rrd->setValue('part' . $part . '_write', $values['sectors_written'] * $this->sector_size);
-			$rrd->setValue('part' . $part . '_readps', self::deriveValue($values['sectors_read'] * $this->sector_size));
-			$rrd->setValue('part' . $part . '_writeps', self::deriveValue($values['sectors_written'] * $this->sector_size));
+			$rrd->setValue('part' . $part . '_readps', $values['sectors_read'] * $this->sector_size);
+			$rrd->setValue('part' . $part . '_writeps', $values['sectors_written'] * $this->sector_size);
 		}
 	}
 	
