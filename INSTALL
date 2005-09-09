@@ -1,6 +1,40 @@
-* Copy/Move config.sample/ to config/
-* Change config/*.php, perhaps the comments help you when doing this
-* graph/ must be writeable for the webserver
-* cache/ and rrd/ must be writeable by the user updating the stats
+Serverstats - BASIC INSTALL
+
+Homepage: http://www.webmasterpro.de/ddanier/serverstats/
+Author: David Danier, david.danier@team23.de
+Licence: GPL v2
+
+Requirements:
+
+* PHP >= 5.0
+* RRDtool >= 1.2
+
+Basic Installation:
+
+  Basic Installation will install a few simple graphs which should work without
+  any additional installation (like CPU, RAM, Users...). To find out how to
+  get more advanced graphs, have a look at docs/ directory.
+
+Basic Installation Steps:
+
+* download latest version from http://www.webmasterpro.de/ddanier/serverstats/
+* extract serverstats archive somewhere in webservers document root
+* copy/move config.sample/ to config/
+* graph/ must be writable for the webserver user
+* cache/ and rrd/ must be writable by the user updating the stats (cronjob)
 * add update.php to the crontab, for example:
-	* * * * * php /path/to/serverstats/update.php
+
+        * * * * * php /path/to/serverstats/update.php
+        
+Advanced Configuration:
+
+  Have a look at docs/ directory, to find out how to configure additional
+  graphs or how to write new sources for collecting data.
+
+Advanced Example:
+
+* demo -> http://www.webmasterpro.de/~ddanier/serverstats/demo/
+* config -> http://www.webmasterpro.de/~ddanier/serverstats/graph_example.phps
+
+  additional configuration needed for some sources like Traffic, Apache 
+  requests/s ...
