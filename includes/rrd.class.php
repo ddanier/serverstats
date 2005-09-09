@@ -149,7 +149,14 @@ class rrd
 			}
 			$params .= ' ' . escapeshellarg($rrastring);
 		}
-		system(escapeshellcmd($this->rrdtoolbin) . $params);
+		$output = array();
+		$return = 0;
+		$command = escapeshellcmd($this->rrdtoolbin) . $params;
+		exec($command . ' 2>&1', $output, $return);
+		if ($return != 0)
+		{
+			throw new Exception('rrdtool ("' . $command . '") finished with exitcode ' . $return . "\n" . implode("\n", $output));
+		}
 		$this->created = true;
 	}
 
@@ -323,8 +330,14 @@ class rrd
 		$templatestr = substr($templatestr, 0, -1);
 		$params .= ' -t  ' . escapeshellarg($templatestr);
 		$params .= ' ' . escapeshellarg($updatestr);
-		system(escapeshellcmd($this->rrdtoolbin) . $params);
-
+		$output = array();
+		$return = 0;
+		$command = escapeshellcmd($this->rrdtoolbin) . $params;
+		exec($command . ' 2>&1', $output, $return);
+		if ($return != 0)
+		{
+			throw new Exception('rrdtool ("' . $command . '") finished with exitcode ' . $return . "\n" . implode("\n", $output));
+		}
 	}
 
 	public function hasDatasource($name)

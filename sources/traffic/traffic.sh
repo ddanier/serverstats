@@ -24,7 +24,7 @@
 
 # Variablen
 
-PATH="/path/to/serverstats/services/traffic"
+PATH="/path/to/serverstats/sources/traffic"
 CHAINLIST="FILL SOMETHING IN HERE"
 
 SLEEP_BIN="/usr/bin/sleep"

@@ -411,12 +411,25 @@ class rrdgraph
 	
 	public function save($file)
 	{
-		system($this->command($file) . ' > /dev/null 2>&1');
+		$output = array();
+		$return = 0;
+		$command = $this->command($file);
+		exec($command . ' 2>&1', $output, $return);
+		if ($return != 0)
+		{
+			throw new Exception('rrdtool ("' . $command . '") finished with exitcode ' . $return . "\n" . implode("\n", $output));
+		}
 	}
 	
 	public function output()
 	{
-		passthru($this->command());
+		$return = 0;
+		$command = $this->command();
+		passthru($command, $return);
+		if ($return != 0)
+		{
+			throw new Exception('rrdtool ("' . $command . '") finished with exitcode ' . $return);
+		}
 	}
 	
 	public function setBase($base)
