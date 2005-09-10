@@ -12,7 +12,7 @@ Requirements:
 Basic Installation:
 
   Basic Installation will install a few simple graphs which should work without
-  any additional installation (like CPU, RAM, Users...). To find out how to
+  any additional configuration (like CPU, RAM, Users...). To find out how to
   get more advanced graphs, have a look at doc/ directory.
 
 Basic Installation Steps:

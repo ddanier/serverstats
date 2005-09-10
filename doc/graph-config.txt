@@ -1,5 +1,5 @@
 ===============================================================================
- serverstats - GRAPH CONFIGURATION
+ Serverstats - GRAPH CONFIGURATION
 ===============================================================================
 
 1. Introduction
@@ -55,8 +55,8 @@
   have a lock at doc/sources.txt.
 
   Available [parameters] can be found in __construct() methode 
-  in sources/<sourcemodulname>.php. For 'load' and 'users' no additional 
-  parameters are available.
+  in sources/<sourcemodulname>.php and in doc/sources.txt. For 'load' and
+  'users' no additional parameters are available (or needed).
 
   ---------------------------------------------------------------------------
 
@@ -120,7 +120,7 @@
 
     $config['list']
 
-  is the array with al the graphs you would like to display. If you want to use
+  is the array with all the graphs you would like to display. If you want to use
   additional graphs, you have to add them here (see config.sample/graph.php for
   examples). 
   Every element of 'list' is a graph.
@@ -131,14 +131,16 @@
   
   Settings in element 'content':
 
-    * 'type' - that's the Typ of graph (line, area..., see: http://people.ee.ethz.ch/oetiker/webtools/rrdtool/doc/rrdgraph_graph.en.html#graph)
+    * 'type' - that's the Typ of graph (line, area..., see:
+      http://people.ee.ethz.ch/oetiker/webtools/rrdtool/doc/rrdgraph_graph.en.html#graph)
 
     * 'source' - that's the mapping to the source, as defined in 
       config/sources.php
       This setting has to fit to an existing source class in sources/ directory.
 
-    * 'ds' (Datasource, see rrdtool manual: 'DS') - that's the name if the 
-      datasource, which is used to create and update the stats data (in rrd file).
+    * 'ds' (Datasource, see rrdtool manual: 'DS') - that's the name of the 
+      datasource, which is used to create and update the stats data (in rrd
+      file).
       One rrd file / source class can have more than one datasource.
       
       - 'sources" are the PHP scripts / classes used to collect data, and write 
@@ -146,8 +148,8 @@
       - datasources are 'fields' in the rrd file.
 
 	  this value has to match to the datasource settings in the 
-	  sources/<sourcemodulname>.php file, which aren't defined in config/ dir
-	  but in sources/<sourcemodulname>.php file.
+	  sources/<sourcemodulname>.php file, which aren't defined in
+	  config/ dir but in sources/<sourcemodulname>.php file.
 	  
 	  For example, the matching part from sources/load.php:
 
@@ -168,7 +170,7 @@
       CF can only be choosen, if the rrd data archive has been created with
       the matching CF. If you choose only AVERAGE values for the archive in 
       config/rra.php, you'll not be able to plot MAX values.
-      ('LAST' has been relaced by VDEFs in rrdtool 1.2
+      ('LAST' has been relaced by VDEFs in rrdtool 1.2)
 
       see: http://people.ee.ethz.ch/oetiker/webtools/rrdtool/doc/rrdtool.en.html#item_consolidation
 
