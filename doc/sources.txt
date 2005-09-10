@@ -20,9 +20,39 @@ Reads the statistics created by apache. This is done by accessing
 "http://localhost/server-status?auto" by default.
 
 Parameters:
-$url ("http://localhost/server-status?auto"): URL to fetch Apache-Stats
-$show (null): 
-$psshow (null)
+$url: URL to fetch Apache-Stats
+	Format: URL-String
+	Default: "http://localhost/server-status?auto"
+$show: List of Variables that should be saved
+	Format:
+		array(
+			APACHE_NAME1 => DS_NAME1,
+			APACHE_NAME2 => DS_NAME2,
+			APACHE_NAME3 => DS_NAME3,
+			...
+		)
+	Default:
+		array(
+			'Total Accesses' => 'requests',
+			'Total kBytes' => 'kilobytes',
+			'BytesPerReq' => 'bytesperreq',
+			'CPULoad' => 'cpuload',
+			'BusyWorkers' => 'busyprocs',
+			'IdleWorkers' => 'idleprocs'
+		)
+$psshow: List of Variables that should be saves in per-second-values
+	Format:
+		array(
+			DS_NAME1 => PS_DS_NAME1,
+			DS_NAME2 => PS_DS_NAME2,
+			DS_NAME3 => PS_DS_NAME3,
+			...
+		)
+	Default:
+		array(
+			'requests' => 'requestsps',
+			'kilobytes' => 'kilobytesps'
+		)
 
 Additional configuration:
 Apache must generate the statsitics, this can be activated by adding the
@@ -37,38 +67,196 @@ following configuration to httpd.conf:
 ExtendedStatus On
 ----------------------------------------------->8---------
 
+Datasources:
+As defined above.
+(Default: requests, kilobytes, bytesperreq, cpuload, busyprocs, idleprocs,
+requestsps, kilobytesps)
+
 ===============================================================================
  2. disk
 ===============================================================================
 
-NOT FINISHED!
+Reads the disk-statistics from /proc/diskstats (kernel 2.6) and saves the
+read/written bytes. Optional all Partitions can be logged, too.
+
+Parameters:
+$disk: Name of disk that should be monitored (example: 'hda')
+	Format: String
+$withpartitions: Decide wether you want to log the partitions
+	Format: boolean
+	Default: false
+$sector_size: Size of the Sectors of your disk
+	Format: integer
+	Default: 512
+$path_stat: Filename to the needed /proc/-file
+	Format: String
+	Default: '/proc/diskstats'
+
+Datasources:
+	read: Bytes read
+	write: Bytes written
+	readps: Bytes read per second
+	writeps: Bytes written per second
+	partX_read, partX_write, partX_readps, partX_writeps:
+		Same for partitions
 
 ===============================================================================
  3. external
 ===============================================================================
 
+Runs an external script and reads the data provided by the script. Format to
+fetch the data is similar to cacti.
+
+Parameters:
+$command: Command that should be executed
+
+Additional Methods:
+addDatasourceDefinition(...):
+	Parameters:
+		$name: Name of the Variable outputted by the command
+		$type = 'GAUGE': See rrdtool manual
+		$heartbeat = null
+		$min = 'U'
+		$max = 'U'
+
+Datasources:
+Depends on command.
+
 ===============================================================================
  4. memory
 ===============================================================================
+
+Reads /proc/meminfo and logs selected variables from the file.
+
+Parameters:
+$show: List of Variables that should be saved
+	Default:
+		array(
+			'MemTotal',
+			'MemFree',
+			'Cached',
+			'SwapCached',
+			'SwapTotal',
+			'SwapFree'
+		)
+	Format:
+		array(
+			NAME1,
+			NAME2,
+			NAME3,
+			...
+		)
+$meminfofile: Filename to the needed /proc/-file
+	Format: String
+	Default: '/proc/meminfo'
+
+Datasources:
+As defined above.
+(Default: MemTotal, MemFree, Cached, SwapCached, SwapTotal, SwapFree)
 
 ===============================================================================
  5. users
 ===============================================================================
 
+Runs 'users' and logs the number of users logged in.
+
+Parameters:
+$usersbin: Path to the user-binary
+	Format: String
+	Default: '/usr/bin/users'
+
+Datasources:
+	users: Number of users logged in
+
 ===============================================================================
  6. cpu
 ===============================================================================
+
+Reads /proc/stat and caclulate the usage of the CPU.
+(sys: XX%, user: XX%, idle: XX%, nice: XX%)
+
+Parameters:
+$path_stat: Path to the needed /proc/-file
+	Format: String
+	Default: '/proc/stat'
+
+Datasources:
+	cpu_user: Userprocesses in percent
+	cpu_nice: Niced processes in percent
+	cpu_system: Systemprocesses in percent
+	cpu_idle: CPU-idle in percent
+	cpuX_user, cpuX_nice, cpuX_system, cpuX_idle:
+		Same for multiple processors
 
 ===============================================================================
  7. load
 ===============================================================================
 
+Reads /proc/loadavg and logs the load of the system.
+
+Parameters:
+$loadavgfile: Path to the needed /proc/-file
+	Format: String
+	Default: '/proc/loadavg'
+
+Datasources:
+	1min: load, 1min average
+	5min: load, 5min average
+	15min: load, 15min average
+	running: number of running tasks
+	tasks: number of tasks
+
 ===============================================================================
  8. mysql
 ===============================================================================
+
+Logs into a mysql-server and fetches some statistics.
+
+Parameters:
+$user: MySQL-User
+	Format: String
+	Default: 'status'
+$password: MySQL-Password
+	Format: String
+	Default: ''
+$host: MySQL-Host
+	Format: String
+	Default: 'localhost'
+
+Datasources:
+	questions: Number of questions 
+	questionsps: Number of questions per second
+	processcount: Current count of "SHOW PROCESSLIST"
 
 ===============================================================================
  9. traffic
 ===============================================================================
 
+Uses an external script and some iptables-rules to log the traffic.
 
+Additional configuration:
+	iptables-rules:
+		Create iptables-rules similar to the sample in
+		sources/traffic/iptables.sample. Every port/daemon you want to
+		log needs his own chain. If you want to have seperate logs for
+		incoming and outgoing traffic you have to use different chains
+		for that, too.
+	traffic.sh:
+		This script runs 'iptables -nvxL' to fetch the current
+		trafficcounters from iptables. It iterates through an list of
+		chains (CHAINLIST) and writes a file with the current counter
+		for each chain. The files are stored in LOGPATH, this path
+		should be set according to the example in the script.
+		The script must be run as a cronjob by root to save the values.
+
+Parameters:
+$chain: Name of the chain
+	Format: String
+$logdir: Path where traffic.sh stores the logs
+	Format: String
+	Default: SOURCEPATH . 'traffic'
+		(SOURCEPATH is autoset to the path where the sources are stored)
+
+Datasources:
+	traffic: Trafficcounter
+	bps: Bytes per second
