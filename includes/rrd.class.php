@@ -330,7 +330,7 @@ class rrd
 				$stringrep = strval($dsvalue);
 				if (preg_match('/^([+\-]?[0-9]+)(\.([0-9]+))?[eE]([+\-]?[0-9]+)$/', $stringrep, $parts))
 				{
-					$precision = @ini_get('precision') || 12;
+					$precision = ini_get('precision');
 					$exponent = intval($parts[4]);
 					$dsvalue = number_format($dsvalue, $precision - $exponent, '.', '');
 				}
