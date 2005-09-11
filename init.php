@@ -39,9 +39,6 @@ define('CONFIGPATH', PATH . 'config' . DIRECTORY_SEPARATOR);
 // Load all needed functions
 require_once(INCLUDEPATH . 'functions.php');
 
-// Avoid float-output
-ini_set('precision', 32);
-
 // Load the config
 $configvars = config::loadConfig(CONFIGPATH . 'main.php');
 $config = new config($configvars, CONFIGPATH);

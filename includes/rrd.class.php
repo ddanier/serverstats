@@ -325,6 +325,16 @@ class rrd
 		foreach ($this->values as $dsname => $dsvalue)
 		{
 			$templatestr .= $dsname . ':';
+			if (is_double($dsvalue))
+			{
+				$stringrep = strval($dsvalue);
+				if (preg_match('/^([+\-]?[0-9]+)(\.([0-9]+))?[eE]([+\-]?[0-9]+)$/', $stringrep, $parts))
+				{
+					$precision = @ini_get('precision') || 12;
+					$exponent = intval($parts[4]);
+					$dsvalue = number_format($dsvalue, $precision - $exponent, '.', '');
+				}
+			}
 			$updatestr .= ':' . $dsvalue;
 		}
 		$templatestr = substr($templatestr, 0, -1);
