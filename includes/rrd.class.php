@@ -322,6 +322,15 @@ class rrd
 		$params = ' update ' . escapeshellarg($this->rrdfile);
 		$updatestr = 'N';
 		$templatestr = '';
+		$precision = ini_get('precision');
+		if (empty($precision))
+		{
+			$precision = 12;
+		}
+		else
+		{
+			$precision = intval($precision);
+		}
 		foreach ($this->values as $dsname => $dsvalue)
 		{
 			$templatestr .= $dsname . ':';
@@ -330,9 +339,13 @@ class rrd
 				$stringrep = strval($dsvalue);
 				if (preg_match('/^([+\-]?[0-9]+)(\.([0-9]+))?[eE]([+\-]?[0-9]+)$/', $stringrep, $parts))
 				{
-					$precision = ini_get('precision');
 					$exponent = intval($parts[4]);
-					$dsvalue = number_format($dsvalue, $precision - $exponent, '.', '');
+					$decimals = $precision - $exponent;
+					if ($decimals < 0)
+					{
+						$decimals = 0;
+					}
+					$dsvalue = number_format($dsvalue, $decimals, '.', '');
 				}
 			}
 			$updatestr .= ':' . $dsvalue;
