@@ -205,7 +205,7 @@ class rrd
 				}
 				$this->datasources[$name] = array(
 					'type' => $type,
-					'expression' => $expression
+					'expression' => $p1
 				);
 				break;
 			default:
@@ -337,6 +337,7 @@ class rrd
 			if (is_double($dsvalue))
 			{
 				$stringrep = strval($dsvalue);
+				$parts = array();
 				if (preg_match('/^([+\-]?[0-9]+)(\.([0-9]+))?[eE]([+\-]?[0-9]+)$/', $stringrep, $parts))
 				{
 					$exponent = intval($parts[4]);
