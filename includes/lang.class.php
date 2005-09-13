@@ -31,12 +31,12 @@ class lang
 	static public function load()
 	{
 		global $config;
-		if (!isset($config) || !isset($config['language']))
+		if (!isset($config) || !isset($config['main']['language']))
 		{
 			self::$isLoaded = true;
 			return;
 		}
-		$langfile = LANGPATH . $config['language'] . '.php';
+		$langfile = LANGPATH . $config['main']['language'] . '.php';
 		if (!file_exists($langfile))
 		{
 			self::$isLoaded = true;

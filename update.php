@@ -63,7 +63,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			file_put_contents($cachefile, $cache);
 			unset($cache);
 		}
-		$sourcerrd = new rrd($config['rrdtool'], $rrdfile);
+		$sourcerrd = new rrd($config['main']['rrdtool'], $rrdfile);
 		if (file_exists($rrdcachefile))
 		{
 			$cache = unserialize(file_get_contents($rrdcachefile));
@@ -74,7 +74,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 		{
 			echo "\tCreating RRD-file\n";
 			$source->initRRD($sourcerrd);
-			$sourcerrd->setStep($config['step']);
+			$sourcerrd->setStep($config['main']['step']);
 			if (isset($sourcedata['rra']))
 			{
 				$sourcerra = $sourcedata['rra'];
