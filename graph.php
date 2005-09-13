@@ -254,7 +254,7 @@ try
 catch (Exception $e)
 {
 	@header('Content-Type: text/plain');
-	echo $e;
+	$config['main']['logger']->logException(logger::ERR, $e);
 }
 
 ?>

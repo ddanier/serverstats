@@ -98,9 +98,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 	}
 	catch (Exception $e)
 	{
-		echo "\tError:\n";
-		echo $e;
-		echo "\n";
+		$config['main']['logger']->logException(logger::ERR, $e);
 	}
 }
 ?>

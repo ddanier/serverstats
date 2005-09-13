@@ -26,6 +26,10 @@
 $config = array(
 	// Language
 	'language' => 'en_US',
+	// Decide which logger you want to use
+	'logger' => new logger_stdout(),
+	// Decide what should be logged
+	'loglevel' => logger::WARN,
 	// Where to find the rrdtool binary
 	'rrdtool' => '/usr/bin/rrdtool',
 	// step for rrd-files, read 'man rrdcreate'

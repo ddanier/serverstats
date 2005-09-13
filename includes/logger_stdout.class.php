@@ -23,14 +23,25 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$lang = array();
-$lang['Statistics'] = 'Statistik';
-$lang['Summary'] = 'Übersicht';
-
-$lang['Information'] = 'Information';
-$lang['Warning'] = 'Warnung';
-$lang['Error'] = 'Fehler';
-$lang['Critical error'] = 'Kritischer Fehler';
-$lang['Unknown error'] = 'Unbekannter Fehler';
+class logger_stdout extends logger
+{
+	public function logString($loglevel, $string)
+	{
+		if (!logger::needsLogging($loglevel)) return;
+		echo logger::levelToString($loglevel);
+		echo ":\n";
+		echo $string;
+		echo "\n";
+	}
+	
+	public function logException($loglevel, Exception $exception)
+	{
+		if (!logger::needsLogging($loglevel)) return;
+		echo logger::levelToString($loglevel);
+		echo ":\n";
+		echo $exception;
+		echo "\n";
+	}
+}
 
 ?>

@@ -23,14 +23,39 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$lang = array();
-$lang['Statistics'] = 'Statistik';
-$lang['Summary'] = 'Übersicht';
-
-$lang['Information'] = 'Information';
-$lang['Warning'] = 'Warnung';
-$lang['Error'] = 'Fehler';
-$lang['Critical error'] = 'Kritischer Fehler';
-$lang['Unknown error'] = 'Unbekannter Fehler';
+// Layout for all loggers
+abstract class logger
+{
+	const INFO = 0;
+	const WARN = 1;
+	const ERR = 2;
+	const CRIT = 3;
+	
+	static public function levelToString($loglevel)
+	{
+		switch ($loglevel)
+		{
+			case self::INFO:
+				return lang::t('Information');
+			case self::WARN:
+				return lang::t('Warning');
+			case self::ERR:
+				return lang::t('Error');
+			case self::CRIT:
+				return lang::t('Critical error');
+			default:
+				return lang::t('Unknown error');
+		}
+	}
+	
+	static protected function needsLogging($loglevel)
+	{
+		global $config;
+		return ($loglevel >= $config['main']['loglevel']);
+	}
+	
+	abstract public function logString($loglevel, $string);
+	abstract public function logException($loglevel, Exception $exception);
+}
 
 ?>
