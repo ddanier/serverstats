@@ -26,10 +26,12 @@
 // Layout for all loggers
 abstract class logger
 {
+	const ALL = 0;
 	const INFO = 0;
 	const WARN = 1;
 	const ERR = 2;
 	const CRIT = 3;
+	const NONE = 4;
 	
 	static public function levelToString($loglevel)
 	{
