@@ -27,7 +27,7 @@ $config = array(
 	// Decide which logger you want to use
 	'logger' => new logger_syslog(),
 	// Decide what should be logged
-	'level' => logger::WARN,
+	'level' => logger::WARN
 );
 
 ?>
