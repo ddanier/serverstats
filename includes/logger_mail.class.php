@@ -23,24 +23,36 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class logger_stdout extends logger
+class logger_mail extends logger
 {
+	private $address;
+	private $subject;
+	
+	public function __construct($address, $subject = '[Serverstats] Log')
+	{
+		$this->address = $address;
+		$this->subject = $subject;
+	}
+	
+	private function sendEmail($body)
+	{
+		mail(
+			$this->address,
+			$this->subject,
+			$body
+			);
+	}
+	
 	public function logString($loglevel, $string)
 	{
 		if (!logger::needsLogging($loglevel)) return;
-		echo logger::levelToString($loglevel);
-		echo ":\n";
-		echo $string;
-		echo "\n";
+		$this->sendEmail($string);
 	}
 	
 	public function logException($loglevel, Exception $exception)
 	{
 		if (!logger::needsLogging($loglevel)) return;
-		echo logger::levelToString($loglevel);
-		echo ":\n";
-		echo $exception;
-		echo "\n";
+		$this->sendEmail($exception->__toSTring());
 	}
 }
 

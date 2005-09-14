@@ -24,12 +24,10 @@
  */
 
 $config = array(
-	// Language
-	'language' => 'en_US',
-	// Where to find the rrdtool binary
-	'rrdtool' => '/usr/bin/rrdtool',
-	// step for rrd-files, read 'man rrdcreate'
-	'step' => 60
+	// Decide which logger you want to use
+	'logger' => new logger_syslog(),
+	// Decide what should be logged
+	'level' => logger::WARN,
 );
 
 ?>

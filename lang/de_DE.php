@@ -30,7 +30,6 @@ $lang['Summary'] = 'Übersicht';
 $lang['Information'] = 'Information';
 $lang['Warning'] = 'Warnung';
 $lang['Error'] = 'Fehler';
-$lang['Critical error'] = 'Kritischer Fehler';
 $lang['Unknown error'] = 'Unbekannter Fehler';
 
 ?>

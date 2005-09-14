@@ -23,13 +23,50 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$config = array(
-	// Language
-	'language' => 'en_US',
-	// Where to find the rrdtool binary
-	'rrdtool' => '/usr/bin/rrdtool',
-	// step for rrd-files, read 'man rrdcreate'
-	'step' => 60
-);
+class logger_file extends logger
+{
+	private $file;
+	private $fh;
+	
+	public function __construct($file)
+	{
+		$this->file = $file;
+	}
+	
+	public function __destruct()
+	{
+		if (isset($this->fh)) 
+		{
+			fclose($this->fh);
+		}
+	}
+	
+	private function getFileHandler()
+	{
+		if (!isset($this->fh)) 
+		{
+			$this->fh = fopen($this->file, 'a+');
+		}
+		return $this->fh;
+	}
+	
+	private function writeToFile($string)
+	{
+		$date = date('r');
+		fwrite($this->getFileHandler(), $date . ': ' . $string . "\n");
+	}
+	
+	public function logString($loglevel, $string)
+	{
+		if (!logger::needsLogging($loglevel)) return;
+		$this->writeToFile($string);
+	}
+	
+	public function logException($loglevel, Exception $exception)
+	{
+		if (!logger::needsLogging($loglevel)) return;
+		$this->writeToFile($exception->__toString());
+	}
+}
 
 ?>

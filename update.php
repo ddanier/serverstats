@@ -73,6 +73,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 		else
 		{
 			echo "\tCreating RRD-file\n";
+			$config['log']['logger']->logString(logger::INFO, 'Creating RRD-file for source "' . $sourcename . '"');
 			$source->initRRD($sourcerrd);
 			$sourcerrd->setStep($config['main']['step']);
 			if (isset($sourcedata['rra']))
@@ -93,12 +94,16 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			unset($cache);
 		}
 		echo "\tUpdating RRD-file\n";
+		$config['log']['logger']->logString(logger::INFO, 'Updating source "' . $sourcename . '"');
 		$source->updateRRD($sourcerrd);
 		$sourcerrd->update();
 	}
 	catch (Exception $e)
 	{
-		$config['main']['logger']->logException(logger::ERR, $e);
+		echo "Error:\n";
+		echo $e;
+		echo "\n";
+		$config['log']['logger']->logException(logger::ERR, $e);
 	}
 }
 ?>

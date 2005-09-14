@@ -25,6 +25,7 @@
 
 // Load all needed classes, function and everything else
 require_once('init.php');
+
 if (!isset($_GET['graph']))
 {
 	die('$_GET["graph"] missing');
@@ -36,6 +37,10 @@ try
 	$graphindex = $_GET['graph'];
 	$start = isset($_GET['start']) ? $_GET['start'] : -$config['graph']['defaultperiod'];
 	$end = isset($_GET['end']) ? $_GET['end'] : null;
+	if (!isset($config['graph']['list'][$graphindex]))
+	{
+		throw new Exception('Graph not found (invalid graphindex?)');
+	}
 	$graph = $config['graph']['list'][$graphindex];
 	$title = $graph['title'];
 	if (isset($_GET['title']))
@@ -96,10 +101,10 @@ try
 		{
 			throw new Exception('Unknow type');
 		}
-		$c['type'] = strtoupper($c['type']); // backwards compability
+		$type = strtoupper($c['type']);
 		// If the Graphcontent need is generated from a RRD-file we need
 		// to add a DEF here
-		if (in_array($c['type'], array('LINE', 'AREA', 'STACK', 'GPRINT', 'SHIFT', 'TICK')))
+		if (in_array($type, array('LINE', 'AREA', 'STACK', 'GPRINT', 'SHIFT', 'TICK')))
 		{
 			if (isset($c['source']))
 			{
@@ -123,12 +128,12 @@ try
 			}
 		}
 		// Add the content
-		switch ($c['type'])
+		switch ($type)
 		{
 			case 'DEF':
 				if (!array_check($c, array('name', 'ds', 'cf')))
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				if (isset($c['source']))
 				{
@@ -140,31 +145,31 @@ try
 				}
 				else
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				$rrdgraph->addDEF($c['name'], $rrdfile, $c['ds'], $c['cf']);
 				break;
 			case 'VDEF':
 				if (!array_check($c, array('name', 'expression')))
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				$rrdgraph->addVDEF($c['name'], $c['expression']);
 				break;
 			case 'CDEF':
 				if (!array_check($c, array('name', 'expression')))
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				$rrdgraph->addCDEF($c['name'], $c['expression']);
 				break;
 			case 'LINE':
 				$rrdgraph->addLINE(array_get($c, 'width'), $intname, array_get($c, 'color'), array_get($c, 'legend'), array_get($c, 'stacked'));
-				$lasttype = $c['type'];
+				$lasttype = $type;
 				break;
 			case 'AREA':
 				$rrdgraph->addAREA($intname, array_get($c, 'color'), array_get($c, 'legend'), array_get($c, 'stacked'));
-				$lasttype = $c['type'];
+				$lasttype = $type;
 				break;
 			case 'STACK': // backwards compability
 				switch ($lasttype)
@@ -183,21 +188,21 @@ try
 			case 'TICK':
 				if (!array_check($c, array('color')))
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				$rrdgraph->addTICK($intname, $c['offset']);
 				break;
 			case 'SHIFT':
 				if (!array_check($c, array('offset')))
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				$rrdgraph->addGPRINT($intname, $c['offset']);
 				break;
 			case 'GPRINT':
 				if (!array_check($c, array('format')))
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				if (isset($c['cf']) && isset($c['name'])) // backwards compability
 				{
@@ -210,26 +215,26 @@ try
 			case 'HRULE': // backwards compability
 				if (!array_check($c, array('value')))
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				$rrdgraph->addLINE(array_get($c, 'width'), $c['value'], array_get($c, 'color'), array_get($c, 'legend'), false);
 				break;
 			case 'VRULE':
 				if (!array_check($c, array('time')))
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				$rrdgraph->addAREA($c['time'], array_get($c, 'color'), array_get($c, 'legend'));
 				break;
 			case 'COMMENT':
 				if (!array_check($c, array('text')))
 				{
-					throw new Exception('Missing values for ' . $c['type']);
+					throw new Exception('Missing values for ' . $type);
 				}
 				$rrdgraph->addCOMMENT($c['text']);
 				break;
 			default:
-				throw new Exception('Unknow type ' . $c['type']);
+				throw new Exception('Unknow type ' . $type);
 				break;
 		}
 	}
@@ -254,7 +259,10 @@ try
 catch (Exception $e)
 {
 	@header('Content-Type: text/plain');
-	$config['main']['logger']->logException(logger::ERR, $e);
+	echo "Error:\n";
+	echo $e;
+	echo "\n";
+	$config['log']['logger']->logException(logger::ERR, $e);
 }
 
 ?>

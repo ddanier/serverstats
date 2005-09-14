@@ -23,38 +23,60 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// Layout for all loggers
-abstract class logger
+class logger_syslog extends logger
 {
-	const ALL = 0;
-	const INFO = 1;
-	const WARN = 2;
-	const ERR = 3;
-	const NONE = 99;
+	public function __construct($ident = 'Serverstats', $options = null, $facility = null)
+	{
+		define_syslog_variables();
+		if (!isset($options))
+		{
+			$options = LOG_ODELAY || LOG_PID;
+		}
+		if (!isset($options))
+		{
+			$facility = LOG_USER;
+		}
+		openlog($ident, $options, $facility);
+	}
 	
-	static public function levelToString($loglevel)
+	public function __destruct()
+	{
+		// closelog();
+		/*
+		"The use of closelog() is optional."
+		Using closelog() I get this error here:
+		*** glibc detected *** double free or corruption (fasttop): 0xADDRESS ***
+		Abgebrochen
+		*/
+	}
+	
+	static private function levelToSyslogLevel($loglevel)
 	{
 		switch ($loglevel)
 		{
 			case self::INFO:
-				return lang::t('Information');
+				return LOG_INFO;
 			case self::WARN:
-				return lang::t('Warning');
+				return LOG_WARNING;
 			case self::ERR:
-				return lang::t('Error');
+				return LOG_ERR;
 			default:
-				return lang::t('Unknown error');
+				/* Unknown Error, should be logged critical */
+				return LOG_CRIT;
 		}
 	}
 	
-	static protected function needsLogging($loglevel)
+	public function logString($loglevel, $string)
 	{
-		global $config;
-		return ($loglevel >= $config['log']['level']);
+		if (!logger::needsLogging($loglevel)) return;
+		syslog(self::levelToSyslogLevel($loglevel), $string);
 	}
 	
-	abstract public function logString($loglevel, $string);
-	abstract public function logException($loglevel, Exception $exception);
+	public function logException($loglevel, Exception $exception)
+	{
+		if (!logger::needsLogging($loglevel)) return;
+		syslog(self::levelToSyslogLevel($loglevel), $exception->__toString());
+	}
 }
 
 ?>

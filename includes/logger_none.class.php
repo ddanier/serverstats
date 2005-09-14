@@ -23,13 +23,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$config = array(
-	// Language
-	'language' => 'en_US',
-	// Where to find the rrdtool binary
-	'rrdtool' => '/usr/bin/rrdtool',
-	// step for rrd-files, read 'man rrdcreate'
-	'step' => 60
-);
+class logger_none extends logger
+{
+	public function logString($loglevel, $string)
+	{
+		/* nothing */
+	}
+	
+	public function logException($loglevel, Exception $exception)
+	{
+		/* nothing */
+	}
+}
 
 ?>
