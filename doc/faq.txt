@@ -20,7 +20,7 @@
   * Have you a complete config in config/ directory?
     -> copy config.sample/ to config/ will install a simple, but
        usually working config
-    -> or set up you own config in config/ directory, see doc/ for 
+    -> or set up your own config in config/ directory, see doc/ for 
        assistance
 
   * Have you set up the cronjob to update the stats?
@@ -35,8 +35,10 @@
     here?
     -> use 'chown' to set the appropriate permissions
 
-  * Have a look at rrd/ directory - is there a .rrd file for every graph?
-    -> run 'php update.php' from commandline to see any errors
+  * Have a look at rrd/ directory - is there a .rrd file for every used data 
+    source (cpu.rrd, load.rrd, users.rrd...)?
+    -> run 'php update.php' from commandline to see any errors when trying to
+       create .rrd files
 
   * rrd files are created and graph/ has appropriate premissions and still
     no graph is created?
