@@ -88,6 +88,7 @@ class rrd
 
 	public function create()
 	{
+		$this->checkVersion();
 		$params = ' create ' . escapeshellarg($this->rrdfile);
 		$params .= ' -s ' . escapeshellarg($this->step);
 		foreach ($this->datasources as $name => $ds)
@@ -363,7 +364,7 @@ class rrd
 			throw new Exception('rrdtool ("' . $command . '") finished with exitcode ' . $return . "\n" . implode("\n", $output));
 		}
 	}
-
+	
 	public function hasDatasource($name)
 	{
 		return isset($this->datasources[$name]);
@@ -402,6 +403,25 @@ class rrd
 	public function getDefaultHeartbeat()
 	{
 		return $this->step * 4;
+	}
+	
+	private function checkVersion()
+	{
+		$output = array();
+		$return = 0;
+		$command = escapeshellcmd($this->rrdtoolbin) . ' -v';
+		exec($command . ' 2>&1', $output, $return);
+		if (isset($output[0]) && preg_match('/^rrdtool\s+(\d+)\.(\d+)\.(\d+)/i', $output[0], $parts))
+		{
+			// minimum rrdtool 1.2 required
+			if ($parts[1] < 1 || ($parts[1] == 1 && $parts[2] < 2))
+			{
+				throw new Exception('rrdtool too old, version 1.2 required (installed version: ' . $parts[1] . '.' . $parts[2] . '.' . $parts[3].')');
+			}
+		}
+		else {
+			#throw new Exception('rrdtool version check failed! serverstats requires rrdtool 1.2.');
+		}
 	}
 }
 
