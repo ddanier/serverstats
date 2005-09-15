@@ -85,10 +85,9 @@ class rrd
 		$temp['archives'] = $this->archives;
 		return $temp;
 	}
-
+	
 	public function create()
 	{
-		$this->checkVersion();
 		$params = ' create ' . escapeshellarg($this->rrdfile);
 		$params .= ' -s ' . escapeshellarg($this->step);
 		foreach ($this->datasources as $name => $ds)
@@ -160,7 +159,7 @@ class rrd
 		}
 		$this->created = true;
 	}
-
+	
 	public function addDatasource($name, $type, $p1 = null, $p2 = null, $p3 = null)
 	{
 		if ($this->created)
@@ -214,7 +213,7 @@ class rrd
 				break;
 		}
 	}
-
+	
 	public function addArchive($cf, $p1 = null, $p2 = null, $p3 = null, $p4 = null, $p5 = null)
 	{
 		if ($this->created)
@@ -299,7 +298,7 @@ class rrd
 				break;
 		}
 	}
-
+	
 	public function setValue($dsname, $value)
 	{
 		if (!isset($this->values[$dsname]))
@@ -365,6 +364,25 @@ class rrd
 		}
 	}
 	
+	public function checkVersion($compare, $neededversion)
+	{
+		$output = array();
+		$command = escapeshellcmd($this->rrdtoolbin);
+		exec($command . ' 2>&1', $output);
+		if (isset($output[0]) && preg_match('/^rrdtool\s+(\d+\.\d+\.\d+)/i', $output[0], $parts))
+		{
+			$rrdversion = $parts[1];
+			var_dump(array(
+				$rrdversion, $neededversion, $compare
+			));
+			return version_compare($rrdversion, $neededversion, $compare);
+		}
+		else
+		{
+			throw new Exception('rrdtool version check failed!');
+		}
+	}
+	
 	public function hasDatasource($name)
 	{
 		return isset($this->datasources[$name]);
@@ -374,12 +392,12 @@ class rrd
 	{
 		return $this->datasources;
 	}
-
+	
 	public function getArchives()
 	{
 		return $this->archives;
 	}
-
+	
 	public function getRRDFile()
 	{
 		return $this->rrdfile;
@@ -389,39 +407,20 @@ class rrd
 	{
 		return $this->rrdtoolbin;
 	}
-
+	
 	public function setStep($step)
 	{
 		$this->step = $step;
 	}
-
+	
 	public function getStep()
 	{
 		return $this->step;
 	}
-
+	
 	public function getDefaultHeartbeat()
 	{
 		return $this->step * 4;
-	}
-	
-	private function checkVersion()
-	{
-		$output = array();
-		$return = 0;
-		$command = escapeshellcmd($this->rrdtoolbin) . ' -v';
-		exec($command . ' 2>&1', $output, $return);
-		if (isset($output[0]) && preg_match('/^rrdtool\s+(\d+)\.(\d+)\.(\d+)/i', $output[0], $parts))
-		{
-			// minimum rrdtool 1.2 required
-			if ($parts[1] < 1 || ($parts[1] == 1 && $parts[2] < 2))
-			{
-				throw new Exception('rrdtool too old, version 1.2 required (installed version: ' . $parts[1] . '.' . $parts[2] . '.' . $parts[3].')');
-			}
-		}
-		else {
-			#throw new Exception('rrdtool version check failed! serverstats requires rrdtool 1.2.');
-		}
 	}
 }
 

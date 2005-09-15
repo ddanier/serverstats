@@ -72,6 +72,10 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 		}
 		else
 		{
+			if ($sourcerrd->checkVersion('<', '1.2'))
+			{
+				throw new Exception('rrdtool >= 1.2 required');
+			}
 			echo "\tCreating RRD-file\n";
 			$config['log']['logger']->logString(logger::INFO, 'Creating RRD-file for source "' . $sourcename . '"');
 			$source->initRRD($sourcerrd);
