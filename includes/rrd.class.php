@@ -372,9 +372,6 @@ class rrd
 		if (isset($output[0]) && preg_match('/^rrdtool\s+(\d+\.\d+\.\d+)/i', $output[0], $parts))
 		{
 			$rrdversion = $parts[1];
-			var_dump(array(
-				$rrdversion, $neededversion, $compare
-			));
 			return version_compare($rrdversion, $neededversion, $compare);
 		}
 		else

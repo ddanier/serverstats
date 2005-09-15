@@ -50,22 +50,22 @@ class logger_file extends logger
 		return $this->fh;
 	}
 	
-	private function writeToFile($string)
+	private function writeToFile($loglevel, $string)
 	{
 		$date = date('r');
-		fwrite($this->getFileHandler(), $date . ': ' . $string . "\n");
+		fwrite($this->getFileHandler(), $date . ' (' . logger::levelToString($loglevel) . '): ' . $string . "\n");
 	}
 	
 	public function logString($loglevel, $string)
 	{
 		if (!logger::needsLogging($loglevel)) return;
-		$this->writeToFile($string);
+		$this->writeToFile($loglevel, $string);
 	}
 	
 	public function logException($loglevel, Exception $exception)
 	{
 		if (!logger::needsLogging($loglevel)) return;
-		$this->writeToFile($exception->__toString());
+		$this->writeToFile($loglevel, $exception->__toString());
 	}
 }
 

@@ -34,25 +34,25 @@ class logger_mail extends logger
 		$this->subject = $subject;
 	}
 	
-	private function sendEmail($body)
+	private function sendEmail($loglevel, $message)
 	{
 		mail(
 			$this->address,
-			$this->subject,
-			$body
+			$this->subject . ': ' . logger::levelToString($loglevel),
+			$message
 			);
 	}
 	
 	public function logString($loglevel, $string)
 	{
 		if (!logger::needsLogging($loglevel)) return;
-		$this->sendEmail($string);
+		$this->sendEmail($loglevel, $string);
 	}
 	
 	public function logException($loglevel, Exception $exception)
 	{
 		if (!logger::needsLogging($loglevel)) return;
-		$this->sendEmail($exception->__toSTring());
+		$this->sendEmail($loglevel, $exception->__toSTring());
 	}
 }
 
