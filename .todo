@@ -17,20 +17,23 @@
             graph features
         </note>
     </note>
-    <note priority="high" time="1120030194">
+    <note priority="high" time="1120030194" done="1126975204">
         add more and better documentation
     </note>
-    <note priority="high" time="1126344228">
+    <note priority="high" time="1126344228" done="1126975191">
         Errorlogging
-    </note>
-    <note priority="medium" time="1121445220">
-        Support all graph options
     </note>
     <note priority="medium" time="1126281625" done="1126344729">
         sources/disk.php: deriveValue() -&gt; Hier sollte ein für das System passender Maximalwert ausgelesen werden
         <comment>
             ini_set('precision', 32) in init.php
         </comment>
+    </note>
+    <note priority="high" time="1126975273">
+        safe_mode bugfixes (auto-escapeshellcmd() for exec()) or document that Serverstats is safe_mode=off only
+    </note>
+    <note priority="medium" time="1121445220">
+        Support all graph options
     </note>
     <note priority="low" time="1120030175">
         add more sources
