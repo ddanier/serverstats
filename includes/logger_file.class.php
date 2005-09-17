@@ -45,7 +45,10 @@ class logger_file extends logger
 	{
 		if (!isset($this->fh)) 
 		{
-			$this->fh = fopen($this->file, 'a+');
+			if (!$this->fh = fopen($this->file, 'a+'))
+			{
+				throw new Exception('Could not open file (' . $this->file . ') for errorlogging');
+			}
 		}
 		return $this->fh;
 	}

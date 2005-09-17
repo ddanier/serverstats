@@ -29,11 +29,19 @@ $config = array();
 
 // You can define multiple RRAs, this is the default: (don't delete the default)
 $config['default'] = array(
+	'day' => array('steps' => 1, 'rows' => 1200, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 4 days
+	'week' => array('steps' => 2, 'rows' => 1800, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 2 weeks
+	'month' => array('steps' => 12, 'rows' => 1500, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 2 month
+	'year' => array('steps' => 36, 'rows' => 12000, 'cf' => 'AVERAGE', 'xff' => 0.5) // ca. 4 years
+);
+/* Use this for a 60 seconds step
+$config['default'] = array(
 	'hour' => array('steps' => 1, 'rows' => 1800, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 24 hours
 	'day' => array('steps' => 5, 'rows' => 1200, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 4 days
 	'week' => array('steps' => 10, 'rows' => 1800, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 2 weeks
 	'month' => array('steps' => 60, 'rows' => 1500, 'cf' => 'AVERAGE', 'xff' => 0.5), // ca. 2 month
 	'year' => array('steps' => 180, 'rows' => 12000, 'cf' => 'AVERAGE', 'xff' => 0.5) // ca. 4 years
 );
+*/
 
 ?>

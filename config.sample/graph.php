@@ -466,7 +466,7 @@ $config['list'] = array(
 );
 // Define what Graphes we want in the detail view (detail.php)
 $config['types'] = array(
-	array('title' => 'Hour', 'period' => 3600),
+//	array('title' => 'Hour', 'period' => 3600), // only useful if you have a small step
 	array('title' => 'Day', 'period' => 86400),
 	array('title' => 'Week', 'period' => 604800),
 	array('title' => 'Month', 'period' => 2678400),

@@ -29,7 +29,7 @@ $config = array(
 	// Where to find the rrdtool binary
 	'rrdtool' => '/usr/bin/rrdtool',
 	// step for rrd-files, read 'man rrdcreate'
-	'step' => 60
+	'step' => 300
 );
 
 ?>

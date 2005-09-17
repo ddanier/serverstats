@@ -24,6 +24,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+// Abort if the script is run by the webserver
+if (!isset($_SERVER["argv"][0])) {
+        die('<br /><strong>Read the README</strong>');
+}
+
 // Load all needed classes, function and everything else
 require_once('init.php');
 
