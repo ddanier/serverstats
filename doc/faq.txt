@@ -3,8 +3,6 @@
  Version: $Id$
 ===============================================================================
 
-1. graph not displayed in browser
-
 ===============================================================================
  1. I have installed serverstats, but my browser does not display one or more
     graphs / images are broken.
@@ -45,3 +43,12 @@
     -> right-click the broken graph image in your browser, and 
        select "view image". This should display a serverstats/rrdtool error
        message, to help you where to look at
+
+===============================================================================
+ 1. PHP exits with an error telling that ArrayIterator is missing, have you
+    forget to include that?
+==============================================================================
+
+  * ArrayIterator is part of the SPL, you have to compile PHP with SPL-support or
+    enable it if its compiled but disabled.
+    -> Gentoo: USE="spl" emerge php
