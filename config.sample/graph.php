@@ -462,7 +462,32 @@ $config['list'] = array(
                 'color' => 'FF0000'
             )
         )
-    )
+    ),
+    array(
+        'title' => 'Traffic (eth0)',
+        'lowerLimit' => 0,
+        'altAutoscaleMax' => true,
+        'content' => array(
+            array(
+                'type' => 'LINE',
+                'source' => 'traffic_proc',
+                'ds' => 'eth0_rbytes',
+                'cf' => 'AVERAGE',
+                'legend' => 'Download Bytes/s',
+                'width' => 1,
+                'color' => '0002A3'
+            ),
+            array(
+                'type' => 'LINE',
+                'source' => 'traffic_proc',
+                'ds' => 'eth0_tbytes',
+                'cf' => 'AVERAGE',
+                'legend' => 'Upload Bytes/s',
+                'width' => 1,
+                'color' => '00A302'
+            )
+        )
+    ) 
 );
 // Define what Graphes we want in the detail view (detail.php)
 $config['types'] = array(

@@ -29,5 +29,6 @@ $config['cpu']['module'] = new cpu();
 $config['mem']['module'] = new memory();
 $config['load']['module'] = new load();
 $config['users']['module'] = new users();
+$config['traffic_proc']['module'] = new traffic_proc();
 
 ?>
