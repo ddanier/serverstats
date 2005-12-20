@@ -3,7 +3,7 @@
  Version: $Id$
 ===============================================================================
 
-Homepage: http://www.webmasterpro.de/ddanier/serverstats/
+Homepage: http://serverstats.berlios.de/
 Author: David Danier, david.danier@team23.de
 Licence: GPL v2
 
@@ -20,16 +20,16 @@ Basic Installation:
 
 Basic Installation Steps:
 
-* download latest version from http://www.webmasterpro.de/ddanier/serverstats/
-* extract serverstats archive somewhere in webservers document root
-* copy/move config.sample/ to config/
-* graph/ must be writable for the webserver user
-* cache/ and rrd/ must be writable by the user updating the stats (cronjob)
-* add update.php to the crontab, for example:
+ 1. download latest version from http://serverstats.berlios.de/
+ 2. extract serverstats archive somewhere in webservers document root
+ 3. copy or move config.sample/ to config/
+ 4. graph/ must be writable for the webserver user
+ 5. cache/ and rrd/ must be writable by the user updating the stats (cronjob)
+ 6. add update.php to the crontab, for example:
 
         * * * * * php /path/to/serverstats/update.php
         
-"It doesn't work":
+if "it doesn't work":
 
   Have a look at doc/faq.txt, to find out what to do if no graphs are displayed.
         
