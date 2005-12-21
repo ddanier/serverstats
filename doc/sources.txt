@@ -3,18 +3,103 @@
  Version: $Id$
 ===============================================================================
 
-1. apache
-2. disk
-3. external
-4. memory
-5. users
-6. cpu
-7. load
-8. mysql
-9. traffic
+1. how to install sources
+
+2. sources bundled with serverstats
+  2.1. apache
+  2.2. disk
+  2.3. external
+  2.4. memory
+  2.5. users
+  2.6. cpu
+  2.7. load
+  2.8. mysql
+  2.9. traffic
+  
+3. additional sources
+
+4. how to configure a graph 
 
 ===============================================================================
- 1. apache
+ 1. how to install sources
+===============================================================================
+
+If you want to install a source, there must be a source class in sources/
+directory of serverstats. serverstats comes with a brunch of sources (see "2.
+sources bundled with serverstats"), but only a few of them work without any
+configuration. Those simple sources/graphs can be found in config.sample/.
+Simply by copying config.sample/ to config/ you will get some nice graphs,
+usually without an further configuration (beside the update.php cronjob).
+
+But if you want to use more advanced sources, you have to change the
+serverstats configuration.
+
+If you want to use one of the bundled sources, you only have to add a line in
+config/sources.php:
+
+  $config[<sourcemodulname>]['module'] = new <sourcemodulname>([parameters]);
+
+<sourcemodulname> is the name of the source, e.g. "disk" for sources/disk.php.
+
+[parameters] is sometimes needed, sometimes not, depending on the specific
+source. That's what chapter 2 ("sources bundled with serverstats") is for, it
+describes the parameters which can/must be provided.
+
+Available [parameters] can also be found in __construct() methode from
+sources/<sourcemodulname>.php. Here you can find out which [parameter] is
+mandatory and which is optional.
+
+An example line from sources/disk.php:
+
+  public function __construct($disk, $withpartitions = false,
+      $sector_size = 512, $path_stat = '/proc/diskstats')
+
+here $disk is a mandatory [parameter] (e.g. 'hda'), all the other [parameters]
+have default values like $path_stat = '/proc/diskstats' which don't need to be
+changed if the default is OK. So the line in config/sources.php for the disk
+source could look like this:
+
+  $config['disk']['module'] = new disk('hda');
+
+If you have a "sector size" of 1024 and not the default 512, you have to pass
+something like that: 
+
+  $config['disk']['module'] = new disk('hdb', false, 1024);
+
+If a parameter has no default value, it must be provided in config/sources.php.
+
+If you want to use an additional source, not one of the bundled ones, you have
+to install the source class in the sources/ directory and add a corresponding
+line in config/sources.php:
+
+  $config[<sourcemodulname>]['module'] = new <sourcemodulname>([parameters]);
+
+For information about the correct settings for <sourcemodulname> and
+[parameters] ask the author of the source, or have a look at 
+sources/<sourcemodulname>.php again (as described above for bundled sources).
+
+See chapter 3. ("additional sources") for further information. 
+
+===============================================================================
+ 2. sources bundled with serverstats
+===============================================================================
+
+Here we provide information, on how to install specific sources, which are
+bundled with serverstats. You can find the sources in  sources/ directory of
+the serverstats archive.
+
+"Parameters" describes all available parameters for config/sources.php:
+
+  $config[<sourcemodulname>]['module'] = new <sourcemodulname>([parameters]);
+
+"Datasources" describes the available datasources ('ds') which can be displayed
+by a graph, see doc/graph-config.txt for details.
+
+"Additional configuration" provides information for sources, which don't work
+by configuring serverstats only, but needs external software to read the data.
+
+===============================================================================
+ 2.1. apache
 ===============================================================================
 
 Reads the statistics created by apache. This is done by accessing
@@ -74,7 +159,7 @@ As defined above.
 requestsps, kilobytesps)
 
 ===============================================================================
- 2. disk
+ 2.2. disk
 ===============================================================================
 
 Reads the disk-statistics from /proc/diskstats (kernel 2.6) and saves the
@@ -102,7 +187,7 @@ Datasources:
 		Same for partitions
 
 ===============================================================================
- 3. external
+ 2.3. external
 ===============================================================================
 
 Runs an external script and reads the data provided by the script. Format to
@@ -124,7 +209,7 @@ Datasources:
 Depends on command.
 
 ===============================================================================
- 4. memory
+ 2.4. memory
 ===============================================================================
 
 Reads /proc/meminfo and logs selected variables from the file.
@@ -156,7 +241,7 @@ As defined above.
 (Default: MemTotal, MemFree, Cached, SwapCached, SwapTotal, SwapFree)
 
 ===============================================================================
- 5. users
+ 2.5. users
 ===============================================================================
 
 Runs 'users' and logs the number of users logged in.
@@ -170,7 +255,7 @@ Datasources:
 	users: Number of users logged in
 
 ===============================================================================
- 6. cpu
+ 2.6. cpu
 ===============================================================================
 
 Reads /proc/stat and caclulate the usage of the CPU.
@@ -190,7 +275,7 @@ Datasources:
 		Same for multiple processors
 
 ===============================================================================
- 7. load
+ 2.7. load
 ===============================================================================
 
 Reads /proc/loadavg and logs the load of the system.
@@ -208,7 +293,7 @@ Datasources:
 	tasks: number of tasks
 
 ===============================================================================
- 8. mysql
+ 2.8. mysql
 ===============================================================================
 
 Logs into a mysql-server and fetches some statistics.
@@ -230,7 +315,7 @@ Datasources:
 	processcount: Current count of "SHOW PROCESSLIST"
 
 ===============================================================================
- 9. traffic
+ 2.9. traffic
 ===============================================================================
 
 Uses an external script and some iptables-rules to log the traffic.
@@ -261,3 +346,18 @@ $logdir: Path where traffic.sh stores the logs
 Datasources:
 	traffic: Trafficcounter
 	bps: Bytes per second
+
+===============================================================================
+ 3. additional sources
+===============================================================================
+
+Additional sources, provided by users of serverstats can be found (and 
+submitted) here:
+
+http://serverstats.berlios.de/sources.html
+
+===============================================================================
+4. how to configure a graph 
+===============================================================================
+
+Have a look at doc/graph-config.txt
