@@ -31,38 +31,55 @@
   of the used parameters.
 
   ---------------------------------------------------------------------------
-  
+
   Settings in config/sources.php (for data sources 'load' and 'users'):
-  
+
     $config = array(); // this line is only needed once in this file
     $config['load']['module'] = new load();
-    $config['load']['rra'] = 'default';
     $config['users']['module'] = new users();
-    $config['users']['rra'] = 'default';
 
-  Explaination:
+  Explanation:
 
   For every source you have to enter the following:
 
     $config[<name>]['module'] = new <sourcemodulname>([parameters]);
-    $config[<name>]['rra'] = 'default';
-  
+
   <sourcemodulname> is a class in sources/ directory, which is used to collect
-  the data. Serverstats ships with a lot of sources, we will use 
+  the data. serverstats ships with a lot of sources, we will use 
   sources/load.php and sources/users.php in this guide, because they don't need
   any additional configuration to work.
-   
+
   For information on how to set up sources for Traffic, Apache requests/s, ...
   have a lock at doc/sources.txt.
 
   Available [parameters] can be found in __construct() methode 
-  in sources/<sourcemodulname>.php and in doc/sources.txt. For 'load' and
-  'users' no additional parameters are available (or needed).
+  in sources/<sourcemodulname>.php and in doc/sources.txt. An example line from
+  sources/disk.php:
+
+    public function __construct($disk, $withpartitions = false,
+        $sector_size = 512, $path_stat = '/proc/diskstats')
+
+  here $disk is a mandatory parameter (e.g. 'hda'), all the other partameters
+  have default values like $path_stat = '/proc/diskstats' which don't need to
+  be changed if the default is OK. So the line in config/sources.php for the
+  disk source could look like this:
+
+    $config['disk']['module'] = new disk('hda');
+
+  If you have a "sector size" of 1024 and not the default 512, you have to pass
+  something like that: 
+
+    $config['disk']['module'] = new disk('hdb', false, 1024);
+
+  The parameters are explained in doc/sources.txt in detail. If a parameter has
+  no default value, it must be provided in config/sources.php.
+
+  For 'load' and 'users' no additional parameters are available (or needed).
 
   ---------------------------------------------------------------------------
 
   Example for settings in config/graph.php
-  
+
   (for only two graphs from data source 'load' and 'users'):
 
     $config['list'] = array(
@@ -117,7 +134,7 @@
             )
     );
 
-  Explaination:
+  Explanation:
 
     $config['list']
 
@@ -129,7 +146,7 @@
     $config['list'][0]
 
   the first graph, in this case 'Number of User logged in'.
-  
+
   Settings in element 'content':
 
     * 'type' - that's the Typ of graph (line, area..., see:
@@ -176,7 +193,7 @@
       see: http://people.ee.ethz.ch/oetiker/webtools/rrdtool/doc/rrdtool.en.html#item_consolidation
 
     * 'legend' (optional) - that's the legend displayed below the graph
-    
+
       - if you want to display ':' you have to escape it (":" -> "\:")
       - you get new lines using "\n"  (see 'man rrdgraph')
 
@@ -196,10 +213,8 @@
 ===============================================================================
 
   More complex, working examples can be found in config.sample/.
-  
+
   A more advanced configuration with a lot of nice graphs can be found here:
 
 	* demo -> http://www.webmasterpro.de/~ddanier/serverstats/demo/
 	* config -> http://www.webmasterpro.de/~ddanier/serverstats/graph_example.phps
-
-
