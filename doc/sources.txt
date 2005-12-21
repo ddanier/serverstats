@@ -15,6 +15,7 @@
   2.7. load
   2.8. mysql
   2.9. traffic
+  2.10. traffic_proc
   
 3. additional sources
 
@@ -346,6 +347,32 @@ $logdir: Path where traffic.sh stores the logs
 Datasources:
 	traffic: Trafficcounter
 	bps: Bytes per second
+
+===============================================================================
+ 2.10. traffic_proc
+===============================================================================
+
+Uses '/proc/net/dev' to log the traffic (Bytes, Packets)
+  no additional config like iptables or snmp needed.
+
+Parameters:
+$ifs: network interface
+	Format: String
+	Default: 'eth0'
+$procfile: Path to the needed /proc/-file 
+	Format: String
+	Default: '/proc/net/dev'
+	
+Datasources:
+	rbytes: Downloaded Bytes
+	rpackets: Downloaded Packets
+	tbytes: Uploaded Bytes
+	tpackets: Uploaded Packets
+	
+The datasources for graph.php config ('ds') have to be assembled by the $ifs
+and the "Datasources", e.g.:
+
+  'ds' => 'eth0_rbytes',
 
 ===============================================================================
  3. additional sources
