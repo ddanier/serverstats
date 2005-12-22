@@ -24,7 +24,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class cpu extends source
+class cpu extends source implements cached
 {
 	private $path_stat;
 	
@@ -104,11 +104,6 @@ class cpu extends source
 				);
 			}
 		}
-	}
-	
-	public function useCache()
-	{
-		return true;
 	}
 	
 	public function initCache()

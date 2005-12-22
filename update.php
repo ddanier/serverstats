@@ -48,7 +48,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			throw new Exception('Source "' . $sourcename . '" not instanceof source');
 		}
 		$source->init();
-		if ($source->useCache())
+		if ($source instanceof cached)
 		{
 			if (file_exists($cachefile))
 			{
@@ -62,7 +62,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			}
 		}
 		$source->refreshData();
-		if ($source->useCache())
+		if ($source instanceof cached)
 		{
 			$cache = serialize($source->getCache());
 			file_put_contents($cachefile, $cache);
