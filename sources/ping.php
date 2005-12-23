@@ -25,23 +25,15 @@
 
 class ping extends source
 {
-	private $hosts;
-	private $data = array();
+	private $host;
+	private $ping_time;
 	
 	private $ping_exec;
 	private $ping_opts;
 	
-	public function __construct($hosts, $ping_exec = '/bin/ping', $ping_opts = '-c 1')
+	public function __construct($host, $ping_opts = '-c 1', $ping_exec = '/bin/ping')
 	{
-		if (is_string($hosts))
-		{
-			$hosts = array($hosts);
-		}
-		if (!is_array($hosts))
-		{
-			throw new Exception('$hosts not an array');
-		}
-		$this->hosts = $hosts;
+		$this->host = $host;
 		$this->ping_exec = $ping_exec;
 		$this->ping_opts = $ping_opts;
 	}
@@ -54,33 +46,33 @@ class ping extends source
 		{
 			$opt_string .= ' ' . escapeshellarg($opt);
 		}
-		foreach ($this->hosts as $host)
+		$command = escapeshellcmd($this->ping_exec) . $opt_string . ' ' . $this->host;
+		$output = array();
+		$return = 0;
+		exec($command . ' 2>&1', $output, $return);
+		if ($return != 0)
 		{
-			$command = escapeshellcmd($this->ping_exec) . $opt_string . ' ' . $host;
-			exec($command . ' 2>&1', $output, $return);
-			if ($return != 0)
+			throw new Exception('rrdtool ("' . $command . '") finished with exitcode ' . $return . "\n" . implode("\n", $output));
+		}
+		foreach ($output as $line)
+		{
+			$matches = array();
+			if (preg_match('/^.*icmp_seq=.+ttl=.+time=([0-9\.]+) ms$/', $line, $matches))
 			{
-				throw new Exception('rrdtool ("' . $command . '") finished with exitcode ' . $return . "\n" . implode("\n", $output));
-			}
-			foreach ($output as $line)
-			{
-				if (preg_match('/^.*icmp_seq=.+ttl=.+time=([0-9\.]+) ms$/', $line, $matches))
-				{
-					$this->data[$host] = $matches[1];
-					break;
-				}
+				$this->ping_time = $matches[1];
+				break;
 			}
 		}
 	}
 	
 	public function initRRD(rrd $rrd)
 	{
-		$rrd->addDatasource('read', 'GAUGE', null, 0);
+		$rrd->addDatasource('time', 'GAUGE', null, 0);
 	}
 	
 	public function updateRRD(rrd $rrd)
 	{
-		$rrd->setValue('read', $this->stats_disk['sectors_read'] * $this->sector_size);
+		$rrd->setValue('time', $this->ping_time);
 	}
 }
 
