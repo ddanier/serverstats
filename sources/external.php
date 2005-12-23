@@ -26,7 +26,7 @@
 class external extends source
 {
 	private $command;
-	private $datarow;
+	private $datarows;
 	private $data;
 
 	private $dsdef = array();
@@ -48,17 +48,19 @@ class external extends source
 	
 	private function getDatarow()
 	{
-		if (isset($this->datarow))
+		if (isset($this->datarows))
 		{
 			return;
 		}
-		$this->datarow = exec(escapeshellcmd($this->command));
-		if ($this->datarow === false)
+		$this->datarows = array();
+		$return = 0;
+		exec(escapeshellcmd($this->command), $this->datarows, $return);
+		if ($return !== 0)
 		{
 			throw new Exception('Could not exec command (' . $this->command . ')');
 		}
 		// Some scripts have ugly output, so we have to delete all unneeded spaces
-		$this->datarow = preg_replace('/([a-zA-Z0-9_]{1,19})[\s,]*:[\s,]*(.+)/', '\\1:\\2', $this->datarow);
+		$this->datarows = preg_replace('/([a-zA-Z0-9_]{1,19})[\s,]*:[\s,]*(.+)/', '\\1:\\2', $this->datarows);
 	}
 	
 	private function getData()
@@ -69,16 +71,19 @@ class external extends source
 		}
 		$this->getDatarow();
 		$this->data = array();
-		$elements = preg_split('/[\s,]+/', $this->datarow);
-		foreach ($elements as $element)
+		foreach ($this->datarows as $datarow)
 		{
-			if (preg_match('/^([a-zA-Z0-9_]{1,19}):(.+)$/', $element, $split))
+			$elements = preg_split('/[\s,]+/', $datarow);
+			foreach ($elements as $element)
 			{
-				$this->data[$split[1]] = $split[2];
-			}
-			else
-			{
-				$this->data[] = $element;
+				if (preg_match('/^([a-zA-Z0-9_]{1,19}):(.+)$/', $element, $split))
+				{
+					$this->data[$split[1]] = $split[2];
+				}
+				else
+				{
+					$this->data[] = $element;
+				}
 			}
 		}
 	}
