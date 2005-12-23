@@ -31,7 +31,7 @@ class ping extends source
 	private $ping_exec;
 	private $ping_opts;
 	
-	public function __construct($host, $ping_opts = '-c 1', $ping_exec = '/bin/ping')
+	public function __construct($host, $ping_opts = '-c 1 -W 1', $ping_exec = '/bin/ping')
 	{
 		$this->host = $host;
 		$this->ping_exec = $ping_exec;
