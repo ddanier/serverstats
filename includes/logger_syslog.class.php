@@ -32,7 +32,7 @@ class logger_syslog extends logger
 		{
 			$options = LOG_ODELAY || LOG_PID;
 		}
-		if (!isset($options))
+		if (!isset($facility))
 		{
 			$facility = LOG_USER;
 		}

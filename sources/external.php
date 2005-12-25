@@ -28,14 +28,14 @@ class external extends source
 	private $command;
 	private $datarows;
 	private $data;
-
+	
 	private $dsdef = array();
 	
 	public function __construct($command)
 	{
 		$this->command = $command;
 	}
-
+	
 	public function addDatasourceDefinition($name, $type = 'GAUGE', $heartbeat = null, $min = 'U', $max = 'U')
 	{
 		$this->dsdef[$name] = array(

@@ -56,7 +56,7 @@ class ping_service extends source
 			socket_set_blocking($socket, true); // just to be sure
 			if (feof($socket))
 			{
-				throw new Exception('Connection closed while sending commands');
+				throw new Exception('Connection closed while sending command');
 			}
 			fwrite($socket, $this->command);
 			fgetc($socket); // read one char
