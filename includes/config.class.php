@@ -29,10 +29,9 @@ class config implements ArrayAccess, IteratorAggregate
 	protected $vars = array();
 	protected $rootConfig;
 	
-	public function __construct($dir, $vars = array(), $rootConfig = null)
+	public function __construct($dir, $rootConfig = null)
 	{
 		$this->dir = $dir;
-		$this->vars = &$vars;
 		if (isset($rootConfig))
 		{
 			if ($rootConfig instanceof Config)
@@ -129,11 +128,12 @@ class config implements ArrayAccess, IteratorAggregate
 		}
 		if (is_array($this->vars[$offset]))
 		{
-			return new
+			$subconfig = new
 				Config(
 					$this->dir . $offset . DIRECTORY_SEPARATOR,
-					&$this->vars[$offset],
 					$this->rootConfig);
+			$subconfig->vars = &$this->vars[$offset];
+			return $subconfig;
 		}
 		else
 		{
