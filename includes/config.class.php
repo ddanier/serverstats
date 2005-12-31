@@ -129,7 +129,7 @@ class config implements ArrayAccess, IteratorAggregate
 		if (is_array($this->vars[$offset]))
 		{
 			$subconfig = new
-				Config(
+				config(
 					$this->dir . $offset . DIRECTORY_SEPARATOR,
 					$this->rootConfig);
 			$subconfig->vars = &$this->vars[$offset];
@@ -170,7 +170,7 @@ class config implements ArrayAccess, IteratorAggregate
 	{
 		throw new Exception('Config may not be changed');
 	}
-
+	
 	public function offsetUnset($offset)
 	{
 		throw new Exception('Config may not be changed');
