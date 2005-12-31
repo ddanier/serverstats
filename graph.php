@@ -259,9 +259,9 @@ try
 catch (Exception $e)
 {
 	@header('Content-Type: text/plain');
-	echo "Error:\n";
+	echo "Error:" . PHP_EOL;
 	echo $e;
-	echo "\n";
+	echo PHP_EOL;
 	$config['log']['logger']->logException(logger::ERR, $e);
 }
 

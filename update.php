@@ -34,7 +34,7 @@ require_once('init.php');
 
 foreach ($config['sources'] as $sourcename => $sourcedata)
 {
-	echo "Working on $sourcename\n";
+	echo "Working on $sourcename" . PHP_EOL;
 	$source = $sourcedata['module'];
 	// All needed Vars
 	$cachefile = CACHEPATH . $sourcename . '.sav';
@@ -81,7 +81,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			{
 				throw new Exception('rrdtool >= 1.2 required');
 			}
-			echo "\tCreating RRD-file\n";
+			echo "\tCreating RRD-file" . PHP_EOL;
 			$config['log']['logger']->logString(logger::INFO, 'Creating RRD-file for source "' . $sourcename . '"');
 			$source->initRRD($sourcerrd);
 			$sourcerrd->setStep($config['main']['step']);
@@ -102,16 +102,16 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			file_put_contents($rrdcachefile, $cache);
 			unset($cache);
 		}
-		echo "\tUpdating RRD-file\n";
+		echo "\tUpdating RRD-file" . PHP_EOL;
 		$config['log']['logger']->logString(logger::INFO, 'Updating source "' . $sourcename . '"');
 		$source->updateRRD($sourcerrd);
 		$sourcerrd->update();
 	}
 	catch (Exception $e)
 	{
-		echo "Error:\n";
+		echo "Error:" . PHP_EOL;
 		echo $e;
-		echo "\n";
+		echo PHP_EOL;
 		$config['log']['logger']->logException(logger::ERR, $e);
 	}
 }
