@@ -92,7 +92,7 @@ class disk extends source
 		}
 		else
 		{
-			if (!($lines = file($this->path_stat)))
+			if (($lines = @file($this->path_stat)) === false)
 			{
 				throw new Exception('Could not read "' . $this->path_stat . '"');
 			}

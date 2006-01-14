@@ -27,7 +27,7 @@ class users extends source
 {
 	private $usersbin;
 	private $count;
-
+	
 	public function __construct($usersbin = '/usr/bin/users')
 	{
 		$this->usersbin = $usersbin;
@@ -35,18 +35,22 @@ class users extends source
 	
 	public function refreshData()
 	{
-		if (!($cmdoutput = exec(escapeshellcmd($this->usersbin))))
+		$return = 0;
+		$datarows = array();
+		exec(escapeshellcmd($this->usersbin), $datarows, $return);
+		if ($return !== 0)
 		{
 			throw new Exception('Could not execute "' . $this->usersbin . '"');
 		}
+		$cmdoutput = implode(' ', $datarows);
 		$this->count = count(explode(' ', trim($cmdoutput . ' x'))) - 1;
 	}
-
+	
 	public function initRRD(rrd $rrd)
 	{
 		$rrd->addDatasource('users', 'GAUGE', null, 0);
 	}
-
+	
 	public function updateRRD(rrd $rrd)
 	{
 		$rrd->setValue('users', $this->count);

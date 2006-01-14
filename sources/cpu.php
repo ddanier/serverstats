@@ -85,7 +85,7 @@ class cpu extends source implements cached
 			return;
 		}
 		
-		if (!($lines = file($this->path_stat)))
+		if (($lines = @file($this->path_stat)) === false)
 		{
 			throw new Exception('Could not read "' . $this->path_stat . '"');
 		}

@@ -40,7 +40,7 @@ class load extends source
 	
 	public function refreshData()
 	{
-		if (!($temp = file_get_contents($this->loadavgfile)))
+		if (($temp = @file_get_contents($this->loadavgfile)) === false)
 		{
 			throw new Exception('Could not read "' . $this->loadavgfile . '"');
 		}
@@ -52,7 +52,7 @@ class load extends source
 		$this->running = $temp[0];
 		$this->tasks = $temp[1];
 	}
-
+	
 	public function initRRD(rrd $rrd)
 	{
 		$rrd->addDatasource('1min', 'GAUGE', null, 0);
@@ -61,7 +61,7 @@ class load extends source
 		$rrd->addDatasource('running', 'GAUGE', null, 0);
 		$rrd->addDatasource('tasks', 'GAUGE', null, 0);
 	}
-
+	
 	public function updateRRD(rrd $rrd)
 	{
 		$rrd->setValue('1min', $this->min1);

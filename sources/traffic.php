@@ -28,7 +28,7 @@ class traffic extends source
 	private $logdir;
 	private $chain;
 	private $cache;
-
+	
 	private $traffic;
 	
 	public function __construct($chain, $logdir = null)
@@ -40,10 +40,10 @@ class traffic extends source
 		$this->logdir = $logdir;
 		$this->chain = $chain;
 	}
-
+	
 	public function refreshData()
 	{
-		if (!($traffic = @file_get_contents($this->logdir . DIRECTORY_SEPARATOR . $this->chain)))
+		if (($traffic = @file_get_contents($this->logdir . DIRECTORY_SEPARATOR . $this->chain)) === false)
 		{
 			throw new Exception('Could not get current data');
 		}
@@ -53,13 +53,13 @@ class traffic extends source
 		}
 		$this->traffic = $traffic;
 	}
-
+	
 	public function initRRD(rrd $rrd)
 	{
 		$rrd->addDatasource('traffic', 'GAUGE', null, 0);
 		$rrd->addDatasource('bps', 'DERIVE', null, 0);
 	}
-
+	
 	public function updateRRD(rrd $rrd)
 	{
 		$rrd->setValue('traffic', $this->traffic);

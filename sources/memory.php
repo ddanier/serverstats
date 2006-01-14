@@ -52,7 +52,7 @@ class memory extends source
 	
 	public function refreshData()
 	{
-		if (!($temp = file($this->meminfofile)))
+		if (($temp = @file($this->meminfofile)) === false)
 		{
 			throw new Exception('Could not read "' . $this->meminfofile . '"');
 		}
@@ -77,7 +77,7 @@ class memory extends source
 			}
 		}
 	}
-
+	
 	public function initRRD(rrd $rrd)
 	{
 		foreach ($this->data as $name => $value)
@@ -88,7 +88,7 @@ class memory extends source
 			}
 		}
 	}
-
+	
 	public function updateRRD(rrd $rrd)
 	{
 		foreach ($this->data as $name => $value)

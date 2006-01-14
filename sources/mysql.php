@@ -29,7 +29,7 @@ class mysql extends source
 	private $host;
 	private $user;
 	private $password;
-
+	
 	private $questions;
 	private $processcount;
 	
@@ -42,7 +42,7 @@ class mysql extends source
 	
 	public function init()
 	{
-		if (!($this->db = mysql_connect($this->host, $this->user, $this->password)))
+		if (($this->db = @mysql_connect($this->host, $this->user, $this->password)) === false)
 		{
 			throw new Exception('Could not connect to database');
 		}
@@ -63,14 +63,14 @@ class mysql extends source
 		$this->questions = $questions;
 		$this->processcount = $processcount;
 	}
-
+	
 	public function initRRD(rrd $rrd)
 	{
 		$rrd->addDatasource('questions', 'GAUGE', null, 0);
 		$rrd->addDatasource('questionsps', 'DERIVE', null, 0);
 		$rrd->addDatasource('processcount', 'GAUGE', null, 0);
 	}
-
+	
 	public function updateRRD(rrd $rrd)
 	{
 		$rrd->setValue('questions', $this->questions);

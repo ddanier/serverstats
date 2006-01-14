@@ -74,7 +74,7 @@ class apache extends source
 	
 	public function refreshData()
 	{
-		if (!($lines = @file($this->url_serverstatus)))
+		if (($lines = @file($this->url_serverstatus)) === false)
 		{
 			throw new Exception('Error while reading Apache-status');
 			return;

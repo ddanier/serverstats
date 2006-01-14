@@ -44,7 +44,7 @@ class traffic_proc extends source
 	
 	public function refreshData()
 	{
-		if (!($lines = file($this->procfile)))
+		if (($lines = @file($this->procfile)) === false)
 		{
 			throw new Exception('Could not read ' . $this->procfile);
 		}
