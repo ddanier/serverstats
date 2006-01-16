@@ -29,7 +29,7 @@ class rrd
 	private $rrdfile;
 	private $created = false;
 	
-	private $step = 60;
+	private $step = 300;
 	private $datasources = array();
 	private $archives = array();
 	private $values = array();
@@ -38,52 +38,139 @@ class rrd
 	{
 		$this->rrdtoolbin = $rrdtoolbin;
 		$this->rrdfile = $rrdfile;
-	}
-	
-	public function initOptions($temp)
-	{
-		$this->step = $temp['step'];
-		$this->datasources = $temp['datasources'];
-		$this->archives = $temp['archives'];
-		foreach ($this->datasources as $name => $ds)
+		if (file_exists($this->rrdfile))
 		{
-			// Backwards compability
-			if (isset($ds['name']))
-			{
-				$name = $ds['name'];
-			}
-			switch($ds['type'])
-			{
-				case 'GAUGE':
-				case 'COUNTER':
-				case 'DERIVE':
-				case 'ABSOLUTE':
-					$this->values[$name] = 'U';
-					break;
-				case 'COMPUTE':
-					break;
-				default:
-					throw new Exception('Unknown Datasource-type: ' . $type);
-					break;
-			}
-		}
-		if (!file_exists($this->rrdfile))
-		{
-			$this->create();
-		}
-		else
-		{
-			$this->created = true;
+			$this->restoreOptions();
 		}
 	}
 	
-	public function getOptions()
+	private function restoreOptions()
 	{
-		$temp = array();
-		$temp['step'] = $this->step;
-		$temp['datasources'] = $this->datasources;
-		$temp['archives'] = $this->archives;
-		return $temp;
+		$output = array();
+		$return = 0;
+		$params = ' info ' . escapeshellarg($this->rrdfile);
+		$command = escapeshellcmd($this->rrdtoolbin) . $params;
+		exec($command . ' 2>&1', $output, $return);
+		if ($return != 0)
+		{
+			throw new Exception('rrdtool ("' . $command . '") finished with exitcode ' . $return . "\n" . implode("\n", $output));
+		}
+		$matches = array();
+		foreach ($output as $line)
+		{
+			if (preg_match('/^(.*?)\s*=\s*(.*?)$/', $line, $matches))
+			{
+				$key = $matches[1];
+				$value = $matches[2];
+				if ($key == 'step')
+				{
+					$this->step = $value;
+				}
+				elseif (preg_match('/^ds\[([a-zA-Z0-9_]+)\]\.(.*?)$/', $key, $matches))
+				{
+					$dsname = $matches[1];
+					$dsattribute = $matches[2];
+					if (!isset($this->datasources[$dsname]))
+					{
+						$this->datasources[$dsname] = array();
+					}
+					switch ($dsattribute)
+					{
+						case 'type':
+							$value = trim($value, '"');
+							$this->datasources[$dsname]['type'] = $value;
+							switch ($value)
+							{
+								case 'GAUGE':
+								case 'COUNTER':
+								case 'DERIVE':
+								case 'ABSOLUTE':
+									$this->values[$dsname] = 'U';
+									break;
+								case 'COMPUTE':
+									break;
+								default:
+									throw new Exception('Unknown Datasource-type: ' . $value);
+									break;
+							}
+							break;
+						case 'cdef':
+							$value = trim($value, '"');
+							$this->datasources[$dsname]['expression'] = $value;
+							break;
+						case 'min':
+							if ($value == 'NaN')
+							{
+								$this->datasources[$dsname]['min'] = 'U';
+							}
+							else
+							{
+								$this->datasources[$dsname]['min'] = floatval($value);
+							}
+							break;
+						case 'max':
+							if ($value == 'NaN')
+							{
+								$this->datasources[$dsname]['max'] = 'U';
+							}
+							else
+							{
+								$this->datasources[$dsname]['max'] = floatval($value);
+							}
+							break;
+						case 'minimal_heartbeat':
+							$this->datasources[$dsname]['heartbeat'] = intval($value);
+							break;
+					}
+				}
+				/* Not all values can be imported this way, but the
+				   RRA-definition is not needed for rrdupdate,
+				   so we may skip this */
+				/*
+				elseif (preg_match('/^rra\[([0-9]+)\]\.(.*?)$/', $key, $matches))
+				{
+					$rranum = $matches[1];
+					$rraattribute = $matches[2];
+					if (!isset($this->archives[$rranum]))
+					{
+						$this->archives[$rranum] = array();
+					}
+					switch ($rraattribute)
+					{
+						case 'cf':
+							$value = trim($value, '"');
+							$this->archives[$rranum]['cf'] = $value;
+							break;
+						case 'rows':
+							$this->archives[$rranum]['rows'] = intval($value);
+							break;
+						case 'xff':
+							$this->archives[$rranum]['xff'] = floatval($value);
+							break;
+						case 'pdp_per_row':
+							$this->archives[$rranum]['steps'] = intval($value);
+							break;
+						case 'alpha':
+							$this->archives[$rranum]['alpha'] = floatval($value);
+							break;
+						case 'beta':
+							$this->archives[$rranum]['beta'] = floatval($value);
+							break;
+						case 'gamma':
+							$this->archives[$rranum]['gamma'] = floatval($value);
+							break;
+						case 'failure_threshold':
+							$this->archives[$rranum]['threshold'] = $value;
+							break;
+						case 'window_length':
+							$this->archives[$rranum][''] = $value;
+							break;
+					}
+				}
+				*/
+			}
+		}
+		$this->created = true;
 	}
 	
 	public function create()

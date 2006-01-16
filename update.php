@@ -38,7 +38,6 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 	$source = $sourcedata['module'];
 	// All needed Vars
 	$cachefile = CACHEPATH . $sourcename . '.sav';
-	$rrdcachefile = CACHEPATH . $sourcename . '.rrd.sav';
 	$rrdfile = RRDPATH . $sourcename . '.rrd';
 	// The classes may throw exceptions, so we need to catch them
 	try
@@ -69,13 +68,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			unset($cache);
 		}
 		$sourcerrd = new rrd($config['main']['rrdtool'], $rrdfile);
-		if (file_exists($rrdcachefile))
-		{
-			$cache = unserialize(file_get_contents($rrdcachefile));
-			$sourcerrd->initOptions($cache);
-			unset($cache);
-		}
-		else
+		if (!file_exists($rrdfile))
 		{
 			if ($sourcerrd->checkVersion('<', '1.2'))
 			{
@@ -98,9 +91,6 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 				$sourcerrd->addArchive($rra['cf'], $rra['xff'], $rra['steps'], $rra['rows']);
 			}
 			$sourcerrd->create();
-			$cache = serialize($sourcerrd->getOptions());
-			file_put_contents($rrdcachefile, $cache);
-			unset($cache);
 		}
 		echo "\tUpdating RRD-file" . PHP_EOL;
 		$config['log']['logger']->logString(logger::INFO, 'Updating source "' . $sourcename . '"');
