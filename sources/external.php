@@ -105,7 +105,7 @@ class external extends source
 			}
 			else
 			{
-				$rrd->addDatasource($key);
+				$rrd->addDatasource($key, 'GAUGE');
 			}
 		}
 	}
