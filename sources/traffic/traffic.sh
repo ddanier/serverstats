@@ -40,7 +40,7 @@ ${IPTABLES_BIN} -nvxL > ${LOGPATH}/tmpfile
 
 for CHAIN in ${CHAINLIST}
 do
-	TRAFFIC=`${GREP_BIN} -A 2 "Chain ${CHAIN}" ${LOGPATH}/tmpfile | ${TAIL_BIN} -n 1 | ${AWK_BIN} '{print $2}'`
+	TRAFFIC=`${GREP_BIN} -A 2 "Chain ${CHAIN} " ${LOGPATH}/tmpfile | ${TAIL_BIN} -n 1 | ${AWK_BIN} '{print $2}'`
 	echo -n "${TRAFFIC}" > ${LOGPATH}/${CHAIN}
 done
 
