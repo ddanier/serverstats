@@ -23,7 +23,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$config = array();
 // Define what archives will be used (-> RRA)
 // see 'man rrdcreate' for details
 

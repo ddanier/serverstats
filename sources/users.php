@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class users extends source
+class users extends source implements source_rrd
 {
 	private $usersbin;
 	private $count;
@@ -51,9 +51,11 @@ class users extends source
 		$rrd->addDatasource('users', 'GAUGE', null, 0);
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
-		$rrd->setValue('users', $this->count);
+		$values = array();
+		$values['users'] = $this->count;
+		return $values;
 	}
 }
 

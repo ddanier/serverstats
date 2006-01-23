@@ -23,8 +23,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-interface monitor
+interface source_cached
 {
+	// Called if no cachedata is present
+	public function initCache();
+	// Called to load the cached data
+	public function loadCache($cachedata);
+	// Called to fetch the cache and save it back to disk
+	public function getCache();
 }
 
 ?>

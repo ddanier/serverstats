@@ -38,7 +38,7 @@
  * ExtendedStatus On
  */
 
-class apache extends source
+class apache extends source implements source_rrd
 {
 	private $url_serverstatus;
 	private $show;
@@ -105,16 +105,18 @@ class apache extends source
 		}
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
+		$values = array();
 		foreach ($this->data as $dsname => $value)
 		{
-			$rrd->setValue($dsname, $value);
+			$values[$dsname] = $value;
 			if (isset($this->psshow[$dsname]))
 			{
-				$rrd->setValue($this->psshow[$dsname], $value);
+				$values[$this->psshow[$dsname]] = $value;
 			}
 		}
+		return $values;
 	}
 }
 

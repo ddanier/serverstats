@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class ping_service extends source
+class ping_service extends source implements source_rrd
 {
 	private $host;
 	private $port;
@@ -70,9 +70,11 @@ class ping_service extends source
 		$rrd->addDatasource('time', 'GAUGE', null, 0);
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
-		$rrd->setValue('time', $this->ping_time);
+		$values = array();
+		$values['time'] = $this->ping_time;
+		return $values;
 	}
 	
 	static public function httpCommand($host, $path = '/')

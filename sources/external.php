@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class external extends source
+class external extends source implements source_rrd
 {
 	private $command;
 	private $datarows;
@@ -110,12 +110,14 @@ class external extends source
 		}
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
+		$values = array();
 		foreach ($this->data as $key => $value)
 		{
-			$rrd->setValue($key, $value);
+			$values[$key] = $value;
 		}
+		return $values;
 	}
 }
 

@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class traffic extends source
+class traffic extends source implements source_rrd
 {
 	private $logdir;
 	private $chain;
@@ -62,8 +62,10 @@ class traffic extends source
 	
 	public function updateRRD(rrd $rrd)
 	{
-		$rrd->setValue('traffic', $this->traffic);
-		$rrd->setValue('bps', $this->traffic);
+		$values = array();
+		$values['traffic'] = $this->traffic;
+		$values['bps'] = $this->traffic;
+		return $values;
 	}
 }
 

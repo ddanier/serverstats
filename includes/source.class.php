@@ -30,10 +30,8 @@ abstract class source
 	public function init() { }
 	// Called to refresh the data
 	abstract function refreshData();
-	// Called if no rrd (or rrdcache) in present
-	abstract public function initRRD(rrd $rrd);
-	// Called to update the rrd
-	abstract public function updateRRD(rrd $rrd);
+	// Called to fetch values from source
+	abstract function fetchValues();
 }
 
 ?>

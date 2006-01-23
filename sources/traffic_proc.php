@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class traffic_proc extends source
+class traffic_proc extends source implements source_rrd
 {
 	private $ifs;
 	private $data;
@@ -76,18 +76,20 @@ class traffic_proc extends source
 		}
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
+		$values = array();
 		foreach ($this->ifs as $if)
 		{
 			if (isset($this->data[$if]))
 			{
-				$rrd->setValue($if . '_rbytes', $this->data[$if]['rbytes']);
-				$rrd->setValue($if . '_rpackets', $this->data[$if]['rpackets']);
-				$rrd->setValue($if . '_tbytes', $this->data[$if]['tbytes']);
-				$rrd->setValue($if . '_tpackets', $this->data[$if]['tpackets']);
+				$values[$if . '_rbytes'] = $this->data[$if]['rbytes'];
+				$values[$if . '_rpackets'] = $this->data[$if]['rpackets'];
+				$values[$if . '_tbytes'] = $this->data[$if]['tbytes'];
+				$values[$if . '_tpackets'] = $this->data[$if]['tpackets'];
 			}
 		}
+		return $values;
 	}
 }
 

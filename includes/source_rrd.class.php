@@ -23,11 +23,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// Define the sources, read the sourcefiles for the needed details
-$config['cpu']['module'] = new cpu();
-$config['mem']['module'] = new memory();
-$config['load']['module'] = new load();
-$config['users']['module'] = new users();
-$config['traffic_proc']['module'] = new traffic_proc('eth0');
+interface source_rrd
+{
+	// Called if no rrd file is present
+	public function initRRD(rrd $rrd);
+	
+	/*
+	// Called to update the rrd
+	abstract public function updateRRD(rrd $rrd);
+	*/
+}
 
 ?>

@@ -22,8 +22,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-class ping extends source
+                                                  
+class ping extends source implements source_rrd
 {
 	private $host;
 	private $ping_time;
@@ -70,9 +70,11 @@ class ping extends source
 		$rrd->addDatasource('time', 'GAUGE', null, 0);
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
-		$rrd->setValue('time', $this->ping_time);
+		$values = array();
+		$values['time'] = $this->ping_time;
+		return $values;
 	}
 }
 

@@ -47,7 +47,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			throw new Exception('Source "' . $sourcename . '" not instanceof source');
 		}
 		$source->init();
-		if ($source instanceof cached)
+		if ($source instanceof source_cached)
 		{
 			if (file_exists($cachefile))
 			{
@@ -61,41 +61,76 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			}
 		}
 		$source->refreshData();
-		if ($source instanceof cached)
+		if ($source instanceof source_cached)
 		{
 			$cache = serialize($source->getCache());
 			file_put_contents($cachefile, $cache);
 			unset($cache);
 		}
-		$sourcerrd = new rrd($config['main']['rrdtool'], $rrdfile);
-		if (!file_exists($rrdfile))
+		$sourcevalues = $source->fetchValues();
+		if ($source instanceof source_rrd)
 		{
-			if ($sourcerrd->checkVersion('<', '1.2'))
+			$sourcerrd = new rrd($config['main']['rrdtool'], $rrdfile);
+			if (!file_exists($rrdfile))
 			{
-				throw new Exception('rrdtool >= 1.2 required');
+				if ($sourcerrd->checkVersion('<', '1.2'))
+				{
+					throw new Exception('rrdtool >= 1.2 required');
+				}
+				echo "\tCreating RRD-file" . PHP_EOL;
+				$config['log']['logger']->logString(logger::INFO, 'Creating RRD-file for source "' . $sourcename . '"');
+				$source->initRRD($sourcerrd);
+				$sourcerrd->setStep($config['main']['step']);
+				if (isset($sourcedata['rra']))
+				{
+					$sourcerra = $sourcedata['rra'];
+				}
+				else
+				{
+					$sourcerra = 'default';
+				}
+				foreach ($config['rra'][$sourcerra] as $rra)
+				{
+					$sourcerrd->addArchive($rra['cf'], $rra['xff'], $rra['steps'], $rra['rows']);
+				}
+				$sourcerrd->create();
 			}
-			echo "\tCreating RRD-file" . PHP_EOL;
-			$config['log']['logger']->logString(logger::INFO, 'Creating RRD-file for source "' . $sourcename . '"');
-			$source->initRRD($sourcerrd);
-			$sourcerrd->setStep($config['main']['step']);
-			if (isset($sourcedata['rra']))
+			echo "\tUpdating RRD-file" . PHP_EOL;
+			$config['log']['logger']->logString(logger::INFO, 'Updating source "' . $sourcename . '"');
+			foreach ($sourcevalues as $valuename => $value)
 			{
-				$sourcerra = $sourcedata['rra'];
+				$sourcerrd->setValue($valuename, $value);
 			}
-			else
-			{
-				$sourcerra = 'default';
-			}
-			foreach ($config['rra'][$sourcerra] as $rra)
-			{
-				$sourcerrd->addArchive($rra['cf'], $rra['xff'], $rra['steps'], $rra['rows']);
-			}
-			$sourcerrd->create();
+			$sourcerrd->update();
 		}
-		echo "\tUpdating RRD-file" . PHP_EOL;
-		$config['log']['logger']->logString(logger::INFO, 'Updating source "' . $sourcename . '"');
-		$source->updateRRD($sourcerrd);
-		$sourcerrd->update();
+		// TODO: Only send warnings once
+		if (isset($config['monitor'][$sourcename]))
+		{
+			echo "\tMonitoring values" . PHP_EOL;
+			foreach ($config['monitor'][$sourcename] as $rule)
+			{
+				$matches = array();
+				if (preg_match('/^([a-zA-Z0-9_]+)\s*(>=?|<=?)\s*(.*)$/', $rule, $matches))
+				{
+					$name = $matches[1];
+					$operator = $matches[2];
+					$limit = $matches[3];
+					if (!isset($sourcevalues[$name]))
+					{
+						throw new Exception("Invalid datasource in rule: $rule ($sourcename)");
+					}
+					if (value_compare($sourcevalues[$name], $limit, $operator))
+					{
+						echo "\t\tLimit hit: $rule ($sourcename)" . PHP_EOL;
+						$config['log']['logger']->logString(logger::ERR, "Limit hit: $rule ($sourcename)");
+					}
+				}
+				else
+				{
+					throw new Exception("Invalid rule: $rule ($sourcename)");
+				}
+			}
+		}
 	}
 	catch (Exception $e)
 	{

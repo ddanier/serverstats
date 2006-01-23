@@ -1,6 +1,6 @@
 <?php
 /**
- * $Id$
+ * $Id: sources.php 82 2005-12-14 11:35:04Z akorthaus $
  *
  * Author: David Danier, david.danier@team23.de
  * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
@@ -23,14 +23,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-interface cached
-{
-	// Called if no cachedata is present
-	public function initCache();
-	// Called to load the cached data
-	public function loadCache($cachedata);
-	// Called to fetch the cache and save it back to disk
-	public function getCache();
-}
+/*
+$config['load'] = array(
+	'1min >= 100'
+);
+*/
 
 ?>

@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class mysql extends source
+class mysql extends source implements source_rrd
 {
 	private $db;
 	private $host;
@@ -71,11 +71,13 @@ class mysql extends source
 		$rrd->addDatasource('processcount', 'GAUGE', null, 0);
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
-		$rrd->setValue('questions', $this->questions);
-		$rrd->setValue('questionsps', $this->questions);
-		$rrd->setValue('processcount', $this->processcount);
+		$values = array();
+		$values['questions'] = $this->questions;
+		$values['questionsps'] = $this->questions;
+		$values['processcount'] = $this->processcount;
+		return $values;
 	}
 }
 

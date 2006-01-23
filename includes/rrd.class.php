@@ -403,7 +403,7 @@ class rrd
 		}
 		$this->values[$dsname] = $value;
 	}
-
+	
 	public function update()
 	{
 		$params = ' update ' . escapeshellarg($this->rrdfile);

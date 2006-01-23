@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class load extends source
+class load extends source implements source_rrd
 {
 	private $loadavgfile;
 	
@@ -62,13 +62,15 @@ class load extends source
 		$rrd->addDatasource('tasks', 'GAUGE', null, 0);
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
-		$rrd->setValue('1min', $this->min1);
-		$rrd->setValue('5min', $this->min5);
-		$rrd->setValue('15min', $this->min15);
-		$rrd->setValue('running', $this->running);
-		$rrd->setValue('tasks', $this->tasks);
+		$values = array();
+		$values['1min'] = $this->min1;
+		$values['5min'] = $this->min5;
+		$values['15min'] = $this->min15;
+		$values['running'] = $this->running;
+		$values['tasks'] = $this->tasks;
+		return $values;
 	}
 }
 

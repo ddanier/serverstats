@@ -23,7 +23,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$config = array();
 // Define the look of the graphs
 $config['width'] = 500;
 $config['height'] = 150;

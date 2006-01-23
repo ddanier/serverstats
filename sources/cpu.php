@@ -24,7 +24,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class cpu extends source implements cached
+class cpu extends source implements source_cached, source_rrd
 {
 	private $path_stat;
 	
@@ -56,8 +56,9 @@ class cpu extends source implements cached
 		}
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
+		$returnValues = array();
 		foreach ($this->stats as $cpu => $values)
 		{
 			$sumProc = array_sum($values) - array_sum($this->oldstats[$cpu]);
@@ -67,15 +68,16 @@ class cpu extends source implements cached
 				{
 					if ($sumProc == 0)
 					{
-						$rrd->setValue($cpu . '_' . $key, 0);
+						$returnValues[$cpu . '_' . $key] = 0;
 					}
 					else
 					{
-						$rrd->setValue($cpu . '_' . $key, (($value - $this->oldstats[$cpu][$key]) * 100) / $sumProc);
+						$returnValues[$cpu . '_' . $key] = (($value - $this->oldstats[$cpu][$key]) * 100) / $sumProc;
 					}
 				}
 			}
 		}
+		return $returnValues;
 	}
 	
 	private function getStats()

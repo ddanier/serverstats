@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class memory extends source
+class memory extends source implements source_rrd
 {
 	private $meminfofile;
 	private $data = array();
@@ -89,15 +89,17 @@ class memory extends source
 		}
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
+		$values = array();
 		foreach ($this->data as $name => $value)
 		{
-			if ($rrd->hasDatasource($name))
+			if (in_array($name, $this->show))
 			{
-				$rrd->setValue($name, $value);
+				$values[$name] = $value;
 			}
 		}
+		return $values;
 	}
 }
 

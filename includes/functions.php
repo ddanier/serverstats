@@ -92,4 +92,26 @@ function array_get($array, $value, $default = null)
 	}
 }
 
+function value_compare($value1, $value2, $operator)
+{
+	switch ($operator)
+	{
+		case '>=':
+			return ($value1 >= $value2);
+		case '>':
+			return ($value1 > $value2);
+		case '<=':
+			return ($value1 <= $value2);
+		case '<':
+			return ($value1 < $value2);
+		case '=':
+		case '==':
+			return ($value1 == $value2);
+		case '!=':
+			return ($value1 != $value2);
+		default:
+			throw new Exception('Invalid operator');
+	}
+}
+
 ?>

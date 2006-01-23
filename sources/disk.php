@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class disk extends source
+class disk extends source implements source_rrd
 {
 	private $path_stat;
 	private $disk;
@@ -64,19 +64,21 @@ class disk extends source
 		}
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
-		$rrd->setValue('read', $this->stats_disk['sectors_read'] * $this->sector_size);
-		$rrd->setValue('write', $this->stats_disk['sectors_written'] * $this->sector_size);
-		$rrd->setValue('readps', $this->stats_disk['sectors_read'] * $this->sector_size);
-		$rrd->setValue('writeps', $this->stats_disk['sectors_written'] * $this->sector_size);
+		$values = array();
+		$values['read'] = $this->stats_disk['sectors_read'] * $this->sector_size;
+		$values['write'] = $this->stats_disk['sectors_written'] * $this->sector_size;
+		$values['readps'] = $this->stats_disk['sectors_read'] * $this->sector_size;
+		$values['writeps'] = $this->stats_disk['sectors_written'] * $this->sector_size;
 		foreach ($this->stats_part as $part => $values)
 		{
-			$rrd->setValue('part' . $part . '_read', $values['sectors_read'] * $this->sector_size);
-			$rrd->setValue('part' . $part . '_write', $values['sectors_written'] * $this->sector_size);
-			$rrd->setValue('part' . $part . '_readps', $values['sectors_read'] * $this->sector_size);
-			$rrd->setValue('part' . $part . '_writeps', $values['sectors_written'] * $this->sector_size);
+			$values['part' . $part . '_read'] = $values['sectors_read'] * $this->sector_size;
+			$values['part' . $part . '_write'] = $values['sectors_written'] * $this->sector_size;
+			$values['part' . $part . '_readps'] = $values['sectors_read'] * $this->sector_size;
+			$values['part' . $part . '_writeps'] = $values['sectors_written'] * $this->sector_size;
 		}
+		return $values;
 	}
 	
 	private function getStats()

@@ -29,8 +29,11 @@
             ini_set('precision', 32) in init.php
         </comment>
     </note>
-    <note priority="high" time="1126975273">
+    <note priority="high" time="1126975273" done="1137978235">
         safe_mode bugfixes (auto-escapeshellcmd() for exec()) or document that Serverstats is safe_mode=off only
+        <comment>
+            not possible, Serverstats needs safe_mode=off
+        </comment>
     </note>
     <note priority="medium" time="1121445220">
         Support all graph options
