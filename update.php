@@ -44,7 +44,9 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 		{
 			throw new Exception('Source "' . $sourcename . '" not instanceof source');
 		}
+		// Init the source
 		$source->init();
+		// Init/load cache if needed
 		if ($source instanceof source_cached)
 		{
 			if (file_exists($cachefile))
@@ -58,18 +60,24 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 				$source->initCache();
 			}
 		}
+		// Refresh data
 		$source->refreshData();
+		// Save cache (if needed)
 		if ($source instanceof source_cached)
 		{
 			$cache = serialize($source->getCache());
 			file_put_contents($cachefile, $cache);
 			unset($cache);
 		}
+		// Receive values
 		$sourcevalues = $source->fetchValues();
+		// If the source needs an RRD: create and update it
 		if ($source instanceof source_rrd)
 		{
+			// Needed vars
 			$rrdfile = RRDPATH . $sourcename . '.rrd';
 			$sourcerrd = new rrd($config['main']['rrdtool'], $rrdfile);
+			// Create RRD-file if it does not exist
 			if (!file_exists($rrdfile))
 			{
 				if ($sourcerrd->checkVersion('<', '1.2'))
@@ -94,6 +102,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 				}
 				$sourcerrd->create();
 			}
+			// Update RRD-file
 			echo "\tUpdating RRD-file" . PHP_EOL;
 			$config['log']['logger']->logString(logger::INFO, 'Updating source "' . $sourcename . '"');
 			foreach ($sourcevalues as $valuename => $value)
@@ -102,32 +111,39 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 			}
 			$sourcerrd->update();
 		}
-		// TODO: Only send warnings once
+		// If the source is monitored: check all values
 		if (isset($config['monitor'][$sourcename]))
 		{
+			// Needed vars
 			$monitorcachefile = CACHEPATH . $sourcename . '.monitor.sav';
 			$monitorcache = array();
+			// Load cache if needed
 			if (file_exists($monitorcachefile))
 			{
 				$monitorcache = unserialize(file_get_contents($monitorcachefile));
 			}
+			// Check all values
 			echo "\tMonitoring values" . PHP_EOL;
 			foreach ($config['monitor'][$sourcename] as $rulenum => $rule)
 			{
+				// Init cache if needed
 				if (!isset($monitorcache[$rulenum]))
 				{
 					$monitorcache[$rulenum] = false;
 				}
 				$matches = array();
-				if (preg_match('/^([a-zA-Z0-9_]+)\s*(>=?|<=?)\s*(.*)$/', $rule, $matches))
+				// Test if we have a valid test
+				if (preg_match('/^([a-zA-Z0-9_]+)\s*(>=?|<=?|!?=)\s*(.*)$/', $rule, $matches))
 				{
 					$name = $matches[1];
 					$operator = $matches[2];
 					$limit = $matches[3];
+					// Test if we know the datasource
 					if (!isset($sourcevalues[$name]))
 					{
 						throw new Exception("Invalid datasource in rule: $rule ($sourcename)");
 					}
+					// Test if limit is hit
 					if (value_compare($sourcevalues[$name], $limit, $operator))
 					{
 						echo "\t\tLimit hit: $rule ($sourcename)" . PHP_EOL;
@@ -142,11 +158,13 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 						$monitorcache[$rulenum] = false;
 					}
 				}
+				// Handle invalid rules
 				else
 				{
 					throw new Exception("Invalid rule: $rule ($sourcename)");
 				}
 			}
+			// Save Cache
 			file_put_contents($monitorcachefile, serialize($monitorcache));
 		}
 	}
