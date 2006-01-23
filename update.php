@@ -36,9 +36,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 {
 	echo "Working on $sourcename" . PHP_EOL;
 	$source = $sourcedata['module'];
-	// All needed Vars
 	$cachefile = CACHEPATH . $sourcename . '.sav';
-	$rrdfile = RRDPATH . $sourcename . '.rrd';
 	// The classes may throw exceptions, so we need to catch them
 	try
 	{
@@ -70,6 +68,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 		$sourcevalues = $source->fetchValues();
 		if ($source instanceof source_rrd)
 		{
+			$rrdfile = RRDPATH . $sourcename . '.rrd';
 			$sourcerrd = new rrd($config['main']['rrdtool'], $rrdfile);
 			if (!file_exists($rrdfile))
 			{
@@ -106,9 +105,19 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 		// TODO: Only send warnings once
 		if (isset($config['monitor'][$sourcename]))
 		{
-			echo "\tMonitoring values" . PHP_EOL;
-			foreach ($config['monitor'][$sourcename] as $rule)
+			$monitorcachefile = CACHEPATH . $sourcename . '.monitor.sav';
+			$monitorcache = array();
+			if (file_exists($monitorcachefile))
 			{
+				$monitorcache = unserialize(file_get_contents($monitorcachefile));
+			}
+			echo "\tMonitoring values" . PHP_EOL;
+			foreach ($config['monitor'][$sourcename] as $rulenum => $rule)
+			{
+				if (!isset($monitorcache[$rulenum]))
+				{
+					$monitorcache[$rulenum] = false;
+				}
 				$matches = array();
 				if (preg_match('/^([a-zA-Z0-9_]+)\s*(>=?|<=?)\s*(.*)$/', $rule, $matches))
 				{
@@ -122,7 +131,15 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 					if (value_compare($sourcevalues[$name], $limit, $operator))
 					{
 						echo "\t\tLimit hit: $rule ($sourcename)" . PHP_EOL;
-						$config['log']['logger']->logString(logger::ERR, "Limit hit: $rule ($sourcename)");
+						if (!$monitorcache[$rulenum])
+						{
+							$config['log']['logger']->logString(logger::ERR, "Limit hit: $rule ($sourcename)");
+						}
+						$monitorcache[$rulenum] = true;
+					}
+					else
+					{
+						$monitorcache[$rulenum] = false;
 					}
 				}
 				else
@@ -130,6 +147,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 					throw new Exception("Invalid rule: $rule ($sourcename)");
 				}
 			}
+			file_put_contents($monitorcachefile, serialize($monitorcache));
 		}
 	}
 	catch (Exception $e)
