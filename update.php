@@ -141,15 +141,16 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 					// Test if we know the datasource
 					if (!isset($sourcevalues[$name]))
 					{
-						throw new Exception("Invalid datasource in rule: $rule ($sourcename)");
+						throw new Exception("Invalid datasource in rule: '$rule' (Source '$sourcename')");
 					}
+					$value = $sourcevalues[$name];
 					// Test if limit is hit
-					if (value_compare($sourcevalues[$name], $limit, $operator))
+					if (value_compare($value, $limit, $operator))
 					{
-						echo "\t\tLimit hit: $rule ($sourcename)" . PHP_EOL;
+						echo "\t\tLimit hit: $rule ($sourcename), current: $value" . PHP_EOL;
 						if (!$monitorcache[$rulenum])
 						{
-							$config['log']['logger']->logString(logger::ERR, "Limit hit: $rule ($sourcename)");
+							$config['log']['logger']->logString(logger::ERR, "Limit hit: '$rule' (Source '$sourcename'), current value: $value");
 						}
 						$monitorcache[$rulenum] = true;
 					}
@@ -161,7 +162,7 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 				// Handle invalid rules
 				else
 				{
-					throw new Exception("Invalid rule: $rule ($sourcename)");
+					throw new Exception("Invalid rule: '$rule' (Source '$sourcename')");
 				}
 			}
 			// Save Cache
