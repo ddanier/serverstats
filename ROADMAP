@@ -1,0 +1,15 @@
+0.8:
+ [*] Monitor
+ [ ] Ping
+ [ ] Testing
+0.9:
+ [ ] SNMP
+ [ ] Bugfixes
+ [ ] Cleanup
+ [ ] Testing
+1.0:
+ [ ] Documentation
+ [ ] Cleanup
+ [ ] API-freeze
+ [ ] Delete all backwards-compability-code
+ [ ] Testing
