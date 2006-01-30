@@ -258,11 +258,43 @@ try
 }
 catch (Exception $e)
 {
-	@header('Content-Type: text/plain');
-	echo "Error:" . PHP_EOL;
-	echo $e;
-	echo PHP_EOL;
-	$config['log']['logger']->logException(logger::ERR, $e);
+	$error = "Error:" . PHP_EOL . $e->__toString();
+	if (extension_loaded('gd') && !isset($_GET['plain']))
+	{
+		$font = 1;
+		$fontx = 5;
+		$fonty = 8;
+		$margin = 5;
+		$ypos = $margin;
+		$xpos = $margin;
+		$xnum = ($config['graph']['width'] - ($margin * 2)) / $fontx;
+		@header('Content-Type: image/png');
+		$img = imagecreatetruecolor($config['graph']['width'], $config['graph']['height']);
+		$color = imagecolorallocatealpha($img, 255, 255, 255, 0);
+		imagefilledrectangle($img, 0, 0, $config['graph']['width'] - 1, $config['graph']['height'] - 1, $color);
+		$color = imagecolorallocatealpha($img, 255, 255, 255, 127);
+		imagefilledrectangle($img, 0, 0, $config['graph']['width'] - 1, $config['graph']['height'] - 1, $color);
+		$color = imagecolorallocatealpha($img, 0, 0, 0, 0);
+		imagerectangle($img, 0, 0, $config['graph']['width'] - 1, $config['graph']['height'] - 1, $color);
+		$errorlines = explode(PHP_EOL, $error);
+		foreach ($errorlines as $errorline)
+		{
+			while (strlen($errorline) > 0)
+			{
+				imagestring($img, $font, $xpos, $ypos, substr($errorline, 0, $xnum), $color);
+				$errorline = substr($errorline, $xnum);
+				$ypos += $fonty;
+			}
+		}
+		imagepng($img);
+		imagedestroy($img);
+	}
+	else
+	{
+		@header('Content-Type: text/plain');
+		echo $error;
+		$config['log']['logger']->logException(logger::ERR, $e);
+	}
 }
 
 ?>
