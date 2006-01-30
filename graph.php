@@ -261,21 +261,23 @@ catch (Exception $e)
 	$error = "Error:" . PHP_EOL . $e->__toString();
 	if (extension_loaded('gd') && !isset($_GET['plain']))
 	{
+		// Configuration
 		$font = 1;
-		$fontx = 5;
-		$fonty = 8;
+		$fontx = imagefontwidth($font);
+		$fonty = imagefontheight($font);
 		$margin = 5;
 		$ypos = $margin;
 		$xpos = $margin;
 		$xnum = ($config['graph']['width'] - ($margin * 2)) / $fontx;
-		@header('Content-Type: image/png');
+		// Create image
 		$img = imagecreatetruecolor($config['graph']['width'], $config['graph']['height']);
+		// Background
 		$color = imagecolorallocatealpha($img, 255, 255, 255, 0);
 		imagefilledrectangle($img, 0, 0, $config['graph']['width'] - 1, $config['graph']['height'] - 1, $color);
-		$color = imagecolorallocatealpha($img, 255, 255, 255, 127);
-		imagefilledrectangle($img, 0, 0, $config['graph']['width'] - 1, $config['graph']['height'] - 1, $color);
+		// Border
 		$color = imagecolorallocatealpha($img, 0, 0, 0, 0);
 		imagerectangle($img, 0, 0, $config['graph']['width'] - 1, $config['graph']['height'] - 1, $color);
+		// Text
 		$errorlines = explode(PHP_EOL, $error);
 		foreach ($errorlines as $errorline)
 		{
@@ -286,6 +288,8 @@ catch (Exception $e)
 				$ypos += $fonty;
 			}
 		}
+		// Output and destroy image
+		@header('Content-Type: image/png');
 		imagepng($img);
 		imagedestroy($img);
 	}
