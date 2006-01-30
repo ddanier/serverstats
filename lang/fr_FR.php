@@ -34,9 +34,4 @@ $lang['Warning'] = 'Attention';
 $lang['Error'] = 'Erreur';
 $lang['Unknown error'] = 'Erreur inconnu';
 
-$lang['Hour'] = 'Heure';
-$lang['Day'] = 'Jour';
-$lang['Week'] = 'Semaine';
-$lang['Year'] = 'Année';
-
 ?>
