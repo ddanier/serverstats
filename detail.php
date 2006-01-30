@@ -48,7 +48,7 @@ $graph = $config['graph']['list'][$graphindex];
 menu();
 
 ?>
-<h1><?php echo lang::t('Statistics'); ?> - <?php echo $graph['title']; ?></h1>
+<h1><?php echo lang::t('Statistics'); ?> - <?php echo htmlspecialchars($graph['title']); ?></h1>
 <?php
 
 // List all configured graphs
