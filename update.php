@@ -141,9 +141,13 @@ foreach ($config['sources'] as $sourcename => $sourcedata)
 					// Test if we know the datasource
 					if (!isset($sourcevalues[$name]))
 					{
-						throw new Exception("Invalid datasource in rule: '$rule' (Source '$sourcename')");
+						$config['log']['logger']->logString(logger::WARN, "Invalid or undefined datasource in rule: '$rule' (Source '$sourcename')");
+						$value = 'U';
 					}
-					$value = $sourcevalues[$name];
+					else
+					{
+						$value = $sourcevalues[$name];
+					}
 					// Test if limit is hit
 					if (value_compare($value, $limit, $operator))
 					{
