@@ -417,7 +417,7 @@ $config['list'] = array(
                 'cf' => 'AVERAGE',
                 'legend' => 'User',
                 'color' => '00FF00',
-                                'stacked' => true
+				'stacked' => true
             ),
             array(
                 'type' => 'AREA',
@@ -426,7 +426,7 @@ $config['list'] = array(
                 'cf' => 'AVERAGE',
                 'legend' => 'Nice',
                 'color' => '0000FF',
-                                'stacked' => true
+				'stacked' => true
             ),
             array(
                 'type' => 'AREA',
@@ -435,7 +435,7 @@ $config['list'] = array(
                 'cf' => 'AVERAGE',
                 'legend' => 'Idle',
                 'color' => 'FFFF00',
-                                'stacked' => true
+				'stacked' => true
             )
         )
     ),
