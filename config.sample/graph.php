@@ -486,7 +486,7 @@ $config['list'] = array(
                 'color' => '00A302'
             )
         )
-    ) 
+    )
 );
 // Define what Graphes we want in the detail view (detail.php)
 $config['types'] = array(

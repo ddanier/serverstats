@@ -23,26 +23,29 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class ping_service extends source implements source_rrd
+class ping_http extends source implements source_rrd
 {
 	private $host;
 	private $port;
+	private $path;
 	private $command;
 	private $timeout;
 	
 	private $ping_time;
 	
-	public function __construct($host, $port, $command = null, $timeout = 1)
+	public function __construct($host, $port = 80, $path = '/', $command = 'HEAD', $timeout = 1)
 	{
 		$this->host = $host;
 		$this->port = $port;
+		$this->path = $path;
 		$this->command = $command;
 		$this->timeout = $timeout;
 	}
 	
 	public function refreshData()
 	{
-		$start = microtime(true);
+		$timer = array();
+		$timer['start'] = microtime(true);
 		$socket = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
 		if (!is_resource($socket))
 		{
@@ -50,36 +53,50 @@ class ping_service extends source implements source_rrd
 			$this->ping_time = 'U';
 			return;
 		}
+		$timer['open'] = microtime(true);
 		socket_set_timeout($socket, $this->timeout);
-		if (isset($this->command))
+		socket_set_blocking($socket, true); // just to be sure
+		if (feof($socket))
 		{
-			socket_set_blocking($socket, true); // just to be sure
-			if (feof($socket))
-			{
-				throw new Exception('Connection closed while sending command');
-			}
-			fwrite($socket, $this->command);
-			fgetc($socket); // read one char
+			throw new Exception('Connection closed while sending command');
 		}
+		$http_request = $this->command . ' ' . $this->path . " HTTP/1.1\r\n" . 
+			'Host: ' . $this->host . "\r\n" . 
+			"User-Agent: Serverstats::ping_http\r\n" . 
+			"Connection: close\r\n\r\n";
+		fputs($socket, $http_request);
+		$timer['send'] = microtime(true);
+		while(!feof($socket))
+		{
+			if (fread($socket, 4096) === false)
+			{
+				throw new Exception('Communication error, could not fetch result');
+			}
+		}
+		$timer['receive'] = microtime(true);
 		fclose($socket);
-		$this->ping_time = microtime(true) - $start;
+		$timer['finish'] = microtime(true);
+		$this->ping_time = array(
+				'time' => $timer['finish'] - $timer['start'],
+				'open' => $timer['open'] - $timer['start'],
+				'send' => $timer['send'] - $timer['open'],
+				'receive' => $timer['receive'] - $timer['send'],
+				'close' => $timer['finish'] - $timer['receive']
+			);
 	}
 	
 	public function initRRD(rrd $rrd)
 	{
 		$rrd->addDatasource('time', 'GAUGE', null, 0);
+		$rrd->addDatasource('open', 'GAUGE', null, 0);
+		$rrd->addDatasource('send', 'GAUGE', null, 0);
+		$rrd->addDatasource('receive', 'GAUGE', null, 0);
+		$rrd->addDatasource('close', 'GAUGE', null, 0);
 	}
 	
 	public function fetchValues()
 	{
-		$values = array();
-		$values['time'] = $this->ping_time;
-		return $values;
-	}
-	
-	static public function httpCommand($host, $path = '/')
-	{
-		return "GET $path HTTP/1.1\r\nHost: $host\r\n\r\n";
+		return $this->ping_time;
 	}
 }
 
