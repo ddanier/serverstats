@@ -1,0 +1,7 @@
+===============================================================================
+ Serverstats - SIMPLE CONFIGURATION
+ Version: $Id$
+===============================================================================
+
+Serverstats supports a simple configuration-method. To use this you have to edit
+config/simple.php to fit your needs.
