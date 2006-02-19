@@ -674,7 +674,6 @@ class simpleconfig
 								{
 									$content[] = array(
 										'type' => 'LINE',
-										'width' => 2,
 										'source' => $module . '_' . self::escapeDsName($host),
 										'ds' => 'time',
 										'cf' => 'AVERAGE',
@@ -715,7 +714,7 @@ class simpleconfig
 												'ds' => 'open',
 												'cf' => 'AVERAGE',
 												'legend' => 'open connection\n',
-												'color' => '994400'
+												'color' => 'DEE100'
 											),
 											array(
 												'type' => 'AREA',
@@ -724,7 +723,7 @@ class simpleconfig
 												'ds' => 'send',
 												'cf' => 'AVERAGE',
 												'legend' => 'send request\n',
-												'color' => '999900'
+												'color' => '665B00'
 											),
 											array(
 												'type' => 'AREA',
@@ -733,7 +732,7 @@ class simpleconfig
 												'ds' => 'receive',
 												'cf' => 'AVERAGE',
 												'legend' => 'receive response\n',
-												'color' => '449900'
+												'color' => '534BEF'
 											),
 											array(
 												'type' => 'AREA',
@@ -742,7 +741,7 @@ class simpleconfig
 												'ds' => 'close',
 												'cf' => 'AVERAGE',
 												'legend' => 'close connection\n',
-												'color' => '444400'
+												'color' => '060085'
 											),
 											array(
 												'type' => 'LINE',
@@ -750,7 +749,7 @@ class simpleconfig
 												'ds' => 'time',
 												'cf' => 'AVERAGE',
 												'legend' => 'total',
-												'color' => 'FF0000'
+												'color' => 'CD0000'
 											)
 										)
 									);
@@ -773,7 +772,6 @@ class simpleconfig
 								{
 									$content[] = array(
 										'type' => 'LINE',
-										'width' => 2,
 										'source' => $module . '_' . self::escapeDsName($host),
 										'ds' => 'time',
 										'cf' => 'AVERAGE',
@@ -814,7 +812,6 @@ class simpleconfig
 												'ds' => 'bps',
 												'cf' => 'AVERAGE',
 												'legend' => $chain,
-												'width' => 1,
 												'color' => '7FD180'
 											)
 										)
@@ -832,7 +829,6 @@ class simpleconfig
 												'ds' => 'traffic',
 												'cf' => 'AVERAGE',
 												'legend' => $chain,
-												'width' => 1,
 												'color' => '7FD180'
 											)
 										)

@@ -49,9 +49,7 @@ class ping_http extends source implements source_rrd
 		$socket = @fsockopen($this->host, $this->port, $errno, $errstr, $this->timeout);
 		if (!is_resource($socket))
 		{
-			// don't log time, use default-value (undefined)
-			$this->ping_time = 'U';
-			return;
+			throw new Exception('Could not open connection');
 		}
 		$timer['open'] = microtime(true);
 		socket_set_timeout($socket, $this->timeout);

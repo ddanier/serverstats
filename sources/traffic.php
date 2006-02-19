@@ -60,7 +60,7 @@ class traffic extends source implements source_rrd
 		$rrd->addDatasource('bps', 'DERIVE', null, 0);
 	}
 	
-	public function updateRRD(rrd $rrd)
+	public function fetchValues()
 	{
 		$values = array();
 		$values['traffic'] = $this->traffic;
