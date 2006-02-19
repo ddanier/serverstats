@@ -16,6 +16,8 @@
   2.8. mysql
   2.9. traffic
   2.10. traffic_proc
+  2.11. ping
+  2.12. ping_http
   
 3. additional sources
 
@@ -374,6 +376,57 @@ and the "Datasources", e.g.:
 
   'ds' => 'eth0_rbytes',
 
+===============================================================================
+ 2.11. ping
+===============================================================================
+
+Uses 'ping' to ping some server.
+
+Parameters:
+$host: Host, that should be pinged
+	Format: String
+$ping_opts: Options passed to ping
+	change it for other UNIX-systems than linux, should tell ping to have
+	a timeout of one second and to only send one ping
+	Format: String
+	Default: '-c 1 -W 1'
+$ping_exec: Path to ping
+	Format: String
+	Default: '/bin/ping'
+	
+Datasources:
+	time: Time in ms
+	
+
+===============================================================================
+ 2.12. ping_http
+===============================================================================
+
+Connects to a HTTP-server and measures the time a request takes.
+
+Parameters:
+$host: HTTP-server
+	Format: String
+$port: Port of the HTTP-daemon
+	Format: integer
+	Default: 80
+$path: Remote path that should be requested
+	Format: String
+	Default: '/'
+$command: HTTP-command
+	Format: String (only 'HEAD' or 'GET')
+	Default: 'HEAD'
+$timeout: Timeout in seconds
+	Format: integer
+	Default: 1
+	
+Datasources:
+	time: ping-time in ms
+	open: delay to open the connection
+	send: delay to send the request
+	receive: delay to receive the respons
+	close: delay to close the connection
+	
 ===============================================================================
  3. additional sources
 ===============================================================================
