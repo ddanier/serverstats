@@ -1,13 +1,13 @@
 0.8:
  [*] Monitor
  [*] Ping
- [*] Testing
+ [ ] Simple configuration
+     (script that uses some parameters and creates the complex config)
+ [ ] Testing
 0.9:
  [ ] SNMP
  [ ] Bugfixes
  [ ] Cleanup
- [ ] Simple configuration
-     (script that uses some parameters and creates the complex config)
  [ ] Testing
 1.0:
  [ ] Documentation

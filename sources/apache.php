@@ -4,7 +4,7 @@
  *
  * Author: Andreas Korthaus, akorthaus@web.de
  * Enhancements: David Danier, david.danier@team23.de
- * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
+ * Project: Serverstats, http://serverstats.berlios.de/
  * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
  *
  * Copyright (C) 2005 Andreas Korthaus
