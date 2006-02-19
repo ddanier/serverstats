@@ -1,7 +1,7 @@
 0.8:
  [*] Monitor
  [*] Ping
- [ ] Simple configuration
+ [*] Simple configuration
      (script that uses some parameters and creates the complex config)
  [ ] Testing
 0.9:

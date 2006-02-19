@@ -3,7 +3,7 @@
  * $Id$
  *
  * Author: David Danier, david.danier@team23.de
- * Project: Serverstats, http://www.webmasterpro.de/~ddanier/serverstats/
+ * Project: Serverstats, http://serverstats.berlios.de/
  * License: GPL v2 or later (http://www.gnu.org/copyleft/gpl.html)
  *
  * Copyright (C) 2005 David Danier
@@ -24,10 +24,17 @@
  */
 
 // Define the sources, read the sourcefiles for the needed details
+
+// Add sources using the simple configuration
+simpleconfig::sources($config, $GLOBALS['simple']);
+
+// Add own sources (examples, like those used in the simple-config)
+/*
 $config['cpu']['module'] = new cpu();
 $config['mem']['module'] = new memory();
 $config['load']['module'] = new load();
 $config['users']['module'] = new users();
 $config['traffic_proc']['module'] = new traffic_proc('eth0');
+*/
 
 ?>
