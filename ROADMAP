@@ -3,7 +3,7 @@
  [*] Ping
  [*] Simple configuration
      (script that uses some parameters and creates the complex config)
- [ ] Testing
+ [*] Testing
 0.9:
  [ ] SNMP
  [ ] Bugfixes
