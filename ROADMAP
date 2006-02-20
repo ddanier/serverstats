@@ -6,6 +6,8 @@
  [*] Testing
 0.9:
  [ ] SNMP
+ [ ] Modular simple-config
+     (additional scripts should be configured this way, too)
  [ ] Bugfixes
  [ ] Cleanup
  [ ] Testing
