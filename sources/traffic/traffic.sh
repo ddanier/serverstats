@@ -25,6 +25,8 @@
 # Variablen
 
 LOGPATH="/path/to/serverstats/sources/traffic"
+# Example:
+#  CHAINLIST="HTTP SSH DNS"
 CHAINLIST="FILL SOMETHING IN HERE"
 
 SLEEP_BIN="/usr/bin/sleep"
