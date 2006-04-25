@@ -126,6 +126,33 @@ class simpleconfig
 											'legend' => 'Idle',
 											'color' => 'FFFF00',
 											'stacked' => true
+										),
+										array(
+											'type' => 'AREA',
+											'source' => $module,
+											'ds' => 'cpu_iowait',
+											'cf' => 'AVERAGE',
+											'legend' => 'IOwait',
+											'color' => 'FFAA00',
+											'stacked' => true
+										),
+										array(
+											'type' => 'AREA',
+											'source' => $module,
+											'ds' => 'cpu_irq',
+											'cf' => 'AVERAGE',
+											'legend' => 'IRQ',
+											'color' => 'FF6600',
+											'stacked' => true
+										),
+										array(
+											'type' => 'AREA',
+											'source' => $module,
+											'ds' => 'cpu_softirq',
+											'cf' => 'AVERAGE',
+											'legend' => 'SoftIRQ',
+											'color' => 'AAFF00',
+											'stacked' => true
 										)
 									)
 								);

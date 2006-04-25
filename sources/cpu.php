@@ -28,11 +28,18 @@ class cpu extends source implements source_cached, source_rrd
 {
 	private $path_stat;
 	
-	private $stats;
-	private $time;
+	private $fieldList = array(
+		'user',
+		'nice',
+		'system',
+		'idle',
+		'iowait',
+		'irq',
+		'softirq'
+	);
 	
+	private $stats;
 	private $oldstats;
-	private $oldtime;
 	
 	public function __construct($path_stat = '/proc/stat')
 	{
@@ -61,19 +68,24 @@ class cpu extends source implements source_cached, source_rrd
 		$returnValues = array();
 		foreach ($this->stats as $cpu => $values)
 		{
-			$sumProc = array_sum($values) - array_sum($this->oldstats[$cpu]);
-			if ($sumProc > 0)
+			$cpuUsage = array();
+			foreach ($values as $key => $value)
 			{
-				foreach ($values as $key => $value)
+				if (isset($this->oldstats[$cpu][$key]))
 				{
-					if ($sumProc == 0)
-					{
-						$returnValues[$cpu . '_' . $key] = 0;
-					}
-					else
-					{
-						$returnValues[$cpu . '_' . $key] = (($value - $this->oldstats[$cpu][$key]) * 100) / $sumProc;
-					}
+					$cpuUsage[$key] = $value - $this->oldstats[$cpu][$key];
+				}
+				else
+				{
+					$cpuUsage[$key] = 0;
+				}
+			}
+			$sumUsage = array_sum($cpuUsage);
+			if ($sumUsage > 0)
+			{
+				foreach ($cpuUsage as $key => $value)
+				{
+					$returnValues[$cpu . '_' . $key] = $value * 100 / $sumUsage;
 				}
 			}
 		}
@@ -91,19 +103,24 @@ class cpu extends source implements source_cached, source_rrd
 		{
 			throw new Exception('Could not read "' . $this->path_stat . '"');
 		}
-		$this->time = microtime(true);
 		
 		$this->stats = array();
 		foreach ($lines as $line)
 		{
-			if (preg_match('/^(cpu[0-9]*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)/i', $line, $parts))
+			if (preg_match('/^(cpu[0-9]*)((\s+([0-9]+))+)\s*$/i', $line, $parts))
 			{
-				$this->stats[$parts[1]] = array(
-					'user' => $parts[2],
-					'nice' => $parts[3],
-					'system' => $parts[4],
-					'idle' => $parts[5]
-				);
+				$this->stats[$parts[1]] = array();
+				$cpustats = preg_split('/\s+/', trim($parts[2]));
+				$i = 0;
+				foreach ($this->fieldList as $fieldName)
+				{
+					if (!isset($cpustats[$i]))
+					{
+						break;
+					}
+					$this->stats[$parts[1]][$fieldName] = $cpustats[$i];
+					$i++;
+				}
 			}
 		}
 	}
@@ -112,20 +129,17 @@ class cpu extends source implements source_cached, source_rrd
 	{
 		$this->getStats();
 		$this->oldstats = $this->stats;
-		$this->oldtime = 0;
 	}
 	
 	public function loadCache($cachedata)
 	{
 		$this->oldstats = $cachedata['stats'];
-		$this->oldtime = $cachedata['time'];
 	}
 	
 	public function getCache()
 	{
 		return array(
 			'stats' => $this->stats,
-			'time' => $this->time
 		);
 	}
 }

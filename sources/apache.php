@@ -76,7 +76,7 @@ class apache extends source implements source_rrd
 	{
 		if (($lines = @file($this->url_serverstatus)) === false)
 		{
-			throw new Exception('Error while reading Apache-status');
+			throw new Exception('Error while reading Apache-status (perhaps file-access is forbidden?)');
 			return;
 		}
 		foreach ($lines as $line)
