@@ -83,9 +83,10 @@ class cpu extends source implements source_cached, source_rrd
 			$sumUsage = array_sum($cpuUsage);
 			if ($sumUsage > 0)
 			{
+				$factor = (100 / $sumUsage);
 				foreach ($cpuUsage as $key => $value)
 				{
-					$returnValues[$cpu . '_' . $key] = $value * 100 / $sumUsage;
+					$returnValues[$cpu . '_' . $key] = $value * $factor;
 				}
 			}
 		}
