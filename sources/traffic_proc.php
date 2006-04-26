@@ -50,7 +50,7 @@ class traffic_proc extends source implements source_rrd
 		}
 		foreach($lines as $line)
 		{
-			if (preg_match('/([\w\d]+):\s*(\d+)\s+(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+)\s+(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+/', $line, $m))
+			if (preg_match('/^\s*([\w\d\.\-]+):\s*(\d+)\s+(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+(\d+)\s+(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+/', $line, $m))
 			{
 				if (in_array($m[1], $this->ifs))
 				{
