@@ -112,12 +112,7 @@ class external extends source implements source_rrd
 	
 	public function fetchValues()
 	{
-		$values = array();
-		foreach ($this->data as $key => $value)
-		{
-			$values[$key] = $value;
-		}
-		return $values;
+		return $this->data;
 	}
 }
 

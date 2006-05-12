@@ -25,11 +25,6 @@
 
 class simpleconfig
 {
-	public static function escapeDsName($name)
-	{
-		return preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
-	}
-	
 	public static function graph(&$config, $simpleconfig)
 	{
 		if (!$simpleconfig['used'])
@@ -63,7 +58,7 @@ class simpleconfig
 										'content' => array(
 											array(
 												'type' => 'LINE',
-												'source' => $module . '_' . self::escapeDsName($host),
+												'source' => $module . '_' . rrd::escapeDsName($host),
 												'ds' => 'requestsps',
 												'cf' => 'AVERAGE',
 												'legend' => 'Requests/s',
@@ -180,7 +175,7 @@ class simpleconfig
 										'content' => array(
 											array(
 												'type' => 'LINE',
-												'source' => $module . '_' . self::escapeDsName($disk),
+												'source' => $module . '_' . rrd::escapeDsName($disk),
 												'ds' => 'readps',
 												'cf' => 'AVERAGE',
 												'legend' => 'read',
@@ -188,7 +183,7 @@ class simpleconfig
 											),
 											array(
 												'type' => 'LINE',
-												'source' => $module . '_' . self::escapeDsName($disk),
+												'source' => $module . '_' . rrd::escapeDsName($disk),
 												'ds' => 'writeps',
 												'cf' => 'AVERAGE',
 												'legend' => 'write',
@@ -674,7 +669,7 @@ class simpleconfig
 										'content' => array(
 											array(
 												'type' => 'LINE',
-												'source' => $module . '_' . self::escapeDsName($host),
+												'source' => $module . '_' . rrd::escapeDsName($host),
 												'ds' => 'time',
 												'cf' => 'AVERAGE',
 												'legend' => $host,
@@ -701,7 +696,7 @@ class simpleconfig
 								{
 									$content[] = array(
 										'type' => 'LINE',
-										'source' => $module . '_' . self::escapeDsName($host),
+										'source' => $module . '_' . rrd::escapeDsName($host),
 										'ds' => 'time',
 										'cf' => 'AVERAGE',
 										'legend' => $host . '\n',
@@ -737,7 +732,7 @@ class simpleconfig
 										'content' => array(
 											array(
 												'type' => 'AREA',
-												'source' => $module . '_' . self::escapeDsName($host),
+												'source' => $module . '_' . rrd::escapeDsName($host),
 												'ds' => 'open',
 												'cf' => 'AVERAGE',
 												'legend' => 'open connection\n',
@@ -746,7 +741,7 @@ class simpleconfig
 											array(
 												'type' => 'AREA',
 												'stacked' => true,
-												'source' => $module . '_' . self::escapeDsName($host),
+												'source' => $module . '_' . rrd::escapeDsName($host),
 												'ds' => 'send',
 												'cf' => 'AVERAGE',
 												'legend' => 'send request\n',
@@ -755,7 +750,7 @@ class simpleconfig
 											array(
 												'type' => 'AREA',
 												'stacked' => true,
-												'source' => $module . '_' . self::escapeDsName($host),
+												'source' => $module . '_' . rrd::escapeDsName($host),
 												'ds' => 'receive',
 												'cf' => 'AVERAGE',
 												'legend' => 'receive response\n',
@@ -764,7 +759,7 @@ class simpleconfig
 											array(
 												'type' => 'AREA',
 												'stacked' => true,
-												'source' => $module . '_' . self::escapeDsName($host),
+												'source' => $module . '_' . rrd::escapeDsName($host),
 												'ds' => 'close',
 												'cf' => 'AVERAGE',
 												'legend' => 'close connection\n',
@@ -772,7 +767,7 @@ class simpleconfig
 											),
 											array(
 												'type' => 'LINE',
-												'source' => $module . '_' . self::escapeDsName($host),
+												'source' => $module . '_' . rrd::escapeDsName($host),
 												'ds' => 'time',
 												'cf' => 'AVERAGE',
 												'legend' => 'total',
@@ -799,7 +794,7 @@ class simpleconfig
 								{
 									$content[] = array(
 										'type' => 'LINE',
-										'source' => $module . '_' . self::escapeDsName($host),
+										'source' => $module . '_' . rrd::escapeDsName($host),
 										'ds' => 'time',
 										'cf' => 'AVERAGE',
 										'legend' => $host . '\n',
@@ -835,7 +830,7 @@ class simpleconfig
 										'content' => array(
 											array(
 												'type' => 'LINE',
-												'source' => $module . '_' . self::escapeDsName($chain),
+												'source' => $module . '_' . rrd::escapeDsName($chain),
 												'ds' => 'bps',
 												'cf' => 'AVERAGE',
 												'legend' => $chain,
@@ -852,7 +847,7 @@ class simpleconfig
 										'content' => array(
 											array(
 												'type' => 'LINE',
-												'source' => $module . '_' . self::escapeDsName($chain),
+												'source' => $module . '_' . rrd::escapeDsName($chain),
 												'ds' => 'traffic',
 												'cf' => 'AVERAGE',
 												'legend' => $chain,
@@ -879,7 +874,7 @@ class simpleconfig
 								{
 									$content[] = array(
 										'type' => 'LINE',
-										'source' => $module . '_' . self::escapeDsName($chain),
+										'source' => $module . '_' . rrd::escapeDsName($chain),
 										'ds' => 'bps',
 										'cf' => 'AVERAGE',
 										'legend' => $chain,
@@ -900,7 +895,7 @@ class simpleconfig
 								{
 									$content[] = array(
 										'type' => 'LINE',
-										'source' => $module . '_' . self::escapeDsName($chain),
+										'source' => $module . '_' . rrd::escapeDsName($chain),
 										'ds' => 'traffic',
 										'cf' => 'AVERAGE',
 										'legend' => $chain,
@@ -936,7 +931,7 @@ class simpleconfig
 										'content' => array(
 											array(
 												'type' => 'LINE',
-												'source' => $module . '_' . self::escapeDsName($interface),
+												'source' => $module . '_' . rrd::escapeDsName($interface),
 												'ds' => $interface . '_rbytes',
 												'cf' => 'AVERAGE',
 												'legend' => 'Download Bytes/s',
@@ -944,7 +939,7 @@ class simpleconfig
 											),
 											array(
 												'type' => 'LINE',
-												'source' => $module . '_' . self::escapeDsName($interface),
+												'source' => $module . '_' . rrd::escapeDsName($interface),
 												'ds' => $interface . '_tbytes',
 												'cf' => 'AVERAGE',
 												'legend' => 'Upload Bytes/s',
@@ -971,7 +966,7 @@ class simpleconfig
 								{
 									$content[] = array(
 											'type' => 'LINE',
-											'source' => $module . '_' . self::escapeDsName($interface),
+											'source' => $module . '_' . rrd::escapeDsName($interface),
 											'ds' => $interface . '_rbytes',
 											'cf' => 'AVERAGE',
 											'legend' => 'Download Bytes/s (' . $interface . ')',
@@ -979,7 +974,7 @@ class simpleconfig
 									);
 									$content[] = array(
 											'type' => 'LINE',
-											'source' => $module . '_' . self::escapeDsName($interface),
+											'source' => $module . '_' . rrd::escapeDsName($interface),
 											'ds' => $interface . '_tbytes',
 											'cf' => 'AVERAGE',
 											'legend' => 'Upload Bytes/s (' . $interface . ')\n',
@@ -1046,7 +1041,7 @@ class simpleconfig
 				case 'apache':
 					foreach ($modconf['hosts'] as $host)
 					{
-						$config[$module . '_' . self::escapeDsName($host)]['module'] = new apache('http://' . $host . '/server-status?auto');
+						$config[$module . '_' . rrd::escapeDsName($host)]['module'] = new apache('http://' . $host . '/server-status?auto');
 					}
 					break;
 				case 'cpu':
@@ -1055,7 +1050,7 @@ class simpleconfig
 				case 'disk':
 					foreach ($modconf['disks'] as $disk)
 					{
-						$config[$module . '_' . self::escapeDsName($disk)]['module'] = new disk($disk);
+						$config[$module . '_' . rrd::escapeDsName($disk)]['module'] = new disk($disk);
 					}
 					break;
 				case 'load':
@@ -1070,25 +1065,25 @@ class simpleconfig
 				case 'ping':
 					foreach ($modconf['hosts'] as $host)
 					{
-						$config[$module . '_' . self::escapeDsName($host)]['module'] = new ping($host);
+						$config[$module . '_' . rrd::escapeDsName($host)]['module'] = new ping($host);
 					}
 					break;
 				case 'ping_http':
 					foreach ($modconf['hosts'] as $host)
 					{
-						$config[$module . '_' . self::escapeDsName($host)]['module'] = new ping_http($host);
+						$config[$module . '_' . rrd::escapeDsName($host)]['module'] = new ping_http($host);
 					}
 					break;
 				case 'traffic':
 					foreach ($modconf['chains'] as $chain)
 					{
-						$config[$module . '_' . self::escapeDsName($chain)]['module'] = new traffic($chain);
+						$config[$module . '_' . rrd::escapeDsName($chain)]['module'] = new traffic($chain);
 					}
 					break;
 				case 'traffic_proc':
 					foreach ($modconf['interfaces'] as $interface)
 					{
-						$config[$module . '_' . self::escapeDsName($interface)]['module'] = new traffic_proc($interface);
+						$config[$module . '_' . rrd::escapeDsName($interface)]['module'] = new traffic_proc($interface);
 					}
 					break;
 				case 'users':

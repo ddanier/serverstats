@@ -506,6 +506,11 @@ class rrd
 	{
 		return $this->step * 4;
 	}
+	
+	public static function escapeDsName($name)
+	{
+		return preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
+	}
 }
 
 ?>
