@@ -82,7 +82,7 @@ class config implements ArrayAccess, IteratorAggregate
 		}
 	}
 	
-	protected static function loadConfig(&$config, $file, $GLOBALS)
+	protected static function loadConfig(&$config, $file, $rootConfig)
 	{
 		if (require_once($file))
 		{

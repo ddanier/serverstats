@@ -27,7 +27,7 @@
 
 // Add sources using the simple configuration
 // (To change what sources are used by simpleconfig please edit simple.php)
-simpleconfig::sources($config, $GLOBALS['simple']);
+simpleconfig::sources($config, $rootConfig['simple']);
 
 // Add own sources (examples, like those used in the simple-config)
 /*
