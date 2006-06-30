@@ -509,17 +509,7 @@ class rrd
 	
 	public static function escapeDsName($name)
 	{
-		// escape
-		$name = preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
-		if (strlen($name) > 19)
-		{
-			$name = str_replace('_', '', $name);
-			if (strlen($name) > 19)
-			{
-				throw new Exception('Your datasource-name is to long');
-			}
-		}
-		return $name;
+		return preg_replace('/[^a-zA-Z0-9_]/', '_', $name);
 	}
 }
 

@@ -56,19 +56,19 @@ class snmp extends source implements source_rrd
 	
 	public function refreshData()
 	{
-		foreach ($this->objects as $object)
+		foreach ($this->objects as $object => $objectValue)
 		{
-			$value = snmpgetnext($this->host, $this->community, $object);
+			$value = snmpgetnext($this->host, $this->community, $objectValue);
 			if ($value !== false)
 			{
-				$this->data[$object] = $value;
+				$this->data[$object] = preg_replace('/.*:\s*(.*)/i','$1', $value);
 			}
 		}
 	}
 	
 	public function initRRD(rrd $rrd)
 	{
-		foreach ($this->objects as $object)
+		foreach ($this->objects as $object => $objectValue)
 		{
 			if (isset($this->dsdef[$object]))
 			{
