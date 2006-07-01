@@ -56,25 +56,26 @@ class snmp extends source implements source_rrd
 	
 	public function refreshData()
 	{
-		foreach ($this->objects as $object => $objectValue)
+		snmp_set_valueretrieval(SNMP_VALUE_OBJECT);
+		foreach ($this->objects as $objectName => $objectId)
 		{
-			$value = snmpgetnext($this->host, $this->community, $objectValue);
-			if ($value !== false)
+			$object = snmpget($this->host, $this->community, $objectId);
+			if ($object !== false)
 			{
-				$this->data[$object] = preg_replace('/.*:\s*(.*)/i','$1', $value);
+				$this->data[$objectName] = $object->value;
 			}
 		}
 	}
 	
 	public function initRRD(rrd $rrd)
 	{
-		foreach ($this->objects as $object => $objectValue)
+		foreach ($this->objects as $objectName => $objectId)
 		{
-			if (isset($this->dsdef[$object]))
+			if (isset($this->dsdef[$objectName]))
 			{
-				$opt = $this->dsdef[$object];
+				$opt = $this->dsdef[$objectName];
 				$rrd->addDatasource(
-					rrd::escapeDsName($object),
+					rrd::escapeDsName($objectName),
 					$opt['type'],
 					$opt['heartbeat'],
 					$opt['min'],
@@ -83,7 +84,7 @@ class snmp extends source implements source_rrd
 			}
 			else
 			{
-				$rrd->addDatasource(rrd::escapeDsName($object), 'GAUGE');
+				$rrd->addDatasource(rrd::escapeDsName($objectName), 'GAUGE');
 			}
 		}
 	}
