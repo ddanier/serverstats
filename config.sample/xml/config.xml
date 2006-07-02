@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<group xmlns="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  >
+	<label>serverstats 0.8</label>
+	<group>
+		<label>Zone 1</label>
+		<xi:include href="hosts/host1.xml" />
+		<xi:include href="hosts/switch1.xml" />
+	</group>	
+</group>
