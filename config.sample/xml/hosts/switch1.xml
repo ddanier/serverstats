@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<host id="switch2" hostname="192.168.0.6" xmlns="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude"> 	
-	<label>switch hp procurve 2626 #1</label>
-	<sources>
-			<xi:include href="../templates/hp_memory.xml" />
-	</sources>
-</host>

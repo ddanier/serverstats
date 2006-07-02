@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<source type="snmp" xmlns="urn:serverstats" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-           <param name="comunity">public</param>
-           <param name="objects" xsi:type="xsd:array">
-             <param name="1mn">UCD-SNMP-MIB::laLoad.1</param>
-           </param>
-</source>
