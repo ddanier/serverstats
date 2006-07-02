@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<source type="snmp" id="appli1" xmlns="urn:serverstats" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+           <param id="host">192.168.0.12</param>
+           <param id="comunity">public</param>
+           <param xsi:type="xsd:array">
+           	 <item id="memtotal">UCD-SNMP-MIB::memTotalReal.0</item>
+             <item id="memfree">UCD-SNMP-MIB::memAvailReal.0</item>
+             <item id="1mn">UCD-SNMP-MIB::laLoad.1</item>
+           </param>
+</source>
