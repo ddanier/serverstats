@@ -59,7 +59,7 @@ function menuTree($tree, $path = '')
 // Function to  draw the menu
 function menu()
 {
-	global $config, $filter;
+	global $config, $filter, $tree;
 	if (!isset($config) || !isset($config['graph']['list']) || !isset($config['graph']['tree']))
 	{
 		return;
@@ -74,7 +74,7 @@ function menu()
 	</ul>
 	<h2><?php echo htmlspecialchars(lang::t('Graphs')); ?></h2>
 	<ul>
-	<li class="index"><a href="index.php"><?php echo htmlspecialchars(lang::t('Summary')); ?></a></li>
+	<li class="index"><a href="index.php?tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>"><?php echo htmlspecialchars(lang::t('Summary')); ?></a></li>
 	<?php
 	foreach ($config['graph']['list'] as $graphindex => $graph)
 	{
@@ -82,7 +82,7 @@ function menu()
 			continue;
 		?>
 		<li class="detail">
-			<a href="detail.php?graph=<?php echo htmlspecialchars($graphindex); ?>"><?php echo htmlspecialchars($graph['title']); ?></a>
+			<a href="detail.php?graph=<?php echo htmlspecialchars($graphindex); ?>&tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>"><?php echo htmlspecialchars($graph['title']); ?></a>
 		</li>
 		<?php
 	}
@@ -239,6 +239,12 @@ function printBreadcrumps($tree)
 		<?php
 		$needSep = true;
 	}
+}
+
+function currentTreePath($tree)
+{
+	$last = array_pop($tree);
+	return $last['path'];
 }
 
 ?>

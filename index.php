@@ -36,22 +36,6 @@ require_once('init.php');
 <body class="index">
 <?php
 
-if (isset($_GET['tree']))
-{
-	$tree = extractTree($_GET['tree']);
-	$filter = extractFilterFromTree($tree);
-}
-elseif (isset($_GET['filter']))
-{
-	$tree = extractTree();
-	$filter = extractFilter($_GET['filter']);
-}
-else
-{
-	$tree = extractTree();
-	$filter = array();
-}
-
 // Show the menu
 menu();
 
@@ -65,8 +49,8 @@ foreach ($config['graph']['list'] as $graphindex => $graph)
 		continue;
 	?>
 	<h2><?php echo htmlspecialchars($graph['title']); ?></h2>
-	<a href="detail.php?graph=<?php echo $graphindex; ?>">
-		<img src="graph.php?graph=<?php echo $graphindex; ?>" alt="<?php echo htmlspecialchars($graph['title']); ?>" />
+	<a href="detail.php?graph=<?php echo htmlspecialchars($graphindex); ?>&tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>">
+		<img src="graph.php?graph=<?php echo htmlspecialchars($graphindex); ?>" alt="<?php echo htmlspecialchars($graph['title']); ?>" />
 	</a>
 	<?php
 }
