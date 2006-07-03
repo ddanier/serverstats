@@ -36,7 +36,7 @@ $config['list'] = array();
 simpleconfig::graph($config, $rootConfig['simple']);
 
 $config['tree'] = array(
-	'title' => 'All Graphs',
+	'title' => 'All graphs',
 	'filter' => '',
 	'sub' => array(
 		array(
