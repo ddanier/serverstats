@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<source type="snmp" xmlns="urn:serverstats" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<source id="mem" type="snmp" xmlns="urn:serverstats" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
            <param name="comunity">public</param>
            <param name="objects" xsi:type="xsd:array">
            	 <param name="memtotal">UCD-SNMP-MIB::memTotalReal.0</param>
-             <param name="memfree">UCD-SNMP-MIB::memAvailReal.0</param>
+	         <param name="memfree">UCD-SNMP-MIB::memAvailReal.0</param>
+		 <param name="memcached">UCD-SNMP-MIB::memCached.0</param>
            </param>
 </source>
