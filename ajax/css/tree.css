@@ -1,0 +1,65 @@
+.treed, .treed ul {
+ list-style-type: none;
+ margin: 0;
+ padding: 0;
+ font-family: Tahoma, verdana, arial, sans-serif;
+ font-size: 12px;
+ background-image: url('../img/vdot.gif');
+ background-repeat: repeat-y;
+ background-position: 8px 0px;
+}
+.treed a {
+ text-decoration: none;
+ color: #000;
+ background-image: url('../img/folder.gif');
+ background-repeat: no-repeat;
+ background-position: center left;
+ padding: 2px 0 2px 20px;
+}
+.treed li {
+ padding-top: 4px;
+ padding-left: 20px;
+ background-image: url('../img/corner.gif');
+ background-repeat: no-repeat;
+ background-position: 8px 0px;
+}
+.treed a:hover {
+ text-decoration: underline;
+}
+.treed .collapsed, .treed .open {
+ background-repeat: no-repeat;
+ background-position: 4px 0px;
+ cursor: pointer;
+}
+.treed .collapsed {
+ background-image: url('../img/plus.gif');
+}
+.treed .open {
+ background-image: url('../img/minus.gif');
+}
+.treed .collapsed ul, .treed .lastcollapsed ul {
+ display: none;
+}
+.treed .last, .treed .lastfile {
+ background-image: url('../img/corner.gif');
+ background-position: 8px 0px;
+ background-color: #fff;
+}
+.treed .lastcollapsed {
+ background-image: url('../img/plus.gif');
+}
+.treed .lastopen {
+ background-image: url('../img/minus.gif');
+}
+.treed .lastopen, .treed .lastcollapsed {
+ background-repeat: no-repeat;
+ background-position: 4px 0px;
+ cursor: pointer;
+ background-color: #fff;
+}
+.treed .file a, .treed .lastfile a {
+ background-image: url('../img/file.gif');
+}
+.treed .file a[type='audio/x-ms-wma'], .treed .lastfile a[type='audio/x-ms-wma'] {
+ background-image: url('../img/wma.gif');
+}

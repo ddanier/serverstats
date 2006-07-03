@@ -34,7 +34,7 @@ define('SOURCEPATH', PATH . 'sources' . DIRECTORY_SEPARATOR);
 define('CACHEPATH', PATH . 'cache' . DIRECTORY_SEPARATOR);
 define('RRDPATH', PATH . 'rrd' . DIRECTORY_SEPARATOR);
 define('LANGPATH', PATH . 'lang' . DIRECTORY_SEPARATOR);
-define('CONFIGPATH', PATH . 'config' . DIRECTORY_SEPARATOR);
+define('CONFIGPATH', PATH . 'config.sample' . DIRECTORY_SEPARATOR);
 
 // Load all needed functions
 require_once(INCLUDEPATH . 'functions.php');

@@ -1,6 +1,5 @@
-<?php
 /**
- * $Id$
+ * $Id: style.css 123 2006-04-11 12:35:34Z goliath $
  *
  * Author: David Danier, david.danier@team23.de
  * Project: Serverstats, http://serverstats.berlios.de/
@@ -23,20 +22,50 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// Define the sources, read the sourcefiles for the needed details
+body {
+	font-family: verdana, arial, sans-serif;
+	padding: 10px;
+	margin: 0px;
+}
 
-// Add sources using the simple configuration
-// (To change what sources are used by simpleconfig please edit simple.php)
-simpleconfig::sources($config, $rootConfig['simple']);
-xmlconfig::sources($config, $rootConfig['xml']);
+img {
+	border: 0px none;
+}
 
-// Add own sources (examples, like those used in the simple-config)
-/*
-$config['cpu']['module'] = new cpu();
-$config['mem']['module'] = new memory();
-$config['load']['module'] = new load();
-$config['users']['module'] = new users();
-$config['traffic_proc']['module'] = new traffic_proc('eth0');
-*/
+a {
+	color: #000000;
+}
 
-?>
+#page {
+}
+
+#main {
+        min-height: 600px;
+        _height: 600px;
+
+}
+
+#left {
+        float: left;
+        width: 200px;
+	border: 1px solid #cccccc;
+}
+
+#content {
+	padding-top: 5px;
+        margin-left: 210px;
+}
+
+#header {
+	border: 1px solid #cccccc;
+	height: 100px;
+}
+
+#footer {
+        border: 1px solid #cccccc;
+        height: 50px;
+}
+
+.progress {
+	background: url(../img/indicator_white.gif) no-repeat 0 0;
+}

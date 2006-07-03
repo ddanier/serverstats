@@ -1,6 +1,6 @@
 <?php
 /**
- * $Id$
+ * $Id: detail.php 141 2006-07-03 11:14:33Z goliath $
  *
  * Author: David Danier, david.danier@team23.de
  * Project: Serverstats, http://serverstats.berlios.de/
@@ -23,20 +23,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// Define the sources, read the sourcefiles for the needed details
+// Load all needed classes, function and everything else
+require_once('../init.php');
+if (!isset($_GET['graph']))
+{
+	die('$_GET["graph"] missing');
+}
 
-// Add sources using the simple configuration
-// (To change what sources are used by simpleconfig please edit simple.php)
-simpleconfig::sources($config, $rootConfig['simple']);
-xmlconfig::sources($config, $rootConfig['xml']);
+// Init Vars used in this script
+$graphindex = $_GET['graph'];
+$graph = $config['graph']['list'][$graphindex];
 
-// Add own sources (examples, like those used in the simple-config)
-/*
-$config['cpu']['module'] = new cpu();
-$config['mem']['module'] = new memory();
-$config['load']['module'] = new load();
-$config['users']['module'] = new users();
-$config['traffic_proc']['module'] = new traffic_proc('eth0');
-*/
+?>
+<h1><?php echo htmlspecialchars(lang::t('Statistics')); ?> - <?php echo htmlspecialchars($graph['title']); ?></h1>
+<?php
 
+// List all configured graphs
+foreach ($config['graph']['types'] as $graphtype)
+{
+	?>
+	<h2><?php echo $graphtype['title']; ?></h2>
+	<img src="../graph.php?graph=<?php echo $graphindex; ?>&start=<?php echo -$graphtype['period']; ?>&title=<?php echo htmlspecialchars($graphtype['title']); ?>" alt="<?php echo htmlspecialchars($graphtype['title']); ?>" />
+	<?php
+}
 ?>

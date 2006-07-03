@@ -42,12 +42,26 @@ $config['tree'] = array(
 		array(
 			'title' => 'localhost',
 			'filter' => 'host:localhost'
-		)
+		),
+		array ( 
+			'title' => 'important',
+			'filter' => 'impact:important'
+		),
+		array ( 
+			'title' => 'datacenter1',
+			'sub' => array (
+				array ( 
+					'title' => 'switches',
+					'filter' => 'groupby:switches1'
+					
+				)
+			)
+		)	
 	)
 );
 
 // Add own graphs (examples, like those used in the simple-config)
-/*
+
 $config['list'][] = array(
 	'title' => 'Users logged in',
 	'lowerLimit' => 0,
@@ -67,6 +81,11 @@ $config['list'][] = array(
 	'title' => 'Load',
 	'lowerLimit' => 0,
 	'altAutoscaleMax' => true,
+	'categories' => array (
+		'host'=> '127.0.0.1',
+		'impact' => 'important',
+		'groupby' => 'switches1'
+	),
 	'content' => array(
 		array(
 			'type' => 'COMMENT',
@@ -506,7 +525,7 @@ $config['list'][] = array(
 		)
 	)
 );
-*/
+
 
 // Define what Graphes we want in the detail view (detail.php)
 $config['types'] = array(

@@ -1,6 +1,7 @@
 <?php
+
 /**
- * $Id$
+ * $Id: index.php 123 2006-04-11 12:35:34Z goliath $
  *
  * Author: David Danier, david.danier@team23.de
  * Project: Serverstats, http://serverstats.berlios.de/
@@ -23,20 +24,20 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// Define the sources, read the sourcefiles for the needed details
+// Load all needed classes, function and everything else
+require_once('../init.php');
 
-// Add sources using the simple configuration
-// (To change what sources are used by simpleconfig please edit simple.php)
-simpleconfig::sources($config, $rootConfig['simple']);
-xmlconfig::sources($config, $rootConfig['xml']);
+foreach ($config['graph']['list'] as $graphindex => $graph)
+{
+        if (isFiltered($graph, $filter))
+                continue;
+        ?>
+        <h2><?php echo htmlspecialchars($graph['title']); ?></h2>
+        <a href="javascript:loadgraphs('detail.php?graph=<?php echo htmlspecialchars($graphindex); ?>&amp;tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>&amp;filter=<?php echo htmlspecialchars(currentFilter($filter)); ?>');">
+        <img src="../graph.php?graph=<?php echo htmlspecialchars($graphindex); ?>" alt="<?php echo htmlspecialchars($graph['title']); ?>" />
+        </a>
+        <?php
+}
 
-// Add own sources (examples, like those used in the simple-config)
-/*
-$config['cpu']['module'] = new cpu();
-$config['mem']['module'] = new memory();
-$config['load']['module'] = new load();
-$config['users']['module'] = new users();
-$config['traffic_proc']['module'] = new traffic_proc('eth0');
-*/
 
 ?>
