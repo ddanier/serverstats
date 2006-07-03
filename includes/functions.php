@@ -144,18 +144,23 @@ function value_compare($value1, $value2, $operator)
 	}
 }
 
-function extractFilter($filter)
+function extractFilter($filterString = '')
 {
-	$filters = array();
-	$filterParts = preg_split('/\s*,\s*/', trim($filter));
+	$filter = array();
+	$filterString = trim($filterString);
+	if (strtolower($filterString) == 'none')
+	{
+		return array('none');
+	}
+	$filterParts = preg_split('/\s*,\s*/', $filterString);
 	foreach ($filterParts as $filterPart)
 	{
 		if (preg_match('/^([a-zA-Z0-9]+):(.+)$/', $filterPart, $matches))
 		{
-			$filters[$matches[1]] = $matches[2];
+			$filter[$matches[1]] = $matches[2];
 		}
 	}
-	return $filters;
+	return $filter;
 }
 
 function extractFilterFromTree($tree)
@@ -205,6 +210,10 @@ function isFiltered($graph, $filter)
 {
 	foreach ($filter as $category => $condition)
 	{
+		if ($condition == 'none')
+		{
+			return true;
+		}
 		if ($condition{0} == "!")
 		{
 			$condition = substr($condition, 1);
