@@ -62,8 +62,11 @@ a {
 }
 
 #footer {
-        border: 1px solid #cccccc;
-        height: 50px;
+	background: #000000;
+	color: #ffffff;
+	font-size: 10px;
+        height: 20px;
+	padding: 5px;
 }
 
 .progress {

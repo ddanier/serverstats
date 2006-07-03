@@ -98,6 +98,10 @@ class snmp extends source implements source_rrd
 		}
 		return $values;
 	}
+
+	public static function factory($args) {
+		return new snmp($args['host'],$args['objects'], $args['comunity']);
+	}
 }
 
 ?>

@@ -14,7 +14,7 @@ class xmlconfig {
   			
   			switch ($child->nodeName) {
   				case 'graph':
-						self::__traverseParams($child, $config[ $host ]['graphs'][], $host);		
+						self::__traverseParams($child, $config['graphs'][]);		
 						break;
 					case 'source':
 						$id = $child->getAttribute('id');
@@ -24,8 +24,7 @@ class xmlconfig {
 						self::__traverseParams($child, $args);		
 											
 						if (class_exists($class)) {
-							/*$args['host'] = $host;*/
-							$config[ $id ] = call_user_func(array($class,'factory'), $args); 				
+							$config['modules'][ $id ] = call_user_func(array($class,'factory'), $args); 				
 						}
 						
 												
@@ -44,7 +43,6 @@ class xmlconfig {
 						break;
 
 					default:
-						print ($child->nodeName);
 						self::__traverseParams($child, $config);		
 						break;
 						
@@ -54,7 +52,21 @@ class xmlconfig {
 	}
 
 
-public static function sources(&$config, $xmlconfig)
+	public static function graph(&$config, $xmlconfig)
+	{
+            if (!$xmlconfig['used'])
+                {
+                        return;
+                }
+
+		foreach ($xmlconfig['graphs'] as $graph => $graphconf) 
+		{
+			 $config['list'][] = $graphconf;
+		}
+		
+	}
+
+	public static function sources(&$config, $xmlconfig)
         {
                 if (!$xmlconfig['used'])
                 {

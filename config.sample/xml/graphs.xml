@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<graphs xmlns="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  >
+	<graph>
+			 <param name="title">Load SNMP</param>
+                                <param name="lowerLimit">0</param>
+                                <param name="altAutoscaleMax">true</param>
+				<param name="categories" xsi:type="xsd:array">
+					<param name="title">vps</param>
+					<param name="groupby">vps</param>
+					<param name="impact">important</param>
+				</param>
+                                <param name="content" xsi:type="xsd:array">
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">COMMENT</param>
+                                                        <param name="text">average number of tasks in the queue\:\n</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">LINE</param>
+                                                        <param name="source">snmp1</param>
+                                                        <param name="ds">1min</param>
+                                                        <param name="cf">AVERAGE</param>
+                                                        <param name="legend">1 minute</param>
+                                                        <param name="width">1</param>
+                                                        <param name="color">FFDD00</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_1min</param>
+                                                        <param name="cf">LAST</param>
+                                                        <param name="format">  cur\: %01.2lf</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_1min</param>
+                                                        <param name="cf">MAXIMUM</param>
+                                                        <param name="format">  max\: %01.2lf</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_1min</param>
+                                                        <param name="cf">MINIMUM</param>
+                                                        <param name="format">  min\: %01.2lf</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_1min</param>
+                                                        <param name="cf">AVERAGE</param>
+                                                        <param name="format">  avg\: %01.2lf\n</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">LINE</param>
+                                                        <param name="source">snmp1</param>
+                                                        <param name="ds">5min</param>
+                                                        <param name="cf">AVERAGE</param>
+                                                        <param name="legend">5 minutes</param>
+                                                        <param name="width">1</param>
+                                                        <param name="color">FF8800</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_5min</param>
+                                                        <param name="cf">LAST</param>
+                                                        <param name="format">  cur\: %01.2lf</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_5min</param>
+                                                        <param name="cf">MAXIMUM</param>
+                                                        <param name="format">  max\: %01.2lf</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_5min</param>
+                                                        <param name="cf">MINIMUM</param>
+                                                        <param name="format">  min\: %01.2lf</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_5min</param>
+                                                        <param name="cf">AVERAGE</param>
+                                                        <param name="format">  avg\: %01.2lf\n</param>
+                                                </param>
+
+
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">LINE</param>
+                                                        <param name="source">snmp1</param>
+                                                        <param name="ds">15min</param>
+                                                        <param name="cf">AVERAGE</param>
+                                                        <param name="legend">15 minutes</param>
+                                                        <param name="width">1</param>
+                                                        <param name="color">FF0000</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_15min</param>
+                                                        <param name="cf">LAST</param>
+                                                        <param name="format">  cur\: %01.2lf</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_15min</param>
+                                                        <param name="cf">MAXIMUM</param>
+                                                        <param name="format">  max\: %01.2lf</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_15min</param>
+                                                        <param name="cf">MINIMUM</param>
+                                                        <param name="format">  min\: %01.2lf</param>
+                                                </param>
+                                                <param xsi:type="xsd:array">
+                                                        <param name="type">GPRINT</param>
+                                                        <param name="name">snmp1_15min</param>
+                                                        <param name="cf">AVERAGE</param>
+                                                        <param name="format">  avg\: %01.2lf</param>
+                                                </param>
+
+                                </param>
+
+	</graph>
+</graphs>

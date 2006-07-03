@@ -26,11 +26,15 @@
 //$config['used'] = true; // is the simple config used
 
 $dom = new domDocument();
-$dom->load(CONFIGPATH . 'xml/sources.xml');
+$dom->load(CONFIGPATH . 'xml/config.xml');
 $dom->Xinclude();
 
-$config['modules'] = xmlconfig::read($dom);
+
+$xmlconfig = xmlconfig::read($dom);
+//print_r ($xmlconfig);
+
+$config['modules'] = $xmlconfig['modules'];
+$config['graphs'] = $xmlconfig['graphs'];
 $config['used'] = true;
 
-//print_r ($config);
 ?>
