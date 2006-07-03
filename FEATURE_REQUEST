@@ -1,10 +1,17 @@
+Legend:
+ [ ] todo
+ [*] done (username)
+ [/] working on (username)
+ [#] discarded (username: reason)
+------------------------------------------------------------------------------
+
 Missing Cacti Features:
- * Tree view
- * Graph preview (smaller graph, perhaps more, not really needed)
- * Graph templates
- * user-management (not needed!)
+ [*] Tree view (goliath) 
+ [ ] Graph preview (smaller graph, perhaps more, not really needed)
+ [ ] Graph templates
+ [#] user-management (goliath: not needed)
 
 Ideas:
- * Remote polling
+ [ ] Remote polling
    (Server sends out data using some XML-format, source to read this data.
     Server does not need to create any RRD-files)
