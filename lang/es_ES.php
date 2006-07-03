@@ -3,7 +3,7 @@
  * $Id: fr_FR.php 123 2006-04-11 12:35:34Z goliath $
  *
  * Author: David Danier, david.danier@team23.de 
- * French translation : S√©bastien Cramatte, s.cramatte@wanadoo.fr
+ * Spanish translation : S√©bastien Cramatte, s.cramatte@wanadoo.fr
  *
  * Project: Serverstats, http://serverstats.berlios.de/
  * License: GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
@@ -26,14 +26,14 @@
  */
 $lang = array();
 
-$lang['Statistics'] = 'EstadÌsticos';
-$lang['Summary'] = 'Õndice';
+$lang['Statistics'] = 'Estad√≠sticos';
+$lang['Summary'] = '√çndice';
 $lang['Tree'] = 'Arbol';
-$lang['Graphs'] = 'Gr·ficos';
+$lang['Graphs'] = 'Gr√°ficos';
 
 
-$lang['Information'] = 'InformaciÛn';
-$lang['Warning'] = 'AttenciÛn';
+$lang['Information'] = 'Informaci√≥n';
+$lang['Warning'] = 'Attenci√≥n';
 $lang['Error'] = 'Error';
 $lang['Unknown error'] = 'Error desconosida';
 
