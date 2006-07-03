@@ -1,6 +1,6 @@
 <?php
 /**
- * $Id$
+ * $Id: fr_FR.php 123 2006-04-11 12:35:34Z goliath $
  *
  * Author: David Danier, david.danier@team23.de 
  * French translation : SÃ©bastien Cramatte, s.cramatte@wanadoo.fr
@@ -26,15 +26,15 @@
  */
 $lang = array();
 
-$lang['Statistics'] = 'Statistiques';
-$lang['Summary'] = 'Sommaire';
-$lang['Tree'] = 'Arborescence';
-$lang['Graphs'] = 'Grapiques';
+$lang['Statistics'] = 'Estadísticos';
+$lang['Summary'] = 'Índice';
+$lang['Tree'] = 'Arbol';
+$lang['Graphs'] = 'Gráficos';
 
 
-$lang['Information'] = 'Information';
-$lang['Warning'] = 'Attention';
-$lang['Error'] = 'Erreur';
-$lang['Unknown error'] = 'Erreur inconnu';
+$lang['Information'] = 'Información';
+$lang['Warning'] = 'Attención';
+$lang['Error'] = 'Error';
+$lang['Unknown error'] = 'Error desconosida';
 
 ?>
