@@ -43,7 +43,7 @@ function menuTree($tree, $path = '')
 	<?php
 	foreach ($tree as $index => $item)
 	{
-		$itempath = $path . ($path === "" ? $index : ",$index");
+		$itempath = $path . ($path === "" ? $index : (',' . $index));
 		?>
 		<li class="treeitem">
 			<a href="index.php?tree=<?php echo htmlspecialchars($itempath); ?>"><?php echo htmlspecialchars($item['title']); ?></a>
@@ -74,7 +74,7 @@ function menu()
 	</ul>
 	<h2><?php echo htmlspecialchars(lang::t('Graphs')); ?></h2>
 	<ul>
-	<li class="index"><a href="index.php?tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>"><?php echo htmlspecialchars(lang::t('Summary')); ?></a></li>
+	<li class="index"><a href="index.php?tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>&amp;filter=<?php echo htmlspecialchars(currentFilter($filter)); ?>"><?php echo htmlspecialchars(lang::t('Summary')); ?></a></li>
 	<?php
 	foreach ($config['graph']['list'] as $graphindex => $graph)
 	{
@@ -82,7 +82,7 @@ function menu()
 			continue;
 		?>
 		<li class="detail">
-			<a href="detail.php?graph=<?php echo htmlspecialchars($graphindex); ?>&tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>"><?php echo htmlspecialchars($graph['title']); ?></a>
+			<a href="detail.php?graph=<?php echo htmlspecialchars($graphindex); ?>&amp;tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>&amp;filter=<?php echo htmlspecialchars(currentFilter($filter)); ?>"><?php echo htmlspecialchars($graph['title']); ?></a>
 		</li>
 		<?php
 	}
@@ -184,7 +184,7 @@ function extractTree($treeString = '')
 	{
 		if (isset($subTree[$part]))
 		{
-			$path .= $path === "" ? $part : ",$part";
+			$path .= $path === "" ? $part : (',' . $part);
 			$tree[] = array(
 				'title' => $subTree[$part]['title'],
 				'filter' => $subTree[$part]['filter'],
@@ -264,6 +264,16 @@ function currentTreePath($tree)
 {
 	$last = array_pop($tree);
 	return $last['path'];
+}
+
+function currentFilter($filter)
+{
+	$filterParts = array();
+	foreach ($filter as $category => $condition)
+	{
+		$filterParts[] = $category . ':' . $condition;
+	}
+	return implode(',', $filterParts);
 }
 
 ?>

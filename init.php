@@ -43,12 +43,12 @@ require_once(INCLUDEPATH . 'functions.php');
 $config = new config(CONFIGPATH);
 
 // TODO: move this out of init.php
-if (isset($_GET['tree']))
+if (isset($_GET['tree']) && !empty($_GET['tree']))
 {
 	$tree = extractTree($_GET['tree']);
 	$filter = extractFilterFromTree($tree);
 }
-elseif (isset($_GET['filter']))
+elseif (isset($_GET['filter']) && !empty($_GET['filter']))
 {
 	$tree = extractTree();
 	$filter = extractFilter($_GET['filter']);

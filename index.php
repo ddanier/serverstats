@@ -49,7 +49,7 @@ foreach ($config['graph']['list'] as $graphindex => $graph)
 		continue;
 	?>
 	<h2><?php echo htmlspecialchars($graph['title']); ?></h2>
-	<a href="detail.php?graph=<?php echo htmlspecialchars($graphindex); ?>&tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>">
+	<a href="detail.php?graph=<?php echo htmlspecialchars($graphindex); ?>&amp;tree=<?php echo htmlspecialchars(currentTreePath($tree)); ?>&amp;filter=<?php echo htmlspecialchars(currentFilter($filter)); ?>">
 		<img src="graph.php?graph=<?php echo htmlspecialchars($graphindex); ?>" alt="<?php echo htmlspecialchars($graph['title']); ?>" />
 	</a>
 	<?php
