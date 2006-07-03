@@ -143,6 +143,10 @@ class cpu extends source implements source_cached, source_rrd
 			'stats' => $this->stats,
 		);
 	}
+	
+	public static function factory () {
+		return new cpu();
+	}
 }
 
 ?>
