@@ -36,23 +36,53 @@ function __autoload($class)
 	}
 }
 
+function menuTree($tree, $path = '')
+{
+	?>
+	<ul>
+	<?php
+	foreach ($tree as $index => $item)
+	{
+		$itempath = $path . ($path === "" ? $index : ",$index");
+		?>
+		<li class="treeitem">
+			<a href="index.php?tree=<?php echo htmlspecialchars($itempath); ?>"><?php echo htmlspecialchars($item['title']); ?></a>
+			<?php if (isset($item['sub'])) menuTree($item['sub'], $itempath); ?>
+		</li>
+		<?php
+	}
+	?>
+	</ul>
+	<?php
+}
+
 // Function to  draw the menu
 function menu()
 {
-	global $config;
-	if (!isset($config) || !isset($config['graph']['list']))
+	global $config, $filter;
+	if (!isset($config) || !isset($config['graph']['list']) || !isset($config['graph']['tree']))
 	{
 		return;
 	}
 	?><div id="menu">
+	<h2><?php echo htmlspecialchars(lang::t('Tree')); ?></h2>
 	<ul>
-	<li class="index"><a href="index.php"><?php echo lang::t('Summary'); ?></a></li>
+	<li class="index">
+		<a href="index.php"><?php echo htmlspecialchars($config['graph']['tree']['title']); ?></a>
+		<?php if (isset($config['graph']['tree']['sub'])) menuTree($config['graph']['tree']['sub']); ?>
+	</li>
+	</ul>
+	<h2><?php echo htmlspecialchars(lang::t('Graphs')); ?></h2>
+	<ul>
+	<li class="index"><a href="index.php"><?php echo htmlspecialchars(lang::t('Summary')); ?></a></li>
 	<?php
 	foreach ($config['graph']['list'] as $graphindex => $graph)
 	{
+		if (isFiltered($graph, $filter))
+			continue;
 		?>
 		<li class="detail">
-			<a href="detail.php?graph=<?php echo $graphindex; ?>"><?php echo htmlspecialchars($graph['title']); ?></a>
+			<a href="detail.php?graph=<?php echo htmlspecialchars($graphindex); ?>"><?php echo htmlspecialchars($graph['title']); ?></a>
 		</li>
 		<?php
 	}
@@ -111,6 +141,103 @@ function value_compare($value1, $value2, $operator)
 			return ($value1 != $value2);
 		default:
 			throw new Exception('Invalid operator');
+	}
+}
+
+function extractFilter($filter)
+{
+	$filters = array();
+	$filterParts = preg_split('/\s*,\s*/', trim($filter));
+	foreach ($filterParts as $filterPart)
+	{
+		if (preg_match('/^([a-zA-Z0-9]+):(.+)$/', $filterPart, $matches))
+		{
+			$filters[$matches[1]] = $matches[2];
+		}
+	}
+	return $filters;
+}
+
+function extractFilterFromTree($tree)
+{
+	$last = array_pop($tree);
+	return extractFilter($last['filter']);
+}
+
+function extractTree($treeString = '')
+{
+	global $config;
+	$tree = array();
+	$treeString = trim($treeString);
+	if ($treeString === "")
+		$treeParts = array();
+	else
+		$treeParts = preg_split('/\s*,\s*/', $treeString);
+	$path = '';
+	$tree[] = array(
+		'title' => $config['graph']['tree']['title'],
+		'filter' => $config['graph']['tree']['filter'],
+		'path' => $path
+	);
+	$subTree = $config['graph']['tree']['sub'];
+	foreach ($treeParts as $part)
+	{
+		if (isset($subTree[$part]))
+		{
+			$path .= $path === "" ? $part : ",$part";
+			$tree[] = array(
+				'title' => $subTree[$part]['title'],
+				'filter' => $subTree[$part]['filter'],
+				'path' => $path
+			);
+			if (isset($subTree[$part]['sub']))
+				$subTree = $subTree[$part]['sub'];
+			else
+				break;
+		}
+		else
+			break;
+	}
+	return $tree;
+}
+
+function isFiltered($graph, $filter)
+{
+	foreach ($filter as $category => $condition)
+	{
+		if (!isset($graph['categories'][$category]))
+			return true;
+		if ($graph['categories'][$category] instanceof ArrayAccess)
+		{
+			$filtered = true;
+			foreach ($graph['categories'][$category] as $value)
+			{
+				if ($condition == $value)
+				{
+					$filtered = false;
+					break;
+				}
+			}
+			if ($filtered)
+				return true;
+		}
+		else
+		{
+			if ($condition != $graph['categories'][$category])
+				return true;
+		}
+	}
+}
+
+function printBreadcrumps($tree)
+{
+	$needSep = false;
+	foreach ($tree as $crump)
+	{
+		?>
+		<?php if ($needSep) echo ' &gt; '; ?><a href="index.php?tree=<?php echo htmlspecialchars($crump['path']); ?>"><?php echo htmlspecialchars($crump['title']); ?></a>
+		<?php
+		$needSep = true;
 	}
 }
 

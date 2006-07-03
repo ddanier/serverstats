@@ -55,6 +55,7 @@ class simpleconfig
 										'title' => sprintf($graphconf['title'], $host),
 										'lowerLimit' => 0,
 										'altAutoscaleMax' => true,
+										'categories' => array('host' => $host),
 										'content' => array(
 											array(
 												'type' => 'LINE',
@@ -86,6 +87,7 @@ class simpleconfig
 									'upperLimit' => 100,
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => 'localhost'),
 									'content' => array(
 										array(
 											'type' => 'AREA',
@@ -172,6 +174,7 @@ class simpleconfig
 										'lowerLimit' => 0,
 										'altAutoscaleMax' => true,
 										'verticalLabel' => 'byte/s',
+										'categories' => array('host' => 'localhost'),
 										'content' => array(
 											array(
 												'type' => 'LINE',
@@ -210,6 +213,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => 'localhost'),
 									'content' => array(
 										array(
 											'type' => 'COMMENT',
@@ -322,6 +326,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => 'localhost'),
 									'content' => array(
 										array(
 											'type' => 'AREA',
@@ -359,6 +364,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => 'localhost'),
 									'content' => array(
 										array(
 											'type' => 'DEF',
@@ -482,6 +488,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => 'localhost'),
 									'content' => array(
 										array(
 											'type' => 'DEF',
@@ -617,6 +624,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => $modconf['host']),
 									'content' => array(
 										array(
 											'type' => 'LINE',
@@ -635,6 +643,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => $modconf['host']),
 									'content' => array(
 										array(
 											'type' => 'AREA',
@@ -666,6 +675,7 @@ class simpleconfig
 										'title' => sprintf($graphconf['title'], $host),
 										'lowerLimit' => 0,
 										'altAutoscaleMax' => true,
+										'categories' => array('host' => $host),
 										'content' => array(
 											array(
 												'type' => 'LINE',
@@ -707,6 +717,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => $modconf['hosts']),
 									'content' => $content
 								);
 								break;
@@ -729,6 +740,7 @@ class simpleconfig
 										'title' => sprintf($graphconf['title'], $host),
 										'lowerLimit' => 0,
 										'altAutoscaleMax' => true,
+										'categories' => array('host' => $host),
 										'content' => array(
 											array(
 												'type' => 'AREA',
@@ -805,6 +817,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => $modconf['hosts']),
 									'content' => $content
 								);
 								break;
@@ -827,6 +840,7 @@ class simpleconfig
 										'title' => sprintf($graphconf['title'], $chain),
 										'lowerLimit' => 0,
 										'altAutoscaleMax' => true,
+										'categories' => array('host' => 'localhost'),
 										'content' => array(
 											array(
 												'type' => 'LINE',
@@ -844,6 +858,7 @@ class simpleconfig
 										'title' => sprintf($graphconf['title'], $chain),
 										'lowerLimit' => 0,
 										'altAutoscaleMax' => true,
+										'categories' => array('host' => 'localhost'),
 										'content' => array(
 											array(
 												'type' => 'LINE',
@@ -885,6 +900,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => 'localhost'),
 									'content' => $content
 								);
 								break;
@@ -906,6 +922,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => 'localhost'),
 									'content' => $content
 								);
 								break;
@@ -928,6 +945,7 @@ class simpleconfig
 										'title' => sprintf($graphconf['title'], $interface),
 										'lowerLimit' => 0,
 										'altAutoscaleMax' => true,
+										'categories' => array('host' => 'localhost'),
 										'content' => array(
 											array(
 												'type' => 'LINE',
@@ -985,6 +1003,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => 'localhost'),
 									'content' => $content
 								);
 								break;
@@ -1005,6 +1024,7 @@ class simpleconfig
 									'title' => $graphconf['title'],
 									'lowerLimit' => 0,
 									'altAutoscaleMax' => true,
+									'categories' => array('host' => 'localhost'),
 									'content' => array(
 										array(
 											'type' => 'AREA',

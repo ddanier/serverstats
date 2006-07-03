@@ -65,6 +65,10 @@ html > body #menu {
 	white-space: nowrap;
 }
 
+#menu .treeitem {
+	padding-left: 10px;
+}
+
 html > body #menu li {
 	display: block;
 	padding-right: 0px;

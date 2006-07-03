@@ -29,22 +29,40 @@ require_once('init.php');
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de">  
 <head>
-	<title><?php echo lang::t('Statistics'); ?> - <?php echo lang::t('Summary'); ?></title>
+	<title><?php echo htmlspecialchars(lang::t('Statistics')); ?> - <?php echo htmlspecialchars(lang::t('Summary')); ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<link rel="stylesheet" href="style.css" type="text/css" media="screen, projection" />
 </head>
 <body class="index">
 <?php
 
+if (isset($_GET['tree']))
+{
+	$tree = extractTree($_GET['tree']);
+	$filter = extractFilterFromTree($tree);
+}
+elseif (isset($_GET['filter']))
+{
+	$tree = extractTree();
+	$filter = extractFilter($_GET['filter']);
+}
+else
+{
+	$tree = extractTree();
+	$filter = array();
+}
+
 // Show the menu
 menu();
 
 ?>
-<h1><?php echo lang::t('Statistics'); ?> - <?php echo lang::t('Summary'); ?></h1>
+<h1><?php echo htmlspecialchars(lang::t('Statistics')); ?> - <?php echo htmlspecialchars(lang::t('Summary')); ?>: <?php printBreadcrumps($tree); ?></h1>
 <?php
 
 foreach ($config['graph']['list'] as $graphindex => $graph)
 {
+	if (isFiltered($graph, $filter))
+		continue;
 	?>
 	<h2><?php echo htmlspecialchars($graph['title']); ?></h2>
 	<a href="detail.php?graph=<?php echo $graphindex; ?>">
