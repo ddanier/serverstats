@@ -26,6 +26,8 @@
 $lang = array();
 $lang['Statistics'] = 'Statistik';
 $lang['Summary'] = 'Übersicht';
+$lang['Tree'] = 'Baum';
+$lang['Graphs'] = 'Graphen';
 
 $lang['Information'] = 'Information';
 $lang['Warning'] = 'Warnung';
