@@ -205,8 +205,17 @@ function isFiltered($graph, $filter)
 {
 	foreach ($filter as $category => $condition)
 	{
+		if ($condition{0} == "!")
+		{
+			$condition = substr($condition, 1);
+			$negate = true;
+		}
+		else
+		{
+			$negate = false;
+		}
 		if (!isset($graph['categories'][$category]))
-			return true;
+			return !$negate;
 		if ($graph['categories'][$category] instanceof ArrayAccess)
 		{
 			$filtered = true;
@@ -214,6 +223,8 @@ function isFiltered($graph, $filter)
 			{
 				if ($condition == $value)
 				{
+					if ($negate)
+						return true;
 					$filtered = false;
 					break;
 				}
@@ -223,8 +234,16 @@ function isFiltered($graph, $filter)
 		}
 		else
 		{
-			if ($condition != $graph['categories'][$category])
-				return true;
+			if ($negate)
+			{
+				if ($condition == $graph['categories'][$category])
+					return true;
+			}
+			else
+			{
+				if ($condition != $graph['categories'][$category])
+					return true;
+			}
 		}
 	}
 }
