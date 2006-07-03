@@ -214,17 +214,17 @@ function isFiltered($graph, $filter)
 		{
 			$negate = false;
 		}
-		if (!isset($graph['categories'][$category]))
+		if (!isset($graph['categories']) || !isset($graph['categories'][$category]))
 			return !$negate;
-		if ($graph['categories'][$category] instanceof ArrayAccess)
+		if (is_array($graph['categories'][$category]) ||
+			$graph['categories'][$category] instanceof Traversable)
 		{
 			$filtered = true;
 			foreach ($graph['categories'][$category] as $value)
 			{
-				if ($condition == $value)
+				if ((!$negate && $condition == $value) ||
+					($negate && $condition != $value))
 				{
-					if ($negate)
-						return true;
 					$filtered = false;
 					break;
 				}
