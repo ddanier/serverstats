@@ -17,7 +17,7 @@
 </xsl:template>
 
 <xsl:template match="stats:node">
-        <li><a href="javascript:loadgraphs('graphs.php?filter={stats:filter}');" class="file"><xsl:value-of select="stats:title" /></a>
+        <li class="open"><a href="javascript:loadgraphs('graphs.php?filter={stats:filter}');" class="file"><xsl:value-of select="stats:title" /></a>
 	<xsl:if test="stats:node">
 	<ul>
 		<xsl:apply-templates/>

@@ -10,19 +10,23 @@ class xmlconfig {
 
    private static function __traverseParams($node, &$config) {
   	foreach ($node->childNodes as $child) {
+		//echo $child->nodeName . $child->nodeType;
   		if ($child->nodeType!=1) continue;
   			
   			switch ($child->nodeName) {
-  				case 'graph':
+					case 'main':
+						 self::__traverseParams($child, $config['main']);
+						break;
+  					case 'graph':
 						self::__traverseParams($child, $config['graphs'][]);		
 						break;
-					case 'source':
+					case 'source':					
 						$id = $child->getAttribute('id');
 						$class = $child->getAttribute('type');
 						$args = null;
-						
+												
+
 						self::__traverseParams($child, $args);		
-											
 						if (class_exists($class)) {
 							$config['modules'][ $id ] = call_user_func(array($class,'factory'), $args); 				
 						}
@@ -33,7 +37,7 @@ class xmlconfig {
 						$name = $child->getAttribute('name');
 						if ($name=='') $name = count($config);
 						
-					if ($child->getAttributeNS('http://www.w3.org/2001/XMLSchema-instance','type')=='xsd:array') {
+						if ($child->getAttributeNS('http://www.w3.org/2001/XMLSchema-instance','type')=='xsd:array') {
 							self::__traverseParams($child, $config[ $name ]);
 						} else {
 							$config[ $name ] = $child->nodeValue;
@@ -43,6 +47,7 @@ class xmlconfig {
 						break;
 
 					default:
+						//print $child->nodeName;
 						self::__traverseParams($child, $config);		
 						break;
 						
@@ -59,6 +64,7 @@ class xmlconfig {
                         return;
                 }
 
+		
 		foreach ($xmlconfig['graphs'] as $graph => $graphconf) 
 		{
 			 $config['list'][] = $graphconf;
@@ -77,7 +83,6 @@ class xmlconfig {
 		foreach ($xmlconfig['modules'] as $module => $modconf)
 		{
 			$config[ $module ]['module'] = $modconf;
-			//print_r ($modconf);
 
 		}
 	}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <sources xmlns="urn:serverstats" xmlns:stats="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  >
 	<source type="cpu" id="cpu2" />
-	<source type="snmp" id="snmp1">
+	<source type="snmp" id="snmp1_load">
 		<param name="host">127.0.0.1</param>
 		<xi:include href="templates/ucd-snmp-mib-load.xml#xmlns(s=urn:serverstats)xpointer(/s:template/*)" />
 	</source>

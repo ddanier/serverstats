@@ -24,17 +24,54 @@
  */
 
 //$config['used'] = true; // is the simple config used
+$xslt = new XSLTProcessor();
 
 $dom = new domDocument();
 $dom->load(CONFIGPATH . 'xml/config.xml');
 $dom->Xinclude();
 
+function avt($matches) {
+		extract($GLOBALS);               
+ 
+		$entries = $xp->evaluate($matches[1], $child);
+	        if ($entries instanceof DOMNodeList) {
+			return $entries->item(0)->nodeValue;
+		} else {
+	                return $entries;
+		}
+        }
 
-$xmlconfig = xmlconfig::read($dom);
-//print_r ($xmlconfig);
+function __traversedom ( $node ) {
+	global $child, $xml, $xp;
 
+	foreach ($node->childNodes as $child) {
+		if ($child->nodeType!=1) continue;
+
+		$value = $child->getAttribute('value');
+		if ($value) {
+			$child->removeAttribute('value');
+			$xp = new domxpath($child->ownerDocument);
+			$result = preg_replace_callback('/\{([^\}]+)\}/','avt', $value);
+			$child->appendChild($child->ownerDocument->createTextNode($result));
+		}
+
+		__traversedom ($child);
+	}
+}
+
+$xsl = new domDocument();
+$xsl -> load(CONFIGPATH . 'clean.xsl');
+$xslt -> importStylesheet($xsl);
+
+$xml = $xslt -> transformToDoc($dom);
+
+__traversedom ($xml->documentElement);
+
+$xmlconfig = xmlconfig::read($xml);
 $config['modules'] = $xmlconfig['modules'];
 $config['graphs'] = $xmlconfig['graphs'];
 $config['used'] = true;
+
+//print_r($xmlconfig);
 
 ?>

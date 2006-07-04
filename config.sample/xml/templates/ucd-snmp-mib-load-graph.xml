@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<graph xmlns="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-				<param name="title">Load</param>
+<template xmlns="urn:serverstats" xmlns:s="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				<param name="title" value="Load {../@name}" />
 				<param name="lowerLimit">0</param>
 				<param name="altAutoscaleMax">true</param>
 				<param name="content" xsi:type="xsd:array">
@@ -10,7 +10,7 @@
 						</param>
 						<param xsi:type="xsd:array">
 							<param name="type">LINE</param>
-							<param name="source">load</param>
+p							<param name="source" value="{../../../@name}_load" />
 							<param name="ds">1min</param>
 							<param name="cf">AVERAGE</param>
 							<param name="legend">1 minute</param>
@@ -19,29 +19,29 @@
 						</param>
 						<param xsi:type="xsd:array">
 							<param name="type">GPRINT</param>
-							<param name="name">load_1min</param>
+							<param name="name" value="{../../../@name}_load_1min" />
 							<param name="cf">LAST</param>
 							<param name="format">  cur\: %01.2lf</param>
 						</param>
 						<param xsi:type="xsd:array">
 							<param name="type">GPRINT</param>
-							<param name="name">load_1min</param>
+							<param name="name" value="{../../../@name}_load_1min" />
 							<param name="cf">MAXIMUM</param>
 							<param name="format">  max\: %01.2lf</param>
 						</param>
 						<param xsi:type="xsd:array">
 							<param name="type">GPRINT</param>
-							<param name="name">load_1min</param>
+							<param name="name" value="{../../../@name}_load_1min" />
 							<param name="cf">MINIMUM</param>
 							<param name="format">  min\: %01.2lf</param>
 						</param>
 						<param xsi:type="xsd:array">
 							<param name="type">GPRINT</param>
-							<param name="name">load_1min</param>
+							<param name="name" value="{../../../@name}_load_1min" />
 							<param name="cf">AVERAGE</param>
 							<param name="format">  avg\: %01.2lf\n</param>
 						</param>
-                                                <param xsi:type="xsd:array">
+                                                <!--param xsi:type="xsd:array">
                                                         <param name="type">LINE</param>
                                                         <param name="source">load</param>
                                                         <param name="ds">5min</param>
@@ -108,9 +108,9 @@
                                                         <param name="name">load_15min</param>
                                                         <param name="cf">AVERAGE</param>
                                                         <param name="format">  avg\: %01.2lf</param>
-                                                </param>
+                                                </param-->
 
 
 
 				</param>
-</graph>
+</template>

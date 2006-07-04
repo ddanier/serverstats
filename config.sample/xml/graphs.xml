@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <graphs xmlns="urn:serverstats" xmlns:stats="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<xi:include href="templates/ucd-snmp-mib-load-graph.xml"	/>
+	<graph name="snmp1">
+		<xi:include href="templates/ucd-snmp-mib-load-graph.xml#xmlns(s=urn:serverstats)xpointer(/s:template/*)" />
+	</graph>
 </graphs>

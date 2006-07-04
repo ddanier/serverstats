@@ -64,7 +64,7 @@ require_once('../init.php');
 			  }
  			}
 
-			//loadgraphs ('home.php');
+			loadgraphs ('graphs.php?filter=');
 		}
 
 		
