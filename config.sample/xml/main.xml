@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<main xmlns="urn:serverstats" xmlns:stats="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<param name="language">en_US</param>
+	<param name="rrdtool">/usr/bin/rrdtool</param>
+	<param name="step">300</param>
+	
+</main>

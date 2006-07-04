@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<template xmlns="urn:serverstats" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> 
+	<param name="comunity">public</param>
+	<param name="objects" xsi:type="xsd:array">
+        	<param name="1min">UCD-SNMP-MIB::laLoad.1</param>
+                <param name="5min">UCD-SNMP-MIB::laLoad.2</param>
+                <param name="15min">UCD-SNMP-MIB::laLoad.3</param>
+        </param>
+</template>

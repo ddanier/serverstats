@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<item xmlns="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" title="All" filter="" >
+	<item title="VPS" filter="groupby:vps" >
+		<item title="127.0.0.1" filter="host:127.0.0.1" />
+	</item>
+</item>
+

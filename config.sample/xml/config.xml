@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<config xmlns="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  >
+<config xmlns="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <xi:include href="tree.xml" />
+	<xi:include href="main.xml" />
 	<xi:include href="sources.xml" />
-	<xi:include href="graphs.xml" />
+        <xi:include href="graphs.xml" />
 </config>
