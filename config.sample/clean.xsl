@@ -19,4 +19,10 @@
         </xsl:copy>
 </xsl:template>
 
+
+<xsl:template match="stats:template">
+       <xsl:apply-templates />
+</xsl:template>
+
+
 </xsl:stylesheet>

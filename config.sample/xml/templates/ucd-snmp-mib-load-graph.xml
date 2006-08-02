@@ -1,116 +1,115 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<template xmlns="urn:serverstats" xmlns:s="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<template xmlns="urn:serverstats" xmlns:s="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude">
 				<param name="title" value="Load {../@name}" />
 				<param name="lowerLimit">0</param>
 				<param name="altAutoscaleMax">true</param>
-				<param name="content" xsi:type="xsd:array">
-						<param xsi:type="xsd:array">
+				<list name="content">
+						<list>
 							<param name="type">COMMENT</param>
 							<param name="text">average number of tasks in the queue\:\n</param>
-						</param>
-						<param xsi:type="xsd:array">
+						</list>
+						<list>
 							<param name="type">LINE</param>
-p							<param name="source" value="{../../../@name}_load" />
+							<param name="source" value="{../../../@name}_load" />
 							<param name="ds">1min</param>
 							<param name="cf">AVERAGE</param>
 							<param name="legend">1 minute</param>
 							<param name="width">1</param>
 							<param name="color">FFDD00</param>
-						</param>
-						<param xsi:type="xsd:array">
+						</list>
+						<list>
 							<param name="type">GPRINT</param>
 							<param name="name" value="{../../../@name}_load_1min" />
 							<param name="cf">LAST</param>
 							<param name="format">  cur\: %01.2lf</param>
-						</param>
-						<param xsi:type="xsd:array">
+						</list>
+						<list>
 							<param name="type">GPRINT</param>
 							<param name="name" value="{../../../@name}_load_1min" />
 							<param name="cf">MAXIMUM</param>
 							<param name="format">  max\: %01.2lf</param>
-						</param>
-						<param xsi:type="xsd:array">
+						</list>
+						<list>
 							<param name="type">GPRINT</param>
 							<param name="name" value="{../../../@name}_load_1min" />
 							<param name="cf">MINIMUM</param>
 							<param name="format">  min\: %01.2lf</param>
-						</param>
-						<param xsi:type="xsd:array">
+						</list>
+						<list>
 							<param name="type">GPRINT</param>
 							<param name="name" value="{../../../@name}_load_1min" />
 							<param name="cf">AVERAGE</param>
 							<param name="format">  avg\: %01.2lf\n</param>
-						</param>
-                                                <!--param xsi:type="xsd:array">
+						</list>
+                                                <list>
                                                         <param name="type">LINE</param>
-                                                        <param name="source">load</param>
+                                                        <param name="source" value="{../../../@name}_load" />
                                                         <param name="ds">5min</param>
                                                         <param name="cf">AVERAGE</param>
                                                         <param name="legend">5 minutes</param>
                                                         <param name="width">1</param>
                                                         <param name="color">FF8800</param>
-                                                </param>
-                                                <param xsi:type="xsd:array">
+                                                </list>
+                                                <list>
                                                         <param name="type">GPRINT</param>
-                                                        <param name="name">load_5min</param>
+                                                        <param name="name" value="{../../../@name}_load_5min" />
                                                         <param name="cf">LAST</param>
                                                         <param name="format">  cur\: %01.2lf</param>
-                                                </param>
-                                                <param xsi:type="xsd:array">
+                                                </list>
+                                                <list>
                                                         <param name="type">GPRINT</param>
-                                                        <param name="name">load_5min</param>
+							<param name="name" value="{../../../@name}_load_5min" />
                                                         <param name="cf">MAXIMUM</param>
                                                         <param name="format">  max\: %01.2lf</param>
-                                                </param>
-                                                <param xsi:type="xsd:array">
+                                                </list>
+                                                <list>
                                                         <param name="type">GPRINT</param>
-                                                        <param name="name">load_5min</param>
-                                                        <param name="cf">MINIMUM</param>
+                                                        <param name="name" value="{../../../@name}_load_5min" />
+							<param name="cf">MINIMUM</param>
                                                         <param name="format">  min\: %01.2lf</param>
-                                                </param>
-                                                <param xsi:type="xsd:array">
+                                                </list>
+                                                <list>
                                                         <param name="type">GPRINT</param>
-                                                        <param name="name">load_5min</param>
+							<param name="name" value="{../../../@name}_load_5min" />
                                                         <param name="cf">AVERAGE</param>
                                                         <param name="format">  avg\: %01.2lf\n</param>
-                                                </param>
+                                                </list>
 
-
-                                                <param xsi:type="xsd:array">
+                                                <list>
                                                         <param name="type">LINE</param>
-                                                        <param name="source">load</param>
+                                                        <param name="source" value="{../../../@name}_load" />
                                                         <param name="ds">15min</param>
                                                         <param name="cf">AVERAGE</param>
                                                         <param name="legend">15 minutes</param>
                                                         <param name="width">1</param>
                                                         <param name="color">FF0000</param>
-                                                </param>
-                                                <param xsi:type="xsd:array">
+                                                </list>
+                                                <list>
                                                         <param name="type">GPRINT</param>
-                                                        <param name="name">load_15min</param>
+                                                        <param name="name" value="{../../../@name}_load_15min" />
                                                         <param name="cf">LAST</param>
                                                         <param name="format">  cur\: %01.2lf</param>
-                                                </param>
-                                                <param xsi:type="xsd:array">
+                                                </list>
+                                                <list>
                                                         <param name="type">GPRINT</param>
-                                                        <param name="name">load_15min</param>
+							<param name="name" value="{../../../@name}_load_15min" />
                                                         <param name="cf">MAXIMUM</param>
                                                         <param name="format">  max\: %01.2lf</param>
-                                                </param>
-                                                <param xsi:type="xsd:array">
+                                                </list>
+                                                <list>
                                                         <param name="type">GPRINT</param>
-                                                        <param name="name">load_15min</param>
+							<param name="name" value="{../../../@name}_load_15min" />
                                                         <param name="cf">MINIMUM</param>
                                                         <param name="format">  min\: %01.2lf</param>
-                                                </param>
-                                                <param xsi:type="xsd:array">
+                                                </list>
+                                                <list>
                                                         <param name="type">GPRINT</param>
-                                                        <param name="name">load_15min</param>
+							<param name="name" value="{../../../@name}_load_15min" />
                                                         <param name="cf">AVERAGE</param>
                                                         <param name="format">  avg\: %01.2lf</param>
-                                                </param-->
+                                                </list>
 
 
 
-				</param>
+				</list>
 </template>

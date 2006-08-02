@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<graphs xmlns="urn:serverstats" xmlns:stats="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<graphs xmlns="urn:serverstats" xmlns:stats="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude">
 	<graph name="snmp1">
-		<xi:include href="templates/ucd-snmp-mib-load-graph.xml#xmlns(s=urn:serverstats)xpointer(/s:template/*)" />
+		<list name="categories" >
+			<param name="impact">critical</param>
+		</list>
+		<xi:include href="templates/ucd-snmp-mib-load-graph.xml" />
 	</graph>
+
+        <graph name="snmp2">
+                <list  name="categories" >
+                        <param name="impact">important</param>
+                </list>
+                <xi:include href="templates/ucd-snmp-mib-load-graph.xml" />
+        </graph>
+
 </graphs>

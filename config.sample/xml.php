@@ -26,8 +26,11 @@
 //$config['used'] = true; // is the simple config used
 $xslt = new XSLTProcessor();
 
+//define('CONFIGPATH','');
+
 $dom = new domDocument();
 $dom->load(CONFIGPATH . 'xml/config.xml');
+
 $dom->Xinclude();
 
 function avt($matches) {
@@ -61,17 +64,22 @@ function __traversedom ( $node ) {
 
 $xsl = new domDocument();
 $xsl -> load(CONFIGPATH . 'clean.xsl');
+
 $xslt -> importStylesheet($xsl);
 
 $xml = $xslt -> transformToDoc($dom);
 
 __traversedom ($xml->documentElement);
 
+
 $xmlconfig = xmlconfig::read($xml);
 $config['modules'] = $xmlconfig['modules'];
 $config['graphs'] = $xmlconfig['graphs'];
 $config['used'] = true;
 
-//print_r($xmlconfig);
+/*
+header("Content-type: text/xml\n");
+print($xml->saveXML()); 
+*/
 
 ?>

@@ -33,17 +33,17 @@ class xmlconfig {
 						
 												
 						break;
+					case 'list':
+						$name = $child->getAttribute('name');
+						self::__traverseParams($child, $config[ $name ]);
+						break;
 					case 'param':							
 						$name = $child->getAttribute('name');
 						if ($name=='') $name = count($config);
 						
-						if ($child->getAttributeNS('http://www.w3.org/2001/XMLSchema-instance','type')=='xsd:array') {
-							self::__traverseParams($child, $config[ $name ]);
-						} else {
-							$config[ $name ] = $child->nodeValue;
-							self::__traverseParams($child, $config);
+						$config[ $name ] = $child->nodeValue;
+						self::__traverseParams($child, $config);
 
-						}
 						break;
 
 					default:
