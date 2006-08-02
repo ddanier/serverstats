@@ -75,11 +75,15 @@ __traversedom ($xml->documentElement);
 $xmlconfig = xmlconfig::read($xml);
 $config['modules'] = $xmlconfig['modules'];
 $config['graphs'] = $xmlconfig['graphs'];
+$config['tree'] = $xmlconfig['tree'];
+
 $config['used'] = true;
 
 /*
 header("Content-type: text/xml\n");
 print($xml->saveXML()); 
 */
+
+//print_r($config);
 
 ?>

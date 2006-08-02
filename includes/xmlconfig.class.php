@@ -35,15 +35,24 @@ class xmlconfig {
 						break;
 					case 'list':
 						$name = $child->getAttribute('name');
+						if ($name=='') $name = count($config);
 						self::__traverseParams($child, $config[ $name ]);
+
 						break;
 					case 'param':							
 						$name = $child->getAttribute('name');
 						if ($name=='') $name = count($config);
-						
+	
 						$config[ $name ] = $child->nodeValue;
 						self::__traverseParams($child, $config);
 
+						break;
+					case 'tree':
+						self::__traverseParams($child, $config['tree']);
+						break;
+
+					case 'item':
+						self::__traverseParams($child, $config[]);
 						break;
 
 					default:
@@ -53,6 +62,22 @@ class xmlconfig {
 						
   			}
   	}
+
+	}
+
+
+	public static function tree(&$config, $xmlconfig)
+        {
+            if (!$xmlconfig['used'])
+                {
+                        return;
+                }
+
+		
+		foreach ($xmlconfig['tree'] as $tree => $treeconf)
+                {
+                         $config['tree'] = $treeconf;
+                }
 
 	}
 
@@ -69,7 +94,7 @@ class xmlconfig {
 		{
 			 $config['list'][] = $graphconf;
 		}
-		
+
 	}
 
 	public static function sources(&$config, $xmlconfig)
@@ -79,7 +104,7 @@ class xmlconfig {
                         return;
                 }
 
-		
+	
 		foreach ($xmlconfig['modules'] as $module => $modconf)
 		{
 			$config[ $module ]['module'] = $modconf;

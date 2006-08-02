@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<item xmlns="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" title="All" filter="" >
-	<item title="VPS" filter="groupby:vps" >
-		<item title="127.0.0.1" filter="host:127.0.0.1" />
+<tree xmlns="urn:serverstats" xmlns:xi="http://www.w3.org/2001/XInclude">
+	<item>
+		<param name="title">All</param>
+		<param name="filter" />
+		<list name="sub" >
+			<item>
+				<param name="title">VPS</param>
+			        <param name="filter">host:127.0.0.1</param>
+			</item>
+                        <item>
+                                <param name="title">VPS2</param>
+                                <param name="filter">host:127.0.0.1</param>
+                        </item>
+		</list>
 	</item>
-</item>
-
+</tree>
