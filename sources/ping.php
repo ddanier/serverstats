@@ -46,7 +46,7 @@ class ping extends source implements source_rrd
 		{
 			$opt_string .= ' ' . escapeshellarg($opt);
 		}
-		$command = escapeshellcmd($this->ping_exec) . $opt_string . ' ' . $this->host;
+		$command = escapeshellcmd($this->ping_exec) . $opt_string . ' ' . escapeshellarg($this->host);
 		$output = array();
 		$return = 0;
 		exec($command . ' 2>&1', $output, $return);
