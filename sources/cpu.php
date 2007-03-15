@@ -28,7 +28,7 @@ class cpu extends source implements source_cached, source_rrd
 {
 	private $path_stat;
 	
-	private $fieldList = array(
+	private $cpuFieldList = array(
 		'user',
 		'nice',
 		'system',
@@ -37,9 +37,25 @@ class cpu extends source implements source_cached, source_rrd
 		'irq',
 		'softirq'
 	);
+	private $sysFieldList = array(
+		'intr',
+		'ctxt',
+		'processes',
+		'procs_running',
+		'procs_blocked'
+	);
+	private $sysFieldListPs = array(
+		'intr',
+		'ctxt',
+		'processes',
+	);
+	private $uptimeField = 'btime';
 	
-	private $stats;
-	private $oldstats;
+	private $cpuStats;
+	private $sysStats;
+	private $uptime;
+	
+	private $oldCpuStats;
 	
 	public function __construct($path_stat = '/proc/stat')
 	{
@@ -54,26 +70,35 @@ class cpu extends source implements source_cached, source_rrd
 	public function initRRD(rrd $rrd)
 	{
 		$this->getStats();
-		foreach ($this->stats as $cpu => $values)
+		foreach ($this->cpuStats as $cpu => $values)
 		{
 			foreach ($values as $key => $value)
 			{
 				$rrd->addDatasource($cpu . '_' . $key, 'GAUGE', null, 0, 100);
 			}
 		}
+		foreach ($this->sysFieldList as $key)
+		{
+			$rrd->addDatasource($key, 'GAUGE', null, 0);
+			if (in_array($key, $this->sysFieldListPs))
+			{
+				$rrd->addDatasource($key . '_ps', 'DERIVE', null, 0);
+			}
+		}
+		$rrd->addDatasource('uptime', 'GAUGE', null, 0);
 	}
 	
 	public function fetchValues()
 	{
 		$returnValues = array();
-		foreach ($this->stats as $cpu => $values)
+		foreach ($this->cpuStats as $cpu => $values)
 		{
 			$cpuUsage = array();
 			foreach ($values as $key => $value)
 			{
-				if (isset($this->oldstats[$cpu][$key]))
+				if (isset($this->oldCpuStats[$cpu][$key]))
 				{
-					$cpuUsage[$key] = $value - $this->oldstats[$cpu][$key];
+					$cpuUsage[$key] = $value - $this->oldCpuStats[$cpu][$key];
 				}
 				else
 				{
@@ -90,12 +115,21 @@ class cpu extends source implements source_cached, source_rrd
 				}
 			}
 		}
+		foreach ($this->sysStats as $key => $value)
+		{
+			$returnValues[$key] = $value;
+			if (in_array($key, $this->sysFieldListPs))
+			{
+				$returnValues[$key . '_ps'] = $value;
+			}
+		}
+		$returnValues['uptime'] = $this->uptime;
 		return $returnValues;
 	}
 	
 	private function getStats()
 	{
-		if (isset($this->stats))
+		if (isset($this->cpuStats) && isset($this->sysStats) && isset($this->uptime))
 		{
 			return;
 		}
@@ -105,22 +139,38 @@ class cpu extends source implements source_cached, source_rrd
 			throw new Exception('Could not read "' . $this->path_stat . '"');
 		}
 		
-		$this->stats = array();
+		$this->cpuStats = array();
+		$this->sysStats = array();
 		foreach ($lines as $line)
 		{
-			if (preg_match('/^(cpu[0-9]*)((\s+([0-9]+))+)\s*$/i', $line, $parts))
+			if (preg_match('/^([a-zA-Z0-9]*)((\s+([0-9]+))+)\s*$/i', $line, $parts))
 			{
-				$this->stats[$parts[1]] = array();
-				$cpustats = preg_split('/\s+/', trim($parts[2]));
-				$i = 0;
-				foreach ($this->fieldList as $fieldName)
+				$key = strtolower($parts[1]);
+				$value = trim($parts[2]);
+				if (preg_match('/^cpu[0-9]*$/i', $key))
 				{
-					if (!isset($cpustats[$i]))
+					$this->cpuStats[$key] = array();
+					$line_cpustats = preg_split('/\s+/', $value);
+					$i = 0;
+					foreach ($this->cpuFieldList as $fieldName)
 					{
-						break;
+						if (!isset($line_cpustats[$i]))
+						{
+							break;
+						}
+						$this->cpuStats[$key][$fieldName] = $line_cpustats[$i];
+						$i++;
 					}
-					$this->stats[$parts[1]][$fieldName] = $cpustats[$i];
-					$i++;
+				}
+				elseif (in_array($key, $this->sysFieldList))
+				{
+					// intval() converts "123 456" to int(123), so we don't have
+					// to do anything special for "intr"
+					$this->sysStats[$key] = intval($value);
+				}
+				elseif ($key == $this->uptimeField)
+				{
+					$this->uptime = time() - intval($value);
 				}
 			}
 		}
@@ -129,18 +179,18 @@ class cpu extends source implements source_cached, source_rrd
 	public function initCache()
 	{
 		$this->getStats();
-		$this->oldstats = $this->stats;
+		$this->oldCpuStats = $this->cpuStats;
 	}
 	
 	public function loadCache($cachedata)
 	{
-		$this->oldstats = $cachedata['stats'];
+		$this->oldCpuStats = $cachedata['cpuStats'];
 	}
 	
 	public function getCache()
 	{
 		return array(
-			'stats' => $this->stats,
+			'cpuStats' => $this->cpuStats,
 		);
 	}
 }

@@ -390,7 +390,7 @@ class rrd
 	{
 		if (!isset($this->values[$dsname]))
 		{
-			throw new Exception('Datasource unknown or computed');
+			throw new Exception('Datasource "' . $dsname . '" unknown or computed');
 		}
 		if ($this->values[$dsname] != 'U')
 		{
