@@ -83,7 +83,7 @@ class apache extends source implements source_rrd
 		{
 			foreach ($this->show as $apachename => $dsname)
 			{
-				$apachename = quotemeta($apachename);
+				$apachename = preg_quote($apachename, '/');
 				if (preg_match('/^' . $apachename . '\s*:\s*(.*)$/', $line, $parts))
 				{
 					$this->data[$dsname] = $parts[1];
