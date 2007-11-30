@@ -10,6 +10,8 @@ Licence: GPL v2
 Requirements:
 
 * PHP >= 5.0
+  (Serverstats is known to fail with safe_mode enabled, that's because
+   safe_mode is broken.)
 * RRDtool >= 1.2
 
 Basic Installation:

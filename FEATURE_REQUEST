@@ -14,4 +14,4 @@ Missing Cacti Features:
 Ideas:
  [ ] Remote polling
    (Server sends out data using some XML-format, source to read this data.
-    Server does not need to create any RRD-files)
+    Server does not need to create any RRD-files. XML-RPC?)
