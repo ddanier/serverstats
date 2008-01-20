@@ -435,6 +435,13 @@ class rrd
 					}
 					$dsvalue = number_format($dsvalue, $decimals, '.', '');
 				}
+				else
+				{
+					// Default format for floats, direct convert to string may
+					// lead to errors due to locale setting changing the
+					// decimal point
+					$dsvalue = number_format($dsvalue, 10, '.', '');
+				}
 			}
 			$updatestr .= ':' . $dsvalue;
 		}
