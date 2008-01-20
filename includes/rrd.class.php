@@ -435,6 +435,11 @@ class rrd
 					}
 					$dsvalue = number_format($dsvalue, $decimals, '.', '');
 				}
+				elseif (floor($dsvalue) == $dsvalue)
+				{
+					// Some integer values might be represented as floats
+					$dsvalue = number_format($dsvalue, 0, '.', '');
+				}
 				else
 				{
 					// Default format for floats, direct convert to string may
