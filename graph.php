@@ -91,6 +91,10 @@ try
 	{
 		$rrdgraph->setAltAutoscaleMax($graph['altAutoscaleMax']);
 	}
+	if (isset($graph['logarithmic']))
+	{
+		$rrdgraph->setLogarithmic($graph['logarithmic']);
+	}
 	
 	$lasttype = null;
 	foreach($graph['content'] as $c)

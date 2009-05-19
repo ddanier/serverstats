@@ -49,6 +49,22 @@ $config['tree'] = array(
 // Add own graphs (examples, like those used in the simple-config)
 /*
 $config['list'][] = array(
+	'title' => 'Something with logarithmic y-axis scaling',
+	'lowerLimit' => 0,
+	'altAutoscaleMax' => true,
+	'logarithmic' => true,
+	'content' => array(
+		array(
+			'type' => 'AREA',
+			'source' => 'users',
+			'ds' => 'users',
+			'cf' => 'AVERAGE',
+			'legend' => 'users logged in',
+			'color' => '4444DD'
+		)
+	)
+);
+$config['list'][] = array(
 	'title' => 'Users logged in',
 	'lowerLimit' => 0,
 	'altAutoscaleMax' => true,

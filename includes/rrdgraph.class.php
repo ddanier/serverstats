@@ -41,6 +41,7 @@ class rrdgraph
 	private $altYMrtg = false;
 	private $altAutoscale = false;
 	private $altAutoscaleMax = false;
+	private $logarithmic = false;
 	private $lazy = false;
 	
 	private $content = array();
@@ -321,6 +322,10 @@ class rrdgraph
 		{
 			$params .= ' -M ';
 		}
+		if ($this->logarithmic)
+		{
+			$params .= ' -o ';
+		}
 		if ($this->lazy)
 		{
 			$params .= ' -z ';
@@ -470,6 +475,11 @@ class rrdgraph
 	public function setAltAutoscaleMax($altAutoscaleMax = true)
 	{
 		$this->altAutoscaleMax = $altAutoscaleMax;
+	}
+	
+	public function setLogarithmic($logarithmic = false)
+	{
+		$this->logarithmic = $logarithmic;
 	}
 	
 	public function setLazy($lazy = true)
