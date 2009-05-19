@@ -95,6 +95,10 @@ try
 	{
 		$rrdgraph->setLogarithmic($graph['logarithmic']);
 	}
+	if (isset($graph['units']))
+	{
+		$rrdgraph->setUnits($graph['units']);
+	}
 	
 	$lasttype = null;
 	foreach($graph['content'] as $c)

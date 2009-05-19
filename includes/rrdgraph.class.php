@@ -42,6 +42,7 @@ class rrdgraph
 	private $altAutoscale = false;
 	private $altAutoscaleMax = false;
 	private $logarithmic = false;
+	private $units = null;
 	private $lazy = false;
 	
 	private $content = array();
@@ -326,6 +327,10 @@ class rrdgraph
 		{
 			$params .= ' -o ';
 		}
+		if ($this->units)
+		{
+			$params .= ' --units=' . escapeshellarg($this->units);
+		}
 		if ($this->lazy)
 		{
 			$params .= ' -z ';
@@ -480,6 +485,11 @@ class rrdgraph
 	public function setLogarithmic($logarithmic = false)
 	{
 		$this->logarithmic = $logarithmic;
+	}
+	
+	public function setUnits($units = null)
+	{
+		$this->units = $units;
 	}
 	
 	public function setLazy($lazy = true)
