@@ -51,7 +51,7 @@ class mysql extends source implements source_rrd
 	public function refreshData()
 	{
 		// Questions
-		$sql = "SHOW STATUS LIKE 'QUESTIONS';";
+		$sql = "SHOW GLOBAL STATUS LIKE 'QUESTIONS';";
 		$result = mysql_query($sql, $this->db);
 		$data = mysql_fetch_row($result);
 		$questions = $data[1];
