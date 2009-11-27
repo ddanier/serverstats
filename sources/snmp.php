@@ -56,6 +56,10 @@ class snmp extends source implements source_rrd
 	
 	public function refreshData()
 	{
+		if (!function_exists('snmpget'))
+		{
+			throw new Exception('SNMP extension missing');
+		}
 		snmp_set_valueretrieval(SNMP_VALUE_OBJECT);
 		foreach ($this->objects as $objectName => $objectId)
 		{
