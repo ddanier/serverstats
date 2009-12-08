@@ -29,6 +29,7 @@ class mysql extends source implements source_rrd
 	private $host;
 	private $user;
 	private $password;
+	private $version;
 	
 	private $questions;
 	private $processcount;
@@ -46,15 +47,36 @@ class mysql extends source implements source_rrd
 		{
 			throw new Exception('Could not connect to database');
 		}
+		
+		// Version
+		$sql = "SELECT version();";
+		$result = mysql_query($sql, $this->db);
+		$data = mysql_fetch_row($result);
+		$this->version = $data[0];
 	}
 	
 	public function refreshData()
 	{
-		// Questions
-		$sql = "SHOW GLOBAL STATUS LIKE 'QUESTIONS';";
+		// Questions/Queries
+		// - http://dev.mysql.com/doc/refman/5.0/en/server-status-variables.html#statvar_Queries
+		// - http://dev.mysql.com/doc/refman/5.1/en/server-status-variables.html#statvar_Queries
+		if (version_compare($this->version, '5.1', '>=')) { // 5.1.x and newer
+		    if (version_compare($this->version, '5.1.31', '>=')) {
+			$sql = "SHOW GLOBAL STATUS LIKE 'QUERIES';";
+		    } else {
+			$sql = "SHOW GLOBAL STATUS LIKE 'QUESTIONS';";
+		    }
+		} else { // 5.0.x and older
+		    if (version_compare($this->version, '5.0.72', '>=')) {
+			$sql = "SHOW GLOBAL STATUS LIKE 'QUERIES';";
+		    } else {
+			$sql = "SHOW GLOBAL STATUS LIKE 'QUESTIONS';";
+		    }
+		}
 		$result = mysql_query($sql, $this->db);
 		$data = mysql_fetch_row($result);
 		$questions = $data[1];
+		
 		// Processcount
 		$sql = "SHOW PROCESSLIST";
 		$result = mysql_query($sql, $this->db);
