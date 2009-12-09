@@ -35,7 +35,9 @@ class cpu extends source implements source_cached, source_rrd
 		'idle',
 		'iowait',
 		'irq',
-		'softirq'
+		'softirq',
+		'steal',
+		'guest'
 	);
 	private $sysFieldList = array(
 		'intr',
@@ -156,6 +158,7 @@ class cpu extends source implements source_cached, source_rrd
 					{
 						if (!isset($line_cpustats[$i]))
 						{
+							$this->cpuStats[$key][$fieldName] = 0;
 							break;
 						}
 						$this->cpuStats[$key][$fieldName] = $line_cpustats[$i];

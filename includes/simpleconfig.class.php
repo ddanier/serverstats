@@ -150,6 +150,24 @@ class simpleconfig
 											'legend' => 'SoftIRQ',
 											'color' => 'AAFF00',
 											'stacked' => true
+										),
+										array(
+											'type' => 'AREA',
+											'source' => $module,
+											'ds' => 'cpu_steal',
+											'cf' => 'AVERAGE',
+											'legend' => 'Steal',
+											'color' => '73287F',
+											'stacked' => true
+										),
+										array(
+											'type' => 'AREA',
+											'source' => $module,
+											'ds' => 'cpu_guest',
+											'cf' => 'AVERAGE',
+											'legend' => 'Guest',
+											'color' => 'FF99FF',
+											'stacked' => true
 										)
 									)
 								);
