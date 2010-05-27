@@ -677,6 +677,160 @@ class simpleconfig
 						}
 					}
 					break;
+				case 'postgresql':
+					foreach ($modconf['graphs'] as $graph => $graphconf)
+					{
+						if (!$graphconf['used'])
+						{
+							continue;
+						}
+						switch ($graph)
+						{
+							case 'transactions':
+								$config['list'][] = array(
+									'title' => $graphconf['title'],
+									'lowerLimit' => 0,
+									'altAutoscaleMax' => true,
+									'categories' => array('host' => $modconf['host']),
+									'content' => array(
+										array(
+											'type' => 'LINE',
+											'source' => 'postgresql',
+											'ds' => 'xact_rollbackps',
+											'cf' => 'AVERAGE',
+											'legend' => 'transaction ROLLBACKs/s',
+											'width' => 1,
+											'color' => 'FF0000'
+										),
+										array(
+											'type' => 'LINE',
+											'source' => 'postgresql',
+											'ds' => 'xact_commitps',
+											'cf' => 'AVERAGE',
+											'legend' => 'transaction COMMITs/s',
+											'width' => 1,
+											'color' => 'FFDD00'
+										)
+									)
+								);
+								break;
+							case 'backends':
+								$config['list'][] = array(
+									'title' => $graphconf['title'],
+									'lowerLimit' => 0,
+									'altAutoscaleMax' => true,
+									'categories' => array('host' => $modconf['host']),
+									'content' => array(
+										array(
+											'type' => 'AREA',
+											'source' => 'postgresql',
+											'ds' => 'backendworking',
+											'cf' => 'AVERAGE',
+											'legend' => 'Working backends',
+											'width' => 1,
+											'color' => 'FFDD00'
+										),
+										array(
+											'type' => 'AREA',
+											'source' => 'postgresql',
+											'ds' => 'backendwaiting',
+											'cf' => 'AVERAGE',
+											'legend' => 'Waiting backends',
+											'color' => 'FF0000',
+											'width' => 1,
+											'stacked' => true
+										),
+										array(
+											'type' => 'AREA',
+											'source' => 'postgresql',
+											'ds' => 'backendidleintrans',
+											'cf' => 'AVERAGE',
+											'legend' => '<IDLE> in transaction backends',
+											'color' => '0000FF',
+											'width' => 1,
+											'stacked' => true
+										),
+										array(
+											'type' => 'AREA',
+											'source' => 'postgresql',
+											'ds' => 'backendidle',
+											'cf' => 'AVERAGE',
+											'legend' => '<IDLE> backends',
+											'color' => '00FF00',
+											'width' => 1,
+											'stacked' => true
+										)
+									)
+								);
+								break;
+							case 'tupleswritten':
+								$config['list'][] = array(
+									'title' => $graphconf['title'],
+									'lowerLimit' => 0,
+									'altAutoscaleMax' => true,
+									'categories' => array('host' => $modconf['host']),
+									'content' => array(
+										array(
+											'type' => 'AREA',
+											'source' => 'postgresql',
+											'ds' => 'tup_insertedps',
+											'cf' => 'AVERAGE',
+											'legend' => 'Tuples INSERTed/s',
+											'width' => 1,
+											'color' => 'FF0000'
+										),
+										array(
+											'type' => 'AREA',
+											'source' => 'postgresql',
+											'ds' => 'tup_updatedps',
+											'cf' => 'AVERAGE',
+											'legend' => 'Tuples UPDATEd/s',
+											'color' => 'FFDD00',
+											'width' => 1,
+											'stacked' => true
+										),
+										array(
+											'type' => 'AREA',
+											'source' => 'postgresql',
+											'ds' => 'tup_deletedps',
+											'cf' => 'AVERAGE',
+											'legend' => 'Tuples DELETEd/s',
+											'color' => '654321',
+											'width' => 1,
+											'stacked' => true
+										)
+									)
+								);
+								break;
+							case 'tuplesread':
+								$config['list'][] = array(
+									'title' => 'PosgreSQL tuples - read',
+									'lowerLimit' => 0,
+									'altAutoscaleMax' => true,
+									'categories' => array('host' => $modconf['host']),
+									'content' => array(
+										array(
+											'type' => 'LINE',
+											'source' => 'postgresql',
+											'ds' => 'tup_returnedps',
+											'cf' => 'AVERAGE',
+											'legend' => 'Tuples returned/s',
+											'color' => '00FF00'
+										),
+										array(
+											'type' => 'LINE',
+											'source' => 'postgresql',
+											'ds' => 'tup_fetchedps',
+											'cf' => 'AVERAGE',
+											'legend' => 'Tuples fetched/s',
+											'color' => 'FF0000'
+										)
+									)
+								);
+								break;
+						}
+					}
+					break;
 				case 'ping':
 					foreach ($modconf['hosts'] as $host)
 					{
@@ -1099,6 +1253,9 @@ class simpleconfig
 					break;
 				case 'mysql':
 					$config[$module]['module'] = new mysql($modconf['user'], $modconf['password'], $modconf['host']);
+					break;
+				case 'postgresql':
+					$config[$module]['module'] = new postgresql($modconf['host'], $modconf['port'], $modconf['user'], $modconf['password'], $modconf['dbname']);
 					break;
 				case 'ping':
 					foreach ($modconf['hosts'] as $host)

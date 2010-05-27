@@ -69,6 +69,20 @@ $config['modules'] = array(
 			'processes' => array('used' => true, 'title' => 'MySQL: query count ("SHOW PROCESSLIST")')
 		)
 	),
+	'postgresql' => array(
+		'used' => true,
+		'host' => 'localhost',
+		'port' => '5432',
+		'user' => 'postgres',
+		'password' => '',
+		'dbname' => 'template1',
+		'graphs' => array(
+			'transactions' => array('used' => true, 'title' => 'PostgreSQL: transactions per second'),
+			'backends' => array('used' => true, 'title' => 'PostgreSQL: backend count'),
+			'tuplesread' => array('used' => true, 'title' => 'PosgreSQL: tuples read'),
+			'tupleswritten' => array('used' => true, 'title' => 'PosgreSQL: tuples written')
+		)
+	),
 	'ping' => array(
 		'used' => false,
 		'hosts' => array('www.google.com'),
