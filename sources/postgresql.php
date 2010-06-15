@@ -21,6 +21,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * Requirements:
+ *
+ * In order to use this source You have to configure PostgreSQL server
+ * with following options:
+ *
+ * track_activities = true
+ * track_counts = true
+ *
+ * It is safer to use special user, different from 'postgres' for
+ * collecting PostgreSQL statistics. To create such user and give him
+ * necessary privileges execute following statements while logged in as
+ * superuser:
+ *
+ * CREATE USER serverstats WITH NOCREATEDB NOCREATEUSER ENCRYPTED PASSWORD 'password';
+ * GRANT SELECT ON pg_stat_activity TO serverstats;
  */
 
 class postgresql extends source implements source_rrd
