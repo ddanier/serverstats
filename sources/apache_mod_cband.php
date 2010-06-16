@@ -28,12 +28,30 @@
  * In order to use this source you have to configure Apache/mod_cband
  * like that:
  *
+ * LoadModule cband_module modules/mod_cband.so
  * <Location /cband-status>
  *     SetHandler cband-status
  *     Order deny,allow
  *     Deny from all
  *     Allow from 127.0.0.1
  * </Location>
+ *
+ * Then configure CBandUser with following directives:
+ * 
+ * <CBandUser example>
+ *  CBandUserLimit 0
+ *  CBandUserScoreboard /var/log/apache2/example.cband
+ * </CBandUser>
+ * 
+ * Next add CBandUser to as many VirtualHosts as You wish:
+ * <VirtualHost *:80>
+ *  ServerName a.example.com
+ *  ...
+ *  CBandUser example
+ * </VirtualHost>
+ *
+ * Now You can gather statistics for either VirtualHost or user
+ * passing their names as '$targets' to this module.
  */
 
 class apache_mod_cband extends source implements source_rrd
@@ -47,12 +65,10 @@ class apache_mod_cband extends source implements source_rrd
 	{
 		foreach ($targets as $target) {
 			$this->labels[] = array(
+				$target.' traffic used' => $target.'_tused',
+				$target.' traffic limit' => $target.'_tlimit',
 				$target.' bandwidth used' => $target.'_bused',
-				$target.' bandwidth slice' => $target.'_bslice',
-				$target.' bandwidth limit' => $target.'_blimit',
-				/* 'VHost bandwidth used' => 'vbandused',
-				'VHost bandwidth slice' => 'vbandslice',
-				'VHost bandwidth limit' => 'vbandlimit', */
+				$target.' bandwidth limit' => $target.'_blimit'
 			);
 		}
 		
@@ -71,20 +87,22 @@ class apache_mod_cband extends source implements source_rrd
 		$status->loadXML(implode('', $lines));
 		foreach ($this->targets as $target) {
 			$elem = $status->getElementsByTagName($target);
-			//print($elem->item(0)->nodeValue);
 			if ($elem != null) {
 				$limits = $elem->item(0)->getElementsByTagName("limits");
 				$total = $limits->item(0)->getElementsByTagName("total");
-				$this->data[$target.'_blimit'] = ((int)$total->item(0)->nodeValue)*1024;
-				$this->data[$target.'_bslice'] = 0;
+				$this->data[$target.'_tlimit'] = ((int)$total->item(0)->nodeValue)*1024;
+				$kbps = $limits->item(0)->getElementsByTagName("kbps");
+				$this->data[$target.'_blimit'] = (int)$kbps->item(0)->nodeValue;
+				
 				$usages = $elem->item(0)->getElementsByTagName("usages");
 				$total = $usages->item(0)->getElementsByTagName("total");
-				$this->data[$target.'_bused'] = ((int)$total->item(0)->nodeValue)*1024;
-				//print ((int)$total->item(0)->nodeValue)*1024;
+				$this->data[$target.'_tused'] = ((int)$total->item(0)->nodeValue)*1024;
+				$this->data[$target.'_bused'] = $this->data[$target.'_tused'];
 			} else {
-				$this->data[$target.'_blimit'] = 0;
-				$this->data[$target.'_bslice'] = 0;
+				$this->data[$target.'_tused'] = 0;
+				$this->data[$target.'_tlimit'] = 0;
 				$this->data[$target.'_bused'] = 0;
+				$this->data[$target.'_blimit'] = 0;
 			}
 		}
 	}
@@ -93,9 +111,10 @@ class apache_mod_cband extends source implements source_rrd
 	{
 		foreach ($this->targets as $target)
 		{
-			$rrd->addDatasource($target.'_blimit', 'GAUGE');
-			$rrd->addDatasource($target.'_bslice', 'GAUGE');
-			$rrd->addDatasource($target.'_bused', 'DERIVE', null, 0);
+			$rrd->addDatasource(rrd::escapeDsName($target.'_tused'), 'GAUGE');
+			$rrd->addDatasource(rrd::escapeDsName($target.'_tlimit'), 'GAUGE');
+			$rrd->addDatasource(rrd::escapeDsName($target.'_bused'), 'DERIVE', null, 0);
+			$rrd->addDatasource(rrd::escapeDsName($target.'_blimit'), 'GAUGE');
 		}
 	}
 	
@@ -104,8 +123,7 @@ class apache_mod_cband extends source implements source_rrd
 		$values = array();
 		foreach ($this->data as $dsname => $value)
 		{
-			$values[$dsname] = $value;
-			//print($dsname.": ".$value);
+			$values[rrd::escapeDsName($dsname)] = $value;
 		}
 		return $values;
 	}
