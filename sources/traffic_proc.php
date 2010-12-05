@@ -69,10 +69,10 @@ class traffic_proc extends source implements source_rrd
 	{
 		foreach ($this->ifs as $if)
 		{
-			$rrd->addDatasource($if . '_rbytes', 'COUNTER', null, 0, 4294967295);
-			$rrd->addDatasource($if . '_rpackets', 'COUNTER', null, 0, 4294967295);
-			$rrd->addDatasource($if . '_tbytes', 'COUNTER', null, 0, 4294967295);
-			$rrd->addDatasource($if . '_tpackets', 'COUNTER', null, 0, 4294967295);
+			$rrd->addDatasource(rrd::escapeDsName($if) . '_rbytes', 'COUNTER', null, 0, 4294967295);
+			$rrd->addDatasource(rrd::escapeDsName($if) . '_rpackets', 'COUNTER', null, 0, 4294967295);
+			$rrd->addDatasource(rrd::escapeDsName($if) . '_tbytes', 'COUNTER', null, 0, 4294967295);
+			$rrd->addDatasource(rrd::escapeDsName($if) . '_tpackets', 'COUNTER', null, 0, 4294967295);
 		}
 	}
 	
@@ -83,10 +83,10 @@ class traffic_proc extends source implements source_rrd
 		{
 			if (isset($this->data[$if]))
 			{
-				$values[$if . '_rbytes'] = $this->data[$if]['rbytes'];
-				$values[$if . '_rpackets'] = $this->data[$if]['rpackets'];
-				$values[$if . '_tbytes'] = $this->data[$if]['tbytes'];
-				$values[$if . '_tpackets'] = $this->data[$if]['tpackets'];
+				$values[rrd::escapeDsName($if) . '_rbytes'] = $this->data[$if]['rbytes'];
+				$values[rrd::escapeDsName($if) . '_rpackets'] = $this->data[$if]['rpackets'];
+				$values[rrd::escapeDsName($if) . '_tbytes'] = $this->data[$if]['tbytes'];
+				$values[rrd::escapeDsName($if) . '_tpackets'] = $this->data[$if]['tpackets'];
 			}
 		}
 		return $values;
