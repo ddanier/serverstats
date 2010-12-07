@@ -1122,7 +1122,7 @@ class simpleconfig
 											array(
 												'type' => 'LINE',
 												'source' => $module . '_' . rrd::escapeDsName($interface),
-												'ds' => $interface . '_rbytes',
+												'ds' => rrd::escapeDsName($interface) . '_rbytes',
 												'cf' => 'AVERAGE',
 												'legend' => 'Download Bytes/s',
 												'color' => '0002A3'
@@ -1130,7 +1130,7 @@ class simpleconfig
 											array(
 												'type' => 'LINE',
 												'source' => $module . '_' . rrd::escapeDsName($interface),
-												'ds' => $interface . '_tbytes',
+												'ds' => rrd::escapeDsName($interface) . '_tbytes',
 												'cf' => 'AVERAGE',
 												'legend' => 'Upload Bytes/s',
 												'color' => '00A302'
@@ -1157,7 +1157,7 @@ class simpleconfig
 									$content[] = array(
 											'type' => 'LINE',
 											'source' => $module . '_' . rrd::escapeDsName($interface),
-											'ds' => $interface . '_rbytes',
+											'ds' => rrd::escapeDsName($interface) . '_rbytes',
 											'cf' => 'AVERAGE',
 											'legend' => 'Download Bytes/s (' . $interface . ')',
 											'color' => sprintf('%02X%02X%02X', rand(0, 255), rand(0, 255), rand(0, 255))
@@ -1165,7 +1165,7 @@ class simpleconfig
 									$content[] = array(
 											'type' => 'LINE',
 											'source' => $module . '_' . rrd::escapeDsName($interface),
-											'ds' => $interface . '_tbytes',
+											'ds' => rrd::escapeDsName($interface) . '_tbytes',
 											'cf' => 'AVERAGE',
 											'legend' => 'Upload Bytes/s (' . $interface . ')\n',
 											'color' => sprintf('%02X%02X%02X', rand(0, 255), rand(0, 255), rand(0, 255))
