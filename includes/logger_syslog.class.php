@@ -27,7 +27,6 @@ class logger_syslog extends logger
 {
 	public function __construct($ident = 'Serverstats', $options = null, $facility = null)
 	{
-		define_syslog_variables();
 		if (!isset($options))
 		{
 			$options = LOG_ODELAY || LOG_PID;
