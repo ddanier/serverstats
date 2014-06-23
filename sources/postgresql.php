@@ -2,7 +2,7 @@
 /**
  * $Id$
  *
- * Author: Piotr Michalczyk, piotr@michalczyk.pro
+ * Author: cryptogopher@github
  * Project: Serverstats, http://serverstats.berlios.de/
  * License: GPL v2 or later (http://www.gnu.org/licenses/gpl.html)
  *
