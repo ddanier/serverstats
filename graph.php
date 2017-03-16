@@ -54,7 +54,7 @@ try
 	$graphfile = GRAPHPATH . $filename . '.png';
 	
 	// Create Graph
-	$rrdgraph = new rrdgraph($config['main']['rrdtool'], $start, $end);
+	$rrdgraph = new ss_rrdgraph($config['main']['rrdtool'], $start, $end);
 	$rrdgraph->setTitle($title);
 	$rrdgraph->setWidth($config['graph']['width']);
 	$rrdgraph->setHeight($config['graph']['height']);
