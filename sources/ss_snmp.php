@@ -23,7 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-class snmp extends source implements source_rrd
+class ss_snmp extends source implements source_rrd
 {
 	private $host;
 	private $objects = array();
@@ -66,7 +66,7 @@ class snmp extends source implements source_rrd
 			$object = snmpget($this->host, $this->community, $objectId);
 			if ($object !== false)
 			{
-				$this->data[$objectName] = $object->value;
+				$this->data[$objectName] = (int)explode(':', $object->value)[1];
 			}
 		}
 	}
@@ -88,7 +88,7 @@ class snmp extends source implements source_rrd
 			}
 			else
 			{
-				$rrd->addDatasource(rrd::escapeDsName($objectName), 'GAUGE');
+				$rrd->addDatasource(rrd::escapeDsName($objectName), 'COUNTER');
 			}
 		}
 	}

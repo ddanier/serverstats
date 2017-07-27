@@ -54,7 +54,7 @@ try
 	$graphfile = GRAPHPATH . $filename . '.png';
 	
 	// Create Graph
-	$rrdgraph = new rrdgraph($config['main']['rrdtool'], $start, $end);
+	$rrdgraph = new ss_rrdgraph($config['main']['rrdtool'], $start, $end);
 	$rrdgraph->setTitle($title);
 	$rrdgraph->setWidth($config['graph']['width']);
 	$rrdgraph->setHeight($config['graph']['height']);
@@ -116,7 +116,7 @@ try
 		{
 			if (isset($c['source']))
 			{
-				$intname = $c['source'] . '_' . $c['ds'];
+				$intname = $c['source'] . '_' . $c['ds'] . $type;
 				$rrdfile = RRDPATH . $c['source'] . '.rrd';
 				$rrdgraph->addDEF($intname, $rrdfile, $c['ds'], $c['cf']);
 			}
