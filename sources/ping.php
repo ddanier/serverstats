@@ -57,7 +57,7 @@ class ping extends source implements source_rrd
 		foreach ($output as $line)
 		{
 			$matches = array();
-			if (preg_match('/^.*icmp_seq=.+ttl=.+time=([0-9\.]+) ms$/', $line, $matches))
+			if (preg_match('/^.*icmp_[rs]eq=.+ttl=.+time=([0-9\.]+) ms$/', $line, $matches))
 			{
 				$this->ping_time = $matches[1];
 				break;
