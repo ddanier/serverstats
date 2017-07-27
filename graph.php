@@ -116,7 +116,7 @@ try
 		{
 			if (isset($c['source']))
 			{
-				$intname = $c['source'] . '_' . $c['ds'] . $type;
+				$intname = $c['source'] . '_' . $c['ds'];
 				$rrdfile = RRDPATH . $c['source'] . '.rrd';
 				$rrdgraph->addDEF($intname, $rrdfile, $c['ds'], $c['cf']);
 			}
