@@ -24,7 +24,7 @@
  */
 
 // All sources should be loaded on demand
-function __autoload($class)
+spl_autoload_register(function ($class)
 {
 	if (file_exists(SOURCEPATH . $class . '.php'))
 	{
@@ -34,7 +34,7 @@ function __autoload($class)
 	{
 		require_once(INCLUDEPATH . $class . '.class.php');
 	}
-}
+});
 
 function menuTree($tree, $path = '')
 {
