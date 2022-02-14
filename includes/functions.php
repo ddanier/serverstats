@@ -214,7 +214,7 @@ function isFiltered($graph, $filter)
 		{
 			return true;
 		}
-		if ($condition{0} == "!")
+		if ($condition[0] == "!")
 		{
 			$condition = substr($condition, 1);
 			$negate = true;
