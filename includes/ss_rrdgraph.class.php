@@ -241,7 +241,7 @@ class ss_rrdgraph
 		$this->add('VDEF', $vname, $expression);
 	}
 	
-	public function addLINE($width = null, $vname, $color = null, $legend = null, $stacked = false)
+	public function addLINE($vname, $width = null, $color = null, $legend = null, $stacked = false)
 	{
 		$this->add('LINE', $width, $vname, $color, $legend, $stacked);
 	}
