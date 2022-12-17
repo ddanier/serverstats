@@ -172,7 +172,7 @@ try
 				$rrdgraph->addCDEF($c['name'], $c['expression']);
 				break;
 			case 'LINE':
-				$rrdgraph->addLINE(array_get($c, 'width'), $intname, array_get($c, 'color'), array_get($c, 'legend'), array_get($c, 'stacked'));
+				$rrdgraph->addLINE($intname, array_get($c, 'width'), array_get($c, 'color'), array_get($c, 'legend'), array_get($c, 'stacked'));
 				$lasttype = $type;
 				break;
 			case 'AREA':
@@ -183,7 +183,7 @@ try
 				switch ($lasttype)
 				{
 					case 'LINE':
-						$rrdgraph->addLINE(array_get($c, 'width'), $intname, array_get($c, 'color'), array_get($c, 'legend'), true);
+						$rrdgraph->addLINE($intname, array_get($c, 'width'), array_get($c, 'color'), array_get($c, 'legend'), true);
 						break;
 					case 'AREA':
 						$rrdgraph->addAREA($intname, array_get($c, 'color'), array_get($c, 'legend'), true);
@@ -225,7 +225,7 @@ try
 				{
 					throw new Exception('Missing values for ' . $type);
 				}
-				$rrdgraph->addLINE(array_get($c, 'width'), $c['value'], array_get($c, 'color'), array_get($c, 'legend'), false);
+				$rrdgraph->addLINE($c['value'], array_get($c, 'width'), array_get($c, 'color'), array_get($c, 'legend'), false);
 				break;
 			case 'VRULE':
 				if (!array_check($c, array('time')))
