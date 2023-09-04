@@ -62,7 +62,7 @@ class config implements ArrayAccess, IteratorAggregate
 		}
 	}
 	
-	public function offsetExists($offset)
+	public function offsetExists($offset): bool
 	{
 		if (isset($this->vars[$offset]))
 		{
@@ -120,7 +120,7 @@ class config implements ArrayAccess, IteratorAggregate
 		return $this->offsetGet($offset);
 	}
 	
-	public function offsetGet($offset)
+	public function offsetGet($offset): mixed
 	{
 		if (!isset($this->vars[$offset]))
 		{
@@ -141,7 +141,7 @@ class config implements ArrayAccess, IteratorAggregate
 		}
 	}
 	
-	public function getIterator()
+	public function getIterator(): Traversable
 	{
 		if (is_dir($this->dir))
 		{
@@ -166,12 +166,12 @@ class config implements ArrayAccess, IteratorAggregate
 		return new ArrayIterator($iteratorVars);
 	}
 	
-	public function offsetSet($offset, $value)
+	public function offsetSet($offset, $value): void
 	{
 		throw new Exception('Config may not be changed');
 	}
 	
-	public function offsetUnset($offset)
+	public function offsetUnset($offset): void
 	{
 		throw new Exception('Config may not be changed');
 	}
