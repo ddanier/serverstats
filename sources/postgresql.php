@@ -46,6 +46,7 @@ class postgresql extends source implements source_rrd
 	private $user;
 	private $password;
 	private $dbname;
+	private $db;
 	
 	private $backendworking;
 	private $backendwaiting;
