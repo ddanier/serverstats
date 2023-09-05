@@ -105,7 +105,7 @@ class disk extends source implements source_rrd
 		$this->stats_part = array();
 		foreach ($lines as $line)
 		{
-			if (preg_match('/^\s*[0-9]+\s+[0-9]+\s+' . preg_quote($this->disk, '/') . '\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s*$/i', $line, $parts))
+			if (preg_match('/^\s*[0-9]+\s+[0-9]+\s+' . preg_quote($this->disk, '/') . '\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s*/i', $line, $parts))
 			{
 				$this->stats_disk = array(
 					/*
@@ -122,7 +122,7 @@ class disk extends source implements source_rrd
 					'ms_io_weighted' => $parts[11]*/
 				);
 			}
-			elseif ($this->withpartitions && preg_match('/^\s*[0-9]+\s+[0-9]+\s+' . preg_quote($this->disk, '/') . '([0-9]*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s*$/i', $line, $parts))
+			elseif ($this->withpartitions && preg_match('/^\s*[0-9]+\s+[0-9]+\s+' . preg_quote($this->disk, '/') . '([0-9]*)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s*/i', $line, $parts))
 			{
 				$this->stats_part[$parts[1]] = array(
 					/*
